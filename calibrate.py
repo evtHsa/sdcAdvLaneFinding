@@ -15,16 +15,18 @@ import os.path
 #        +
 
 def calibrate_camera():
-    viewer = ut.ImgViewer()
+    viewer = ut.ImgViewer(4,4)
     
     for fname in glob.glob("camera_cal/*.jpg"):
         basename = os.path.basename(fname)
 
         img = mpimg.imread(fname)
         viewer.push(img, "initial img")
-        gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         viewer.push(gray, "initial img")
+        print("FIXME:  exit loop")
         break
+    viewer.show()
     print("FIXME:thats all folx")
 
 

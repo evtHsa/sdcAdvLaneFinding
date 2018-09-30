@@ -53,4 +53,4 @@ demo_pipeline_3 = pipe.Pipe(
 demo_pipeline_3.exec('camera_cal/calibration1.jpg')
 
 
-#cal.calibrate_camera()
+cal.calibrate_camera()
