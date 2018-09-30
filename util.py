@@ -32,12 +32,15 @@ class ImgViewer:
         #print("FIXME: rows = %d, cols = %d" % (rows, cols))
         
         fig = plt.figure(figsize=(self.w, self.h))
-        for i , img_parms in zip(range(1, len(self.img_parms_list) + 1), self.img_parms_list):
-            img_ref = img_parms['img_ref']
+        for i , _img_parms in zip(range(1, len(self.img_parms_list) + 1), self.img_parms_list):
+            img_ref = _img_parms['img_ref']
             ax = fig.add_subplot(rows, cols , i)
-            ax.set_title(img_parms['title'])
+            ax.set_title(_img_parms['title'])
             plt.imshow(img_ref, cmap='Greys_r')
         plt.show()
+
+    def flush(self):
+        self.img_parms_list = []
 
 class ImgSaver:
     # abstracts saving a bunch of files in a timestamp directory

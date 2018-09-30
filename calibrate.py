@@ -14,16 +14,21 @@ import os.path
 #        + https://docs.opencv.org/2.4.1/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html#calibratecamera
 #        +
 
-def calibrate_camera():
-    viewer = ut.ImgViewer(4,4)
+def calibrate_camera(viewer):
     
     for fname in glob.glob("camera_cal/*.jpg"):
         basename = os.path.basename(fname)
-
-        img = mpimg.imread(fname)
+        img = None
+        img = cv2.imread(fname)
+        print("FIXME_2: shape = " + str(img.shape))
+        plt.figure()
+        plt.imshow(img)
+        plt.show()
+        viewer.push(mpimg.imread('camera_cal/calibration1.jpg'), "desperation")
+        viewer.flush()
         viewer.push(img, "initial img")
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-        viewer.push(gray, "initial img")
+        #viewer.push(gray, "initial img")
         print("FIXME:  exit loop")
         break
     viewer.show()

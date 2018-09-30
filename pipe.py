@@ -18,10 +18,13 @@ class PipeStage:
 
 class Pipe:
 
-    def __init__(self, stage_list, pipe_parm_dict):
+    def __init__(self, stage_list, parm_dict, viewer=None):
         self.stage_list = stage_list
-        self.pipe_parm_dict = pipe_parm_dict
-        self.imgViewer = ut.ImgViewer(4,4)
+        self.pipe_parm_dict = parm_dict
+        try:
+            self.imgViewer = parm_dict['viewer']
+        except:
+            self.imgViewer = ut.ImgViewer(4,4)
 
     def exec(self, img):
         # unenforced convention img can also be a path for pipes where the
