@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
+import util as ut
 
 class PipeStage:
 
@@ -12,7 +13,7 @@ class PipeStage:
         self.hyper_parms = hyper_parms
 
     def exec(self, img, pipe_parms):
-        self.fn(img)
+        return  self.fn(img)
 
 
 class Pipe:
@@ -20,9 +21,19 @@ class Pipe:
     def __init__(self, stage_list, pipe_parm_dict):
         self.stage_list = stage_list
         self.pipe_parm_dict = pipe_parm_dict
+        self.imgViewer = ut.ImgViewer(4,4)
 
     def exec(self, img):
+        # unenforced convention img can also be a path for pipes where the
+        # first stage reads an image from the path
         tmp = img
         for stage in self.stage_list:
+            stage_name = stage.hyper_parms['name']
+            print("stage: %s" % stage_name)
             tmp = stage.exec(tmp, None)
+
+            none_type = type(None) # FIXME
+            if type(tmp) != none_type: # stages must return img or None
+                self.imgViewer.push(tmp, stage_name)
+        self.imgViewer.show()
             
