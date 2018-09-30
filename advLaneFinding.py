@@ -15,6 +15,10 @@ def stage_fn_img_read(path):
      img = mpimg.imread(path)
      return img
 
+def stage_fn_rgb2gray(img):
+    gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+    return gray
+
 demo_pipeline_1 = pipe.Pipe(
     [
         pipe.PipeStage(stage_fn_img_read,
@@ -35,7 +39,18 @@ demo_pipeline_2 = pipe.Pipe(
     ],
     {'debug_level ': 3})
 
+demo_pipeline_3 = pipe.Pipe(
+    [
+        pipe.PipeStage(stage_fn_img_read,
+                       {'name' : 'imgread', 'debug_level' : 2}),
+        pipe.PipeStage(stage_fn_rgb2gray,
+                       {'name' : 'stub2', 'debug_level' : 2})
+    ],
+    {'debug_level ': 3})
+
 #demo_pipeline_1.exec('test_images/test1.jpg')
 #demo_pipeline_2.exec(mpimg.imread('test_images/test1.jpg'))
+demo_pipeline_3.exec('camera_cal/calibration1.jpg')
 
-cal.calibrate_camera()
+
+#cal.calibrate_camera()
