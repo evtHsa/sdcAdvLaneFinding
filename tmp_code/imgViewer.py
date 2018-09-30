@@ -13,7 +13,7 @@ binary_warped = mpimg.imread('test_images/test1.jpg')
 class ImgViewer:
     def __init__(self, w, h):
         self.img_parms_list = []
-        self.w = 2
+        self.w = w
         self.h = h
 
     def push(self, img_ref, title="larry"):
