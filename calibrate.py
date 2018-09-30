@@ -15,17 +15,15 @@ import os.path
 #        +
 
 def calibrate_camera():
-    saver = ut.ImgSaver()
+    viewer = ut.ImgViewer()
     
     for fname in glob.glob("camera_cal/*.jpg"):
         basename = os.path.basename(fname)
-        print("FIXME: fname = " + fname)
+
         img = mpimg.imread(fname)
-        #saver.save(img, basename,  msg="init")
-        ut.ohBother(img)
+        viewer.push(img, "initial img")
         gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
-        #saver.save(gray, basename,  msg="gray")
-        ut.ohBother_g(img)
+        viewer.push(gray, "initial img")
         break
     print("FIXME:thats all folx")
 
