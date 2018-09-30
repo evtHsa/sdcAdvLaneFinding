@@ -34,8 +34,7 @@ class ImgViewer:
 
 
 imgViewer = ImgViewer(30, 30)
-#for i in range(1,10):
-#    imgViewer.push(binary_warped)
+for i in range(1,10):
+    imgViewer.push(binary_warped)
 
-imgViewer.push(binary_warped)
 imgViewer.show()
