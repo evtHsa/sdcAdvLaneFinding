@@ -25,7 +25,7 @@ class ImgViewer:
     def show(self):
         if  len(self.img_parms_list) < 1:
             raise Exception("nothing to show")
-        rows = np.sqrt(len(self.img_parms_list))
+        rows = int(np.ceil(np.sqrt(len(self.img_parms_list))))
         cols = rows
         print("rows = %d, cols = %d" % (rows, cols))
         
@@ -33,7 +33,7 @@ class ImgViewer:
         for i , img_parms in zip(range(1, len(self.img_parms_list) + 1), self.img_parms_list):
             img_ref = img_parms['img_ref']
             ax = fig.add_subplot(rows, cols , i)
-            ax.set_title(img_parms['title'] + str(i))
+            ax.set_title(img_parms['title'])
             plt.imshow(img_ref)
         plt.show()
 
