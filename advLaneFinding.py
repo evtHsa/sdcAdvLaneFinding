@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import pipe
+import calibrate as cal
 
 def stage_fn_stub(img):
     print("boy howdy")
@@ -34,5 +35,7 @@ demo_pipeline_2 = pipe.Pipe(
     ],
     {'debug_level ': 3})
 
-demo_pipeline_1.exec('test_images/test1.jpg')
-demo_pipeline_2.exec(mpimg.imread('test_images/test1.jpg'))
+#demo_pipeline_1.exec('test_images/test1.jpg')
+#demo_pipeline_2.exec(mpimg.imread('test_images/test1.jpg'))
+
+cal.calibrate_camera()
