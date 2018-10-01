@@ -7,13 +7,17 @@ import ImgSaver as imgsvr
 import ImgViewer as imgvwr
 import ImRead as ir
 
-gViewer = imgvwr.ImgViewer(8,4,"bummer")
+gViewer = imgvwr.ImgViewer(10, 6,"bummer", rows = 2, cols = 2)
 
-fname = 'camera_cal/calibration1.jpg'
+f1 = 'camera_cal/calibration1.jpg'
+f16 = 'camera_cal/calibration16.jpg'
 
-img = ir.read(fname)
-for i in range(1,4):
-    gViewer.push(img, fname)
+img1 = ir.read(f1)
+img16 = ir.read(f16)
+
+for i in range(1, 8):
+    gViewer.push(img1, f1 + "_" + str(i))
+    gViewer.push(img16, f16 + "_" + str(i))
+    gViewer.show()
+
 gViewer.show()
-
-
