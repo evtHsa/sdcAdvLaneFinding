@@ -19,23 +19,24 @@ class ImgViewer:
         self.fig = plt.figure(figsize=(self.w, self.h), num=self.title)
 
     def push(self, img_ref, title="larry"):
-        l = len(self.img_parms_list)
-        if l > 4:
-            print("FIXME:i am full")
-            return
-        
+        l = len(self.img_parms_list)        
         self.img_parms_list.append({'img_ref' : np.copy(img_ref), 'title' : title})
 
-    def show(self,  cols = 2):
+    def show(self,  cols = 2, grid = False):
         if  len(self.img_parms_list) < 1:
             raise Exception("nothing to show")
         rows = int(np.ceil(len(self.img_parms_list) / cols))
-        #print("FIXME: rows = %d, cols = %d" % (rows, cols))
+        print("FIXME: rows = %d, cols = %d" % (rows, cols))
+        plt.xticks(())
+        plt.yticks(())
         
         for i , _img_parms in zip(range(1, len(self.img_parms_list) + 1), self.img_parms_list):
             img_ref = _img_parms['img_ref']
             ax = self.fig.add_subplot(rows, cols , i)
             ax.set_title(_img_parms['title'])
+            # dont ask if they want ticks, just turn them off
+            ax.set_xticks(())
+            ax.set_yticks(())
             plt.imshow(img_ref, cmap='Greys_r')
         plt.show()
 
