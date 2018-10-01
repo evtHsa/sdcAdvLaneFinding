@@ -1,10 +1,4 @@
-#!/usr/bin/env python3
-
-import cv2
-import numpy as np
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
-import util as ut
+import ImgViewer as imgvwr
 
 class PipeStage:
 
@@ -24,7 +18,7 @@ class Pipe:
         try:
             self.imgViewer = parm_dict['viewer']
         except:
-            self.imgViewer = ut.ImgViewer(4,4)
+            self.imgViewer = imgvwr.ImgViewer(4,4)
 
     def exec(self, img):
         # unenforced convention img can also be a path for pipes where the
