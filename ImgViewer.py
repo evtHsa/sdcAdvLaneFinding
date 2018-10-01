@@ -58,6 +58,7 @@ class ImgViewer:
             ax.set_yticks(())
             img_ref = L[i]['img_ref']
             img_title = L[i]['title']
+            print("title = " + img_title)
             ax.set_title(img_title)
             ax.imshow(img_ref, cmap='Greys_r')
         
