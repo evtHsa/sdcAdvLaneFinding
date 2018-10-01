@@ -11,10 +11,12 @@ class ImgViewer:
     #        imgViewer.push(binary_warped, "some_title' + str(i))
 
     #    
-    def __init__(self, w, h):
+    def __init__(self, w, h, title):
         self.img_parms_list = []
         self.w = w
         self.h = h
+        self.title = title
+        self.fig = plt.figure(figsize=(self.w, self.h), num=self.title)
 
     def push(self, img_ref, title="larry"):
         l = len(self.img_parms_list)
@@ -30,10 +32,9 @@ class ImgViewer:
         rows = int(np.ceil(len(self.img_parms_list) / cols))
         #print("FIXME: rows = %d, cols = %d" % (rows, cols))
         
-        fig = plt.figure(figsize=(self.w, self.h))
         for i , _img_parms in zip(range(1, len(self.img_parms_list) + 1), self.img_parms_list):
             img_ref = _img_parms['img_ref']
-            ax = fig.add_subplot(rows, cols , i)
+            ax = self.fig.add_subplot(rows, cols , i)
             ax.set_title(_img_parms['title'])
             plt.imshow(img_ref, cmap='Greys_r')
         plt.show()
