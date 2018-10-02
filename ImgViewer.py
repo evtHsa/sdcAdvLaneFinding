@@ -98,8 +98,8 @@ class ImgViewer:
         self.img_parms_list = []
 
     def show_immed(self, img, title="", cmap=None):
-        print("FIXME: nous non avons title")
         plt.figure()
+        plt.title(title)
         if cmap:
             plt.imshow(img, cmap=_cmap)
         else:
