@@ -101,7 +101,7 @@ class ImgViewer:
         plt.figure()
         plt.title(title)
         if cmap:
-            plt.imshow(img, cmap=_cmap)
+            plt.imshow(img, cmap=cmap)
         else:
             plt.imshow(img)
         plt.show()    
