@@ -69,4 +69,6 @@ demo_pipeline_3 = pipe.Pipe(
 #gViewer.push(img, "frm main")
 #gViewer.show()
 
-cal.calibrate_camera(gViewer)
+chess_b_nx = 9 # per assignment overview
+chess_b_ny = 6 # per assignment overview
+cal.calibrate_camera(gViewer, chess_b_nx, chess_b_ny)
