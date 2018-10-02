@@ -12,25 +12,14 @@ class ImgViewer:
     #        imgViewer.push(binary_warped, "some_title' + str(i))
 
     #    
-    def __init__(self, w, h, title, rows=1, cols=1):
-        raise Exception("not sure why this show updates of plot but, for now, it is useless")
+    def __init__(self, w=4, h=4, rows=1, cols=1, title = "",):
+        #raise Exception("not sure why this show updates of plot but, for now, it is useless")
         self.img_parms_list = []
         self.w = w
         self.h = h
         self.title = title
-        self.fig = plt.figure(figsize=(self.w, self.h), num=self.title)
         self.rows = rows
-#      self.ax_list = []
         self.cols = cols
-
-#        for i in range(rows * cols):
-#            ax = self.fig.add_subplot(rows, cols , i + 1)
-#            self.ax_list.append(ax)
-#            ax.set_xticks(())
-#            ax.set_yticks(())
-
-    def __init__(self):
-        pass #doesn't do much, does it?
 
     def clear_sub_plots(self):
         #return;
@@ -40,7 +29,7 @@ class ImgViewer:
     def push(self, img_ref, title="", debug=False):
         L = self.img_parms_list
         L.append({'img_ref' : np.copy(img_ref), 'title' : title})
-        print("push: len = %d, title = %s"  %  (len(L), title))
+        #print("push: len = %d, title = %s"  %  (len(L), title))
 
     def show_1_grid(self, start):
         L = self.img_parms_list
@@ -72,6 +61,24 @@ class ImgViewer:
         def clear(self):
             img_parms_list 
             print("FIXME: may want to clear frame here too")
+
+    def show_1_img(self, img=None, start=0, ix=0):
+        print("\t\tFIXME:show_1_grid_2(start = %d, ix = %d" % (start, ix))
+        
+    def show_1_grid_2(self, start):
+        print("\tFIXME:show_1_grid_2(%d)" % start)
+        print("\tFIXME: do plot setup here")
+        for i in range(1, self.rows * self.cols + 1):
+            self.show_1_img(img=None, start=start, ix=i)
+        
+    def show_2(self, clear=False):
+        print("FIXME:show_2")
+        L = self.img_parms_list
+        n_imgs = len(L)
+        grid_size = self.rows * self.cols
+
+        for i in range(0, n_imgs, grid_size):
+            self.show_1_grid_2(start=i)
 
     def show(self, clear = False):
         L = self.img_parms_list

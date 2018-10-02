@@ -41,9 +41,17 @@ def calibrate_camera(viewer, nx, ny):
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         vwr._view(viewer, gray, "gray: " + fname, cmap='Greys_r')
         ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
-        print("FIXME: fCBC -> " + str(ret))
-        raise Exception("needs more code")
-    print("FIXME:thats all folx")
+        if ret:
+            objpoints.append(objp)
+            imgpoints.append(corners)
+
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
+                                                           gray.shape[::-1],None,None)
+
+    #print("mtx = " + str(mtx))
+    #print("objp.shape = %s" % str(objp.shape))
+    return mtx, dist
+
 
 
     

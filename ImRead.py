@@ -1,3 +1,7 @@
+#
+# this module may not need to continue existing. it was originally created to experiment
+# between mpimg & cv2 variants of imread
+#
 
 import matplotlib.image as mpimg
 
@@ -12,6 +16,5 @@ def static_var(varname, value):
 def read(path):
     read.ctr += 1
     img = mpimg.imread(path)
-    print("ImRead.read(%s): ctr = %d" % (path, read.ctr))
-    #print(str(img))
+    #print("ImRead.read(%s): ctr = %d" % (path, read.ctr))
     return img
