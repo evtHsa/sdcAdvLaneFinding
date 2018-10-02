@@ -13,6 +13,7 @@ class ImgViewer:
 
     #    
     def __init__(self, w, h, title, rows=1, cols=1):
+        raise Exception("not sure why this show updates of plot but, for now, it is useless")
         self.img_parms_list = []
         self.w = w
         self.h = h
@@ -28,15 +29,18 @@ class ImgViewer:
 #            ax.set_xticks(())
 #            ax.set_yticks(())
 
+    def __init__(self):
+        pass #doesn't do much, does it?
+
     def clear_sub_plots(self):
         #return;
         for i in range(rows * cols):
             self.ax_list[i].cla()
             
-    def push(self, img_ref, title=""):
+    def push(self, img_ref, title="", debug=False):
         L = self.img_parms_list
         L.append({'img_ref' : np.copy(img_ref), 'title' : title})
-        print("push: len = " + str(len(L)))
+        print("push: len = %d, title = %s"  %  (len(L), title))
 
     def show_1_grid(self, start):
         L = self.img_parms_list
@@ -56,13 +60,13 @@ class ImgViewer:
             ax = self.fig.add_subplot(self.rows, self.cols , i + 1)
             ax.set_xticks(())
             ax.set_yticks(())
-            img_ref = L[i]['img_ref']
-            img_title = L[i]['title']
+            img_ref = L[ix]['img_ref']
+            img_title = L[ix]['title']
             print("title = " + img_title)
             ax.set_title(img_title)
             ax.imshow(img_ref, cmap='Greys_r')
         
-        self.fig.show()
+        plt.show(block=True)
         pdb.set_trace()
 
         def clear(self):
@@ -92,4 +96,14 @@ class ImgViewer:
 
     def flush(self):
         self.img_parms_list = []
+
+    def show_immed(self, img, title="", cmap=None):
+        print("FIXME: nous non avons title")
+        plt.figure()
+        if cmap:
+            plt.imshow(img, cmap=_cmap)
+        else:
+            plt.imshow(img)
+        plt.show()    
+
 

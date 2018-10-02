@@ -1,5 +1,7 @@
 import datetime as dt
 import os
+import matplotlib.image as mpimg
+import os.path
 
 class ImgSaver:
     # abstracts saving a bunch of files in a timestamp directory
@@ -10,7 +12,7 @@ class ImgSaver:
         os.mkdir(d)
 
     def save(self, img, img_name, cmap='Greys_r', msg=""):
-        outf = self.outdir + img_name + "_" + msg + ".png"
+        outf = self.outdir + os.path.basename(img_name) + "_" + msg + ".png"
         if cmap:
             mpimg.imsave(outf, img, cmap=cmap)
         else:
