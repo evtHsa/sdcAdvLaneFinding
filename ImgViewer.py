@@ -107,3 +107,8 @@ class ImgViewer:
         plt.show()    
 
 
+def _view(vwr, img, title, cmap=None):
+    # turn off viewing by passing None as viewer
+    if vwr:
+        vwr.show_immed(img, title, cmap)
+    
