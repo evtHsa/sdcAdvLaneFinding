@@ -18,7 +18,8 @@ class Pipe:
         try:
             self.imgViewer = parm_dict['viewer']
         except:
-            self.imgViewer = imgvwr.ImgViewer(4,4)
+            #self.imgViewer = imgvwr.ImgViewer(4,4)
+            self.imgViewer = imgvwr.ImgViewer()
 
     def exec(self, img):
         # unenforced convention img can also be a path for pipes where the
