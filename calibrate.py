@@ -19,11 +19,9 @@ def calibrate_camera(viewer):
         basename = os.path.basename(fname)
 
         img = ir.read(fname)
-        viewer.push(img, "img")
+        viewer.show_immed(img, "initial: " + fname)
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-        viewer.push(gray, "img")
-    viewer.show()
-    viewer.flush()
+        viewer.show_immed(gray, "gray: " + fname)
     print("FIXME:thats all folx")
 
 
