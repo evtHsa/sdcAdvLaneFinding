@@ -7,7 +7,8 @@ import ImgSaver as imgsvr
 import ImgViewer as imgvwr
 import ImRead as ir
 
-gViewer = imgvwr.ImgViewer(4,4)
+#gViewer = imgvwr.ImgViewer(4,4)
+gViewer = imgvwr.ImgViewer()
 
 def stage_fn_stub(img):
     print("boy howdy")
