@@ -21,7 +21,7 @@ def calibrate_camera(viewer):
         img = ir.read(fname)
         viewer.show_immed(img, "initial: " + fname)
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-        viewer.show_immed(gray, "gray: " + fname)
+        viewer.show_immed(gray, "gray: " + fname, cmap='Greys_r')
     print("FIXME:thats all folx")
 
 
