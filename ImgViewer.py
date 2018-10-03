@@ -16,10 +16,10 @@ class ImgViewer:
         self.rows = rows
         self.cols = cols
 
-    def push(self, img_ref, title="", debug=False):
+    def push(self, img_ref, title="", debug=False, cmap=None):
         L = self.img_parms_list
-        L.append({'img_ref' : np.copy(img_ref), 'title' : title})
-        #print("push: len = %d, title = %s"  %  (len(L), title))
+        L.append({'img_ref' : np.copy(img_ref), 'title' : title, 'cmap': cmap})
+        print("push: len = %d, title = %s, cmap = %s"  %  (len(L), title, cmap))
 
     def flush(self):
         self.img_parms_list = []
@@ -37,7 +37,11 @@ class ImgViewer:
             img_parms = L[ix]
             plt.subplot(self.rows, self.cols, i + 1)
             img_parms = L[ix]
-            plt.imshow(img_parms['img_ref'])
+            cmap = img_parms['cmap']
+            if cmap:
+                plt.imshow(img_parms['img_ref'], cmap=cmap)
+            else:
+                plt.imshow(img_parms['img_ref'])
             plt.xlabel(img_parms['title'])
             plt.xticks([], [])
             plt.yticks([], [])
