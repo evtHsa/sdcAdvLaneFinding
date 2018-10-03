@@ -58,7 +58,6 @@ class ImgViewer:
         grid_size = self.rows * self.cols
 
         for i in range(0, n_imgs, grid_size):
-            pdb.set_trace()
             self.show_1_grid_2(i)
 
     def show(self, clear=False):
