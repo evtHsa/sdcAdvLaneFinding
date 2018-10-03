@@ -31,40 +31,6 @@ class ImgViewer:
         L.append({'img_ref' : np.copy(img_ref), 'title' : title})
         print("push: len = %d, title = %s"  %  (len(L), title))
 
-    def show_1_grid(self, start):
-        L = self.img_parms_list
-        n_imgs = len(L)
-        print("FIXME, FIXME, FIXME: show_1_grid(%d)" % start)
-        if (start >= n_imgs):
-            return
-        print("FIXME:beware old content on last gridfull")
-        grid_size = self.rows * self.cols
-            
-        #pdb.set_trace()
-        for i in range(grid_size):
-            ix = start + i
-            if (ix >= n_imgs):
-                print("FIXME: out of images")
-                break
-            ax = self.fig.add_subplot(self.rows, self.cols , i + 1)
-            ax.set_xticks(())
-            ax.set_yticks(())
-            img_ref = L[ix]['img_ref']
-            img_title = L[ix]['title']
-            print("title = " + img_title)
-            ax.set_title(img_title)
-            ax.imshow(img_ref, cmap='Greys_r')
-        
-        plt.show(block=True)
-        pdb.set_trace()
-
-        def clear(self):
-            img_parms_list 
-            print("FIXME: may want to clear frame here too")
-
-    def show_1_img(self, img=None, start=0, ix=0):
-        print("\t\tFIXME:show_1_img = %d, ix = %d" % (start, ix))
-        
     def show_1_grid_2(self, start):
         L = self.img_parms_list
         n_imgs = len(L)

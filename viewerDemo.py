@@ -28,4 +28,6 @@ for i in range(1, 10):
     gViewer.push(img, fname)
 
 gViewer.show_2()
+gViewer.show_2()
+gViewer.show_immed(img1, "booger", None)
 
