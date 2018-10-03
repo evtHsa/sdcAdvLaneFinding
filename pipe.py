@@ -21,6 +21,9 @@ class Pipe:
             #self.imgViewer = imgvwr.ImgViewer(4,4)
             self.imgViewer = imgvwr.ImgViewer()
 
+    def get_parm_dict(self):
+        return self.pipe_parm_dict
+
     def exec(self, img):
         # unenforced convention img can also be a path for pipes where the
         # first stage reads an image from the path
