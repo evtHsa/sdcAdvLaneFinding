@@ -18,11 +18,14 @@ push_debug = False
 img1 = ir.read(f1)
 img16 = ir.read(f16)
 
-for i in range(1, 8):
-    #gViewer.show_immed(img1, f1 + "_" + str(i))
-    #gViewer.show_immed(img16, f16 + "_" + str(i))
-    gViewer.push(img1, title=f1 + "_" + str(i))
-    gViewer.push(img16, title=f16 + "_" + str(i))
+for i in range(1, 10):
+    if i % 2 != 0:
+        img = img1
+        fname = "f1" + "_" + str(i)
+    else:
+        img = img16
+        fname = "f16" + "_" + str(i)
+    gViewer.push(img, fname)
 
 gViewer.show_2()
 

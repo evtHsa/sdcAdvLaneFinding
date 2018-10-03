@@ -29,7 +29,7 @@ class ImgViewer:
     def push(self, img_ref, title="", debug=False):
         L = self.img_parms_list
         L.append({'img_ref' : np.copy(img_ref), 'title' : title})
-        #print("push: len = %d, title = %s"  %  (len(L), title))
+        print("push: len = %d, title = %s"  %  (len(L), title))
 
     def show_1_grid(self, start):
         L = self.img_parms_list
@@ -63,13 +63,27 @@ class ImgViewer:
             print("FIXME: may want to clear frame here too")
 
     def show_1_img(self, img=None, start=0, ix=0):
-        print("\t\tFIXME:show_1_grid_2(start = %d, ix = %d" % (start, ix))
+        print("\t\tFIXME:show_1_img = %d, ix = %d" % (start, ix))
         
     def show_1_grid_2(self, start):
+        L = self.img_parms_list
+        n_imgs = len(L)
+
         print("\tFIXME:show_1_grid_2(%d)" % start)
-        print("\tFIXME: do plot setup here")
-        for i in range(1, self.rows * self.cols + 1):
-            self.show_1_img(img=None, start=start, ix=i)
+
+        plt.figure(figsize=(self.w, self.h))
+        for i in range(self.rows * self.cols):
+            ix = start + i
+            if ix >= n_imgs:
+                break
+            img_parms = L[ix]
+            plt.subplot(self.rows, self.cols, i + 1)
+            img_parms = L[ix]
+            plt.imshow(img_parms['img_ref'])
+            plt.xlabel(img_parms['title'])
+            plt.xticks([], [])
+            plt.yticks([], [])
+        plt.show()
         
     def show_2(self, clear=False):
         print("FIXME:show_2")
@@ -78,9 +92,10 @@ class ImgViewer:
         grid_size = self.rows * self.cols
 
         for i in range(0, n_imgs, grid_size):
-            self.show_1_grid_2(start=i)
+            pdb.set_trace()
+            self.show_1_grid_2(i)
 
-    def show(self, clear = False):
+    def show(self, clear=False):
         L = self.img_parms_list
         print("FIXME: n = %d" % (len(L)))
 
@@ -88,7 +103,6 @@ class ImgViewer:
         grid_size = self.rows * self.cols
         for i in range(0, n_imgs, grid_size):
             self.show_1_grid(i)
-        pdb.set_trace()
 
     def dump(self):
         L = self.img_parms_list
