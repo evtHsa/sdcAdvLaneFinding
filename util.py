@@ -1,5 +1,7 @@
 import pdb
-
+import ImRead as ir
+import ImgViewer as iv
+import cv2
 
 def ohBother(img):
         plt.figure()
@@ -21,3 +23,19 @@ def safeGetDictVal(dict, key):
 def brk(msg=""):
         print(msg + "\n\n")
         pdb.set_trace()
+
+def img_read(path, viewer=None):
+     img = ir.read(path)
+     iv._push(viewer, img, "img_read: " + path)
+     return img
+
+def rgb2gray(img, viewer=None):
+        gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+        iv._push(viewer, gray, "gray: ", 'Greys_r')
+        return gray
+        
+def img_undistort(img, mtx, dist, viewer=None):
+        print("FIXME: None?????????????")
+        undist = cv2.undistort(img, mtx, dist, None, mtx)
+        iv._push(viewer, img, "undistort: ")
+        return undist
