@@ -73,3 +73,6 @@ def _view(vwr, img, title, cmap=None):
     if vwr:
         vwr.show_immed(img, title, cmap)
     
+def _push(vwr, img, title, cmap=None):
+    if vwr:
+        vwr.push(img, title, cmap)
