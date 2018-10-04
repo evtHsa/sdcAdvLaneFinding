@@ -1,7 +1,7 @@
 import pdb
-import ImRead as ir
 import ImgViewer as iv
 import cv2
+import matplotlib.image as mpimg
 
 def ohBother(img):
         plt.figure()
@@ -25,7 +25,7 @@ def brk(msg=""):
         pdb.set_trace()
 
 def img_read(path, viewer=None):
-     img = ir.read(path)
+     img = mpimg.imread(path)
      iv._push(viewer, img, "img_read: " + path)
      return img
 

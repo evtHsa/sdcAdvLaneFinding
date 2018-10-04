@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-import ImRead as ir
 import glob
 import os
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import ImgViewer as vwr
-
+import matplotlib.image as mpimg
 
 # code heavly borrowed from
 #        + lesson 5: Camera Calibration: modules 10-12
@@ -36,7 +35,7 @@ def calibrate_camera(viewer, nx, ny):
     for fname in glob.glob("camera_cal/*.jpg"):
         basename = os.path.basename(fname)
 
-        img = ir.read(fname)
+        img = mpimg.imread(fname)
         vwr._view(viewer, img, "initial: " + fname)
         gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         vwr._view(viewer, gray, "gray: " + fname, cmap='Greys_r')

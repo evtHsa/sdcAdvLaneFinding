@@ -5,7 +5,6 @@ import calibrate as cal
 import util as ut
 import ImgSaver as imgsvr
 import ImgViewer as imgvwr
-import ImRead as ir
 import pdb
 
 #gViewer = imgvwr.ImgViewer()
