@@ -16,7 +16,7 @@ demo_pipeline_3 = pipe.Pipe(
         pipe.PipeStage(pipe.stage_fn_rgb2gray,
                        {'name' : 'rgb2gray', 'debug_level' : 2, 'cmap': 'Greys_r'}),
         pipe.PipeStage(pipe.stage_fn_undistort,
-                       {'name' : 'undistort', 'debug_level' : 2, 'cmap': 'Greys_r'})
+                       {'name' : 'undistort', 'debug_level' : 2, 'cmap' : 'Greys_r'})
     ],
     {'debug_level ': 3, 'viewer' : gViewer})
 
@@ -26,6 +26,6 @@ ppd = demo_pipeline_3.get_parm_dict()
 ppd['cal_mtx'] , ppd['cal_dist'] = cal_mtx, cal_dist = cal.calibrate_camera(None,
                                                                             chess_b_nx, chess_b_ny)
 
-demo_pipeline_3.exec('camera_cal/calibration1.jpg')
-ut.brk()
+demo_pipeline_3.exec('test_images/test1.jpg')
+
 
