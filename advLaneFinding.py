@@ -13,8 +13,6 @@ demo_pipeline_3 = pipe.Pipe(
     [
         pipe.PipeStage(pipe.stage_fn_img_read,
                        {'name' : 'imgread', 'debug_level' : 2}),
-        pipe.PipeStage(pipe.stage_fn_rgb2gray,
-                       {'name' : 'rgb2gray', 'debug_level' : 2, 'cmap': 'Greys_r'}),
         pipe.PipeStage(pipe.stage_fn_undistort,
                        {'name' : 'undistort', 'debug_level' : 2, 'cmap' : 'Greys_r'})
     ],
