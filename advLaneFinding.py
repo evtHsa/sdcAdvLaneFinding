@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import pipe
 import calibrate as cal
 import util as ut
 import ImgSaver as imgsvr
