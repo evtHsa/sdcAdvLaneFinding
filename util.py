@@ -48,7 +48,7 @@ def calibrate_camera(viewer, nx, ny):
 
     for fname in glob.glob("camera_cal/*.jpg"):
         tmp = iu.img_read(fname, None)
-        tmp = iu.rgb2gray(tmp, None)
+        tmp = iu.img_rgb2gray(tmp, None)
 
         ret, corners = cv2.findChessboardCorners(tmp, (nx, ny), None)
         if ret:
