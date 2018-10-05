@@ -3,6 +3,7 @@
 import util as ut
 import ImgSaver as imgsvr
 import ImgViewer as iv
+import ImgUtil as iu
 
 
 def lane_finding_take_1(path):
@@ -22,8 +23,8 @@ def lane_finding_take_1(path):
     cal_mtx , cal_dist = cal_mtx, cal_dist = ut.calibrate_camera(None,
                                                                  chess_b_nx, chess_b_ny)
 
-    tmp = ut.img_read(path, vwr)
-    tmp = ut.img_undistort(tmp, cal_mtx, cal_dist, vwr)
+    tmp = iu.img_read(path, vwr)
+    tmp = iu.img_undistort(tmp, cal_mtx, cal_dist, vwr)
     vwr.show()
 
 lane_finding_take_1('test_images/test1.jpg')

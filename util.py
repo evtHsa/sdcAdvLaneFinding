@@ -1,5 +1,6 @@
 import pdb
 import ImgViewer as iv
+import ImgUtil as iu
 import cv2
 import matplotlib.image as mpimg
 import numpy as np
@@ -27,22 +28,6 @@ def brk(msg=""):
         print(msg + "\n\n")
         pdb.set_trace()
 
-def img_read(path, viewer=None):
-     img = mpimg.imread(path)
-     iv._push(viewer, img, "img_read: " + path)
-     return img
-
-def rgb2gray(img, viewer=None):
-        gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
-        iv._push(viewer, gray, "gray: ", 'Greys_r')
-        return gray
-        
-def img_undistort(img, mtx, dist, viewer=None):
-        print("FIXME: None?????????????")
-        undist = cv2.undistort(img, mtx, dist, None, mtx)
-        iv._push(viewer, img, "undistort: ")
-        return undist
-
 def calibrate_camera(viewer, nx, ny):
     # inputs:
     #         viewer: for showing intermediate images, may be None
@@ -62,8 +47,8 @@ def calibrate_camera(viewer, nx, ny):
     objp[:,:2] = np.mgrid[0:nx,0:ny].T.reshape(-1, 2)
 
     for fname in glob.glob("camera_cal/*.jpg"):
-        tmp = img_read(fname, None)
-        tmp = rgb2gray(tmp, None)
+        tmp = iu.img_read(fname, None)
+        tmp = iu.rgb2gray(tmp, None)
 
         ret, corners = cv2.findChessboardCorners(tmp, (nx, ny), None)
         if ret:
