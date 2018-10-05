@@ -5,6 +5,11 @@ import ImgSaver as imgsvr
 import ImgViewer as iv
 import ImgUtil as iu
 
+# FIXME: may want to tweak some of thse parms 
+gParmDict ={ 
+    'chessboard_nx' : 9,
+    'chessboard_ny' : 6
+}
 
 def lane_finding_take_1(path):
     #@Undistort the image using cv2.undistort() with mtx and dist
