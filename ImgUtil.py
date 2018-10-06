@@ -41,7 +41,6 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
      #
      # cv2.Sobel(src, ddepth, dx, dy[, dst[, ksize[, scale[, delta[, borderType]]]]]) → dst
      #
-     print("FIXME: ksize,out_depth belong in  kpd")
 
      assert(len(img.shape) == 2) # grayscale
      assert(dx_order != dy_order)
@@ -60,7 +59,6 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
 # should produce output like the example image shown above this quiz.
 def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
                      out_depth=cv2.CV_64F, vwr=None):
-     # img is expected to be gray scale (FIXME: how to enforce?)
      # Apply the following steps to img
     # 2) Take the derivative in x or y given orient = 'x' or 'y'
     if orient == 'x':
