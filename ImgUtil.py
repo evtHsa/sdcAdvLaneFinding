@@ -9,6 +9,7 @@ import matplotlib.image as mpimg
 import numpy as np
 import glob
 import os
+import util as ut
 
 def img_read(path, viewer=None):
      img = mpimg.imread(path)
@@ -21,7 +22,6 @@ def img_rgb2gray(img, viewer=None):
         return gray
         
 def img_undistort(img, mtx, dist, viewer=None):
-        print("FIXME: None?????????????")
         undist = cv2.undistort(img, mtx, dist, None, mtx)
         iv._push(viewer, img, "undistort: ")
         return undist
