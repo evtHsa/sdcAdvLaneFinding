@@ -52,6 +52,7 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
         
     
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Applying Sobel"
+# 
 # Define a function that applies Sobel x or y, 
 # then takes an absolute value and applies a threshold.
 # Note: calling your function with orient='x', thresh_min=5, thresh_max=100
