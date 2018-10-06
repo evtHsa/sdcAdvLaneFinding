@@ -47,8 +47,7 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
      assert(ksize == 1 or ksize == 3 or ksize == 5 or ksize == 7)
 
      tmp = cv2.Sobel(img, out_depth, dx_order, dy_order, ksize)
-     iv._push(vwr, tmp, "sobel") 
-     iv._view(vwr, tmp, title="sobel_", cmap='Greys_r')
+     iv._push(vwr, tmp, "sobel", cmap='Greys_r') 
      return tmp,
         
     
@@ -65,7 +64,6 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
           sobel = img_sobel(img, out_depth, 1, 0, ksize, vwr)
      else:
           sobel = img_sobel(img, out_depth, 0, 1, ksize, vwr)
-     ut.brk("FIXME:is img grayscale???")
      # 3) Take the absolute value of the derivative or gradient
      abs_sobel = np.absolute(sobel)
      # 4) Scale to 8-bit (0 - 255) then convert to type = np.uint8
@@ -75,5 +73,6 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      sxbinary = np.zeros_like(scaled_sobel)
      sxbinary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
      # 6) Return this mask as your binary_output image
+     iv._push(vwr, np.squeeze(sxbinary), "scaled sobel", cmap='Greys_r') 
      return sxbinary
 
