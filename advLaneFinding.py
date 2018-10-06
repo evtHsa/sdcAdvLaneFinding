@@ -30,7 +30,6 @@ def lane_finding_take_1(path):
     gpd['cal_mtx'] , gpd['cal_dist'] = ut.calibrate_camera(None, gpd['chessboard_nx'],
                                                            gpd['chessboard_ny'], gpd['objpoints'],
                                                            gpd['imgpoints'])
-    ut.brk()
     tmp = iu.img_read(path, vwr)
     tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
     vwr.show()
