@@ -1,0 +1,8 @@
+;-*- mode: outline -*-
+* bugs
+** _notes_
+** _done_
+** draw the corners, show the image and flush on each iteration
+** why sometimes 3 pushes
+** why are some imgs showing green background
+** find corners fails for some calibration images 
