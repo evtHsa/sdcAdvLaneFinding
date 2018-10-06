@@ -25,7 +25,7 @@ def lane_finding_take_1(path):
     # Define 4 destination points (must be listed in the same order as src points!)
     # Use cv2.getPerspectiveTransform() to get M, the transform matrix
     # use cv2.warpPerspective() to apply M and warp your image to a top-down view
-    vwr = iv.ImgViewer(w=4, h=4, rows=2, cols=2, title="lane_finding_take1")
+    vwr = iv.ImgViewer(w=5, h=5, rows=2, cols=2, title="lane_finding_take1")
 
     gpd['cal_mtx'] , gpd['cal_dist'] = ut.calibrate_camera(vwr, gpd['chessboard_nx'],
                                                            gpd['chessboard_ny'], gpd['objpoints'],
