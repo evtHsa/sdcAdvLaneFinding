@@ -25,7 +25,7 @@ def safeGetDictVal(dict, key):
         return val
 
 def brk(msg=""):
-        print(msg + "\n\n")
+        print("\n==========\n" +msg + "\n==========\n")
         pdb.set_trace()
 
 def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
@@ -64,7 +64,7 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         # per https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                            tmp.shape[::-1],None,None)
-        iv._show(vwr,clear=True)
+        iv._show(vwr, clear=True)
         #print("FIXME:ret = " + str(ret))
         #print("mtx = " + str(mtx))
         #print("objp.shape = %s" % str(objp.shape))
