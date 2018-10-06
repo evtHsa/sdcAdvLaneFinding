@@ -26,7 +26,10 @@ def img_undistort(img, mtx, dist, viewer=None):
         iv._push(viewer, img, "undistort: ")
         return undist
 
-
+def img_drawChessboardCorners(img, nx, ny, corners, ret, viewer=None):
+     cv2.drawChessboardCorners(img, (nx, ny), corners, ret)
+     iv._push(viewer, img, "with corners", cmap='Greys_r')
+     return None
 
 
     
