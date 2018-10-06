@@ -45,10 +45,8 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         objp[:,:2] = np.mgrid[0:nx,0:ny].T.reshape(-1, 2)
         
         for fname in glob.glob("camera_cal/*.jpg"):
-                
-                
-                
-                tmp = iu.img_read(fname, vwr)
+                tmp = iu.img_read(fname, None)
+                orig = np.copy(tmp)
                 # they're not all 720x1280
                 #print("shape(%s) = %s" % (fname, tmp.shape))
                 tmp = iu.img_rgb2gray(tmp, vwr)
@@ -57,15 +55,16 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
                 if ret:
                         objpoints.append(objp)
                         imgpoints.append(corners)
-                        iu.img_drawChessboardCorners(tmp, nx,ny, corners, ret, vwr)
-                        vwr.show(clear=True)
+                        iu.img_drawChessboardCorners(orig, nx,ny, corners, ret, vwr)
                 else:
                         print("failed to find corners: %s" % fname)
-                        iv._flush(vwr)
+                        iv._push(vwr, orig, "**NO CORNERS**")
+                        
         # ret is the RMS reprojection error. usually between 0.1 & 1.0
         # per https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                            tmp.shape[::-1],None,None)
+        vwr.show(clear=True)
         #print("FIXME:ret = " + str(ret))
         #print("mtx = " + str(mtx))
         #print("objp.shape = %s" % str(objp.shape))
