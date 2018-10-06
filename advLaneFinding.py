@@ -5,10 +5,15 @@ import ImgSaver as imgsvr
 import ImgViewer as iv
 import ImgUtil as iu
 
-# FIXME: may want to tweak some of thse parms 
-gParmDict ={ 
+# FIXME: may want to tweak some of thse parms
+# gpd -> global parm dict
+gpd ={ 
     'chessboard_nx' : 9,
-    'chessboard_ny' : 6
+    'chessboard_ny' : 6,
+    'objpoints' : [],
+    'imgpoints': [],
+    'cal_mtx' : None,
+    'cal_dist': None
 }
 
 def lane_finding_take_1(path):
@@ -22,13 +27,12 @@ def lane_finding_take_1(path):
     # use cv2.warpPerspective() to apply M and warp your image to a top-down view
     vwr = iv.ImgViewer(w=4, h=4, rows=2, cols=2, title="lane_finding_take1")
 
-    chess_b_nx = 9 # per assignment overview
-    chess_b_ny = 6 # per assignment overview
-
-    cal_mtx , cal_dist = ut.calibrate_camera(None, chess_b_nx, chess_b_ny)
-
+    gpd['cal_mtx'] , gpd['cal_dist'] = ut.calibrate_camera(vwr, gpd['chessboard_nx'],
+                                                           gpd['chessboard_ny'], gpd['objpoints'],
+                                                           gpd['imgpoints'])
+    ut.brk()
     tmp = iu.img_read(path, vwr)
-    tmp = iu.img_undistort(tmp, cal_mtx, cal_dist, vwr)
+    tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
     vwr.show()
 
 lane_finding_take_1('test_images/test1.jpg')

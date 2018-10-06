@@ -28,7 +28,7 @@ def brk(msg=""):
         print(msg + "\n\n")
         pdb.set_trace()
 
-def calibrate_camera(viewer, nx, ny):
+def calibrate_camera(viewer, nx, ny, objpoints, imgpoints):
         # inputs:
         #         viewer: for showing intermediate images, may be None
         #         nx: number of corners in x dim of chessboard
@@ -41,19 +41,16 @@ def calibrate_camera(viewer, nx, ny):
         #  CV =https://docs.opencv.org/2.4.1/modules/calib3d/doc
         #  CV/camera_calibration_and_3d_reconstruction.html#calibratecamera        
 
-        objpoints = []
-        imgpoints = []
         objp = np.zeros((nx*ny,3), np.float32)
         objp[:,:2] = np.mgrid[0:nx,0:ny].T.reshape(-1, 2)
         
         for fname in glob.glob("camera_cal/*.jpg"):
-                print('FIXME: hey idiot are we supposed to calibrate on one img or all?')
-                print('FIXME: if all, how do we choose points like we did in excercise')
                 
                 
                 
                 tmp = iu.img_read(fname, None)
-                print("shape(%s) = %s" % (fname, tmp.shape))
+                # they're not all 720x1280
+                #print("shape(%s) = %s" % (fname, tmp.shape))
                 tmp = iu.img_rgb2gray(tmp, None)
                 
                 ret, corners = cv2.findChessboardCorners(tmp, (nx, ny), None)
