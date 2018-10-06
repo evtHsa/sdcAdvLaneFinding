@@ -2,7 +2,8 @@
 * bugs
 ** _notes_
 ** _done_
-** draw the corners, show the image and flush on each iteration
-** why sometimes 3 pushes
+*** draw the corners, show the image and flush on each iteration
+*** why sometimes 3 pushes
+    - happened when find corners failed, we didn't show and prev push wasn't nuked
 ** why are some imgs showing green background
-** find corners fails for some calibration images 
+** find corners fails for some calibration images (5,1,4)
