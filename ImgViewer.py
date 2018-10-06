@@ -30,7 +30,6 @@ class ImgViewer:
     def show_1_grid(self, start):
         L = self.img_parms_list
         n_imgs = len(L)
-        #print("\tFIXME:show_1_grid(%d)" % start)
 
         plt.figure(figsize=(self.w, self.h))
         for i in range(self.rows * self.cols):
@@ -51,7 +50,6 @@ class ImgViewer:
         plt.show()
         
     def show(self, clear=False):
-        #print("FIXME:show_2")
         L = self.img_parms_list
         n_imgs = len(L)
         grid_size = self.rows * self.cols
