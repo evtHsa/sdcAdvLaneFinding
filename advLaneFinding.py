@@ -4,6 +4,7 @@ import util as ut
 import ImgSaver as imgsvr
 import ImgViewer as iv
 import ImgUtil as iu
+import cv2
 
 # FIXME: may want to tweak some of thse parms
 # gpd -> global parm dict
@@ -13,7 +14,11 @@ gpd ={
     'objpoints' : [],
     'imgpoints': [],
     'cal_mtx' : None,
-    'cal_dist': None
+    'cal_dist': None,
+    'sobel_min_thresh' : 5,
+    'sobel_max_thresh' : 100,
+    'sobel_kernel_size' : 3,
+    'sobel_out_depth' : cv2.CV_64F
 }
 
 def lane_finding_take_1(path):
@@ -33,8 +38,9 @@ def lane_finding_take_1(path):
     tmp = iu.img_read(path, vwr)
     tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
     tmp = iu.img_rgb2gray(tmp, vwr)
-    print("FIXME: sobel thresholds shdb in gpd")
-    tmp = iu.abs_sobel_thresh(tmp, 'x', 5, 100, 3, vwr)
+    tmp = iu.abs_sobel_thresh(tmp, 'x', gpd['sobel_min_thresh'],
+                              gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
+                              gpd['sobel_out_depth'], vwr)
     vwr.show()
 
 lane_finding_take_1('test_images/test1.jpg')

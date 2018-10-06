@@ -58,14 +58,15 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
 # then takes an absolute value and applies a threshold.
 # Note: calling your function with orient='x', thresh_min=5, thresh_max=100
 # should produce output like the example image shown above this quiz.
-def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3, vwr=None):
+def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
+                     out_depth=cv2.CV_64F, vwr=None):
      # img is expected to be gray scale (FIXME: how to enforce?)
      # Apply the following steps to img
     # 2) Take the derivative in x or y given orient = 'x' or 'y'
     if orient == 'x':
-        sobel = img_sobel(img, cv2.CV_64F, 1, 0, ksize, vwr)
+        sobel = img_sobel(img, out_depth, 1, 0, ksize, vwr)
     else:
-        sobel = img_sobel(img, cv2.CV_64F, 0, 1, ksize, vwr)
+        sobel = img_sobel(img, out_depth, 0, 1, ksize, vwr)
     ut.brk("is img grayscale???")
     # 3) Take the absolute value of the derivative or gradient
     abs_sobel = np.absolute(sobel)
