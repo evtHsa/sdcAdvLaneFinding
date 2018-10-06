@@ -64,7 +64,7 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         # per https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                            tmp.shape[::-1],None,None)
-        vwr.show(clear=True)
+        iv._show(vwr,clear=True)
         #print("FIXME:ret = " + str(ret))
         #print("mtx = " + str(mtx))
         #print("objp.shape = %s" % str(objp.shape))
