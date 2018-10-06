@@ -15,7 +15,7 @@ gpd ={
     'imgpoints': [],
     'cal_mtx' : None,
     'cal_dist': None,
-    'sobel_min_thresh' : 5,
+    'sobel_min_thresh' : 30,
     'sobel_max_thresh' : 100,
     'sobel_kernel_size' : 3,
     'sobel_out_depth' : cv2.CV_64F
@@ -38,7 +38,10 @@ def lane_finding_take_1(path):
     tmp = iu.img_read(path, vwr)
     tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
     gray = iu.img_rgb2gray(tmp, vwr)
-    tmp = iu.abs_sobel_thresh(gray, 'x', gpd['sobel_min_thresh'],
+    abs_sobel = iu.abs_sobel_thresh(gray, 'x', gpd['sobel_min_thresh'],
+                              gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
+                              gpd['sobel_out_depth'], vwr)
+    mag_sobel = iu.mag_thresh(gray, gpd['sobel_min_thresh'],
                               gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
                               gpd['sobel_out_depth'], vwr)
     vwr.show()

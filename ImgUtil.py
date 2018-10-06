@@ -74,6 +74,30 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      sxbinary = np.zeros_like(scaled_sobel)
      sxbinary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
      # 6) Return this mask as your binary_output image
+     #FIXME: this squeeze thing may be a problem
      iv._push(vwr, np.squeeze(sxbinary), "scaled sobel", cmap='Greys_r') 
      return sxbinary
 
+#from lesson 6 "Gradients and Color Spaces", ch 3 "Magnitude of the Gradient"
+# 
+# Define a function that applies Sobel x and y, 
+# then computes the magnitude of the gradient
+# and applies a threshold
+def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
+               out_depth=cv2.CV_64F, vwr=None):
+     # 2) Take the gradient in x and y separately
+     sobel_x = img_sobel(img, out_depth, 1, 0, ksize, vwr)
+     sobel_y = img_sobel(img, out_depth, 0, 1, ksize, vwr)
+     # 3) Calculate the magnitude 
+     sobel_abs = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
+     # 4) Scale to 8-bit (0 - 255) and convert to type = np.uint8
+     sobel_max = np.max(sobel_abs)
+     scaled_sobel = np.uint8(255 * sobel_abs / sobel_max)
+     # 5) Create a binary mask where mag thresholds are met
+     binary_output = np.zeros_like(scaled_sobel)
+     binary_output[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
+    
+     # 6) Return this mask as your binary_output image
+     #FIXME: this squeeze thing may be a problem
+     iv._push(vwr, np.squeeze(binary_output), "sobel mag thresh", cmap='Greys_r') 
+     return binary_output
