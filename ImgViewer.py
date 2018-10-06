@@ -21,6 +21,9 @@ class ImgViewer:
         if (debug):
             print("push: len = %d, title = %s, cmap = %s"  %  (len(L), title, cmap))
 
+    def pop(self):
+        return self.img_parms_list.pop()
+
     def flush(self):
         self.img_parms_list = []
 
@@ -80,3 +83,7 @@ def _push(vwr, img, title, cmap=None):
 def _flush(vwr):
     if vwr:
         vwr.flush()
+
+def _pop(vwr):
+    if vwr:
+        vwr.pop()
