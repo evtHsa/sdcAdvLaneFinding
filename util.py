@@ -59,7 +59,9 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
                         imgpoints.append(corners)
                         iu.img_drawChessboardCorners(tmp, nx,ny, corners, ret, vwr)
                         vwr.show(clear=True)
-
+                else:
+                        print("failed to find corners: %s" % fname)
+                        iv._flush(vwr)
         # ret is the RMS reprojection error. usually between 0.1 & 1.0
         # per https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
