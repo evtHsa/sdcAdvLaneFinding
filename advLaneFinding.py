@@ -25,8 +25,7 @@ def lane_finding_take_1(path):
     chess_b_nx = 9 # per assignment overview
     chess_b_ny = 6 # per assignment overview
 
-    cal_mtx , cal_dist = cal_mtx, cal_dist = ut.calibrate_camera(None,
-                                                                 chess_b_nx, chess_b_ny)
+    cal_mtx , cal_dist = ut.calibrate_camera(None, chess_b_nx, chess_b_ny)
 
     tmp = iu.img_read(path, vwr)
     tmp = iu.img_undistort(tmp, cal_mtx, cal_dist, vwr)
