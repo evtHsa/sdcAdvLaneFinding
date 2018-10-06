@@ -87,3 +87,7 @@ def _flush(vwr):
 def _pop(vwr):
     if vwr:
         vwr.pop()
+
+def _show(vwr, clear):
+    if vwr:
+        vwr.show(clear)
