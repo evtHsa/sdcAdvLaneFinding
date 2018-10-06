@@ -31,7 +31,12 @@ def lane_finding_take_1(path):
                                                            gpd['chessboard_ny'], gpd['objpoints'],
                                                            gpd['imgpoints'])
     tmp = iu.img_read(path, vwr)
+    print("FIXME: shape(init) = " + str(tmp.shape))
     tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
+    tmp = iu.img_rgb2gray(tmp, vwr)
+    print("FIXME: shape(gray) = " + str(tmp.shape))
+    print("FIXME: sobel thresholds shdb in gpd")
+    tmp = iu.abs_sobel_thresh(tmp, 'x', 5, 100, 3, vwr)
     vwr.show()
 
 lane_finding_take_1('test_images/test1.jpg')
