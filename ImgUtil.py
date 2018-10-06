@@ -48,7 +48,7 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
 
      tmp = cv2.Sobel(img, out_depth, dx_order, dy_order, ksize)
      iv._push(vwr, tmp, "sobel", cmap='Greys_r') 
-     return tmp,
+     return tmp
         
     
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Applying Sobel"
