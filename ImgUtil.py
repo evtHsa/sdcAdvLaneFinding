@@ -60,20 +60,20 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
 def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
                      out_depth=cv2.CV_64F, vwr=None):
      # Apply the following steps to img
-    # 2) Take the derivative in x or y given orient = 'x' or 'y'
-    if orient == 'x':
-        sobel = img_sobel(img, out_depth, 1, 0, ksize, vwr)
-    else:
-        sobel = img_sobel(img, out_depth, 0, 1, ksize, vwr)
-    ut.brk("is img grayscale???")
-    # 3) Take the absolute value of the derivative or gradient
-    abs_sobel = np.absolute(sobel)
-    # 4) Scale to 8-bit (0 - 255) then convert to type = np.uint8
-    scaled_sobel = np.uint8(255*abs_sobel/np.max(abs_sobel))
-    # 5) Create a mask of 1's where the scaled gradient magnitude 
-            # is > thresh_min and < thresh_max
-    sxbinary = np.zeros_like(scaled_sobel)
-    sxbinary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
-    # 6) Return this mask as your binary_output image
-    return sxbinary
+     # 2) Take the derivative in x or y given orient = 'x' or 'y'
+     if orient == 'x':
+          sobel = img_sobel(img, out_depth, 1, 0, ksize, vwr)
+     else:
+          sobel = img_sobel(img, out_depth, 0, 1, ksize, vwr)
+     ut.brk("FIXME:is img grayscale???")
+     # 3) Take the absolute value of the derivative or gradient
+     abs_sobel = np.absolute(sobel)
+     # 4) Scale to 8-bit (0 - 255) then convert to type = np.uint8
+     scaled_sobel = np.uint8(255*abs_sobel/np.max(abs_sobel))
+     # 5) Create a mask of 1's where the scaled gradient magnitude 
+     # is > thresh_min and < thresh_max
+     sxbinary = np.zeros_like(scaled_sobel)
+     sxbinary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
+     # 6) Return this mask as your binary_output image
+     return sxbinary
 
