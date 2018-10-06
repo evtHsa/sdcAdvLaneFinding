@@ -7,3 +7,18 @@
     - happened when find corners failed, we didn't show and prev push wasn't nuked
 *** why are some imgs showing green background
 *** find corners fails for some calibration images (5,1,4)
+** implement sobel
+*** _notes_
+*** _done_
+*** adapt code from lesson to save imgs
+**** _done_
+***** get it to work w/hardcoded parms
+**** add hyperparms to gpd
+**** save the image to the viewer
+**** think about using saver to save the stuff we display in the viewer(@least on flush)
+**** how to enforce input to sobel is gray scale?(#chans?)
+***** _done_
+***** maybe control this via gpd
+**** xx
+*** xx
+*** xx
