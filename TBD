@@ -10,15 +10,15 @@
 ** implement sobel
 *** _notes_
 *** _done_
-*** adapt code from lesson to save imgs
-**** _done_
-***** get it to work w/hardcoded parms
-**** add hyperparms to gpd
-**** save the image to the viewer
-**** think about using saver to save the stuff we display in the viewer(@least on flush)
-**** how to enforce input to sobel is gray scale?(#chans?)
+**** adapt code from lesson to save imgs
 ***** _done_
-***** maybe control this via gpd
-**** xx
-*** xx
+****** get it to work w/hardcoded parms
+****** add hyperparms to gpd
+****** save the image to the viewer
+****** think about using saver to save the stuff we display in the viewer(@least on flush)
+****** how to enforce input to sobel is gray scale?(#chans?)
+******* _done_
+******* maybe control this via gpd
+***** xx
+*** xx xxxxxxxxxxxxxxxxxxxxxx
 *** xx
