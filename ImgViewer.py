@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-import pdb
+import util as ut
 
 class ImgViewer:
     # for debug - usage demo
@@ -19,7 +18,8 @@ class ImgViewer:
     def push(self, img_ref, title="", debug=False, cmap=None):
         L = self.img_parms_list
         L.append({'img_ref' : np.copy(img_ref), 'title' : title, 'cmap': cmap})
-        print("push: len = %d, title = %s, cmap = %s"  %  (len(L), title, cmap))
+        if (debug):
+            print("push: len = %d, title = %s, cmap = %s"  %  (len(L), title, cmap))
 
     def flush(self):
         self.img_parms_list = []
@@ -76,3 +76,7 @@ def _view(vwr, img, title, cmap=None):
 def _push(vwr, img, title, cmap=None):
     if vwr:
         vwr.push(img, title, cmap=cmap)
+
+def _flush(vwr):
+    if vwr:
+        vwr.flush()
