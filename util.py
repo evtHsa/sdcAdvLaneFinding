@@ -58,13 +58,14 @@ def calibrate_camera(viewer, nx, ny, objpoints, imgpoints):
                         objpoints.append(objp)
                         imgpoints.append(corners)
 
+        # ret is the RMS reprojection error. usually between 0.1 & 1.0
+        # per https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                            tmp.shape[::-1],None,None)
-
+        print("FIXME:ret = " + str(ret))
         #print("mtx = " + str(mtx))
         #print("objp.shape = %s" % str(objp.shape))
         return mtx, dist
-
 
 
     
