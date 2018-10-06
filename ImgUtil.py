@@ -11,24 +11,24 @@ import glob
 import os
 import util as ut
 
-def img_read(path, viewer=None):
+def img_read(path, vwr=None):
      img = mpimg.imread(path)
-     iv._push(viewer, img, "img_read: " + path)
+     iv._push(vwr, img, "img_read: " + path)
      return img
 
-def img_rgb2gray(img, viewer=None):
+def img_rgb2gray(img, vwr=None):
         gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
-        iv._push(viewer, gray, "gray: ", 'Greys_r')
+        iv._push(vwr, gray, "gray: ", 'Greys_r')
         return gray
         
-def img_undistort(img, mtx, dist, viewer=None):
+def img_undistort(img, mtx, dist, vwr=None):
         undist = cv2.undistort(img, mtx, dist, None, mtx)
-        iv._push(viewer, img, "undistort: ")
+        iv._push(vwr, img, "undistort: ")
         return undist
 
-def img_drawChessboardCorners(img, nx, ny, corners, ret, viewer=None):
+def img_drawChessboardCorners(img, nx, ny, corners, ret, vwr=None):
      cv2.drawChessboardCorners(img, (nx, ny), corners, ret)
-     iv._push(viewer, img, "with corners", cmap='Greys_r')
+     iv._push(vwr, img, "with corners", cmap='Greys_r')
      return None
 
 
