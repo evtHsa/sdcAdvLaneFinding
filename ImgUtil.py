@@ -62,9 +62,9 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      # Apply the following steps to img
      # 2) Take the derivative in x or y given orient = 'x' or 'y'
      if orient == 'x':
-          sobel = img_sobel(img, out_depth, 1, 0, ksize, vwr)
+          sobel = img_sobel(img, out_depth, 1, 0, ksize)
      else:
-          sobel = img_sobel(img, out_depth, 0, 1, ksize, vwr)
+          sobel = img_sobel(img, out_depth, 0, 1, ksize)
      # 3) Take the absolute value of the derivative or gradient
      abs_sobel = np.absolute(sobel)
      # 4) Scale to 8-bit (0 - 255) then convert to type = np.uint8
@@ -86,8 +86,8 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
 def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
                out_depth=cv2.CV_64F, vwr=None):
      # 2) Take the gradient in x and y separately
-     sobel_x = img_sobel(img, out_depth, 1, 0, ksize, vwr)
-     sobel_y = img_sobel(img, out_depth, 0, 1, ksize, vwr)
+     sobel_x = img_sobel(img, out_depth, 1, 0, ksize)
+     sobel_y = img_sobel(img, out_depth, 0, 1, ksize)
      # 3) Calculate the magnitude 
      sobel_abs = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
      # 4) Scale to 8-bit (0 - 255) and convert to type = np.uint8
