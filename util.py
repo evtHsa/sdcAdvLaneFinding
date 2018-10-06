@@ -28,9 +28,9 @@ def brk(msg=""):
         print(msg + "\n\n")
         pdb.set_trace()
 
-def calibrate_camera(viewer, nx, ny, objpoints, imgpoints):
+def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         # inputs:
-        #         viewer: for showing intermediate images, may be None
+        #         vwr: for showing intermediate images, may be None
         #         nx: number of corners in x dim of chessboard
         #         ny: number of corners in y dim of chessboard
         #
@@ -48,21 +48,23 @@ def calibrate_camera(viewer, nx, ny, objpoints, imgpoints):
                 
                 
                 
-                tmp = iu.img_read(fname, None)
+                tmp = iu.img_read(fname, vwr)
                 # they're not all 720x1280
                 #print("shape(%s) = %s" % (fname, tmp.shape))
-                tmp = iu.img_rgb2gray(tmp, None)
+                tmp = iu.img_rgb2gray(tmp, vwr)
                 
                 ret, corners = cv2.findChessboardCorners(tmp, (nx, ny), None)
                 if ret:
                         objpoints.append(objp)
                         imgpoints.append(corners)
+                        iu.img_drawChessboardCorners(tmp, nx,ny, corners, ret, vwr)
+                        vwr.show(clear=True)
 
         # ret is the RMS reprojection error. usually between 0.1 & 1.0
         # per https://docs.opencv.org/3.3.1/d9/d0c/group__calib3d.html
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                            tmp.shape[::-1],None,None)
-        print("FIXME:ret = " + str(ret))
+        #print("FIXME:ret = " + str(ret))
         #print("mtx = " + str(mtx))
         #print("objp.shape = %s" % str(objp.shape))
         return mtx, dist
