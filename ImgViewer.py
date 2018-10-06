@@ -75,4 +75,4 @@ def _view(vwr, img, title, cmap=None):
     
 def _push(vwr, img, title, cmap=None):
     if vwr:
-        vwr.push(img, title, cmap)
+        vwr.push(img, title, cmap=cmap)
