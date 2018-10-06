@@ -41,6 +41,7 @@ def lane_finding_take_1(path):
     abs_sobel = iu.abs_sobel_thresh(gray, 'x', gpd['sobel_min_thresh'],
                               gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
                               gpd['sobel_out_depth'], vwr)
+    
     mag_sobel = iu.mag_thresh(gray, gpd['sobel_min_thresh'],
                               gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
                               gpd['sobel_out_depth'], vwr)
