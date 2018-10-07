@@ -55,8 +55,51 @@ def lane_finding_take_1(path):
                               1.3, # FIXME: need new gpd['sobel_dir_thresh_min'] ?
                               15, # FIXME: gpd['sobel_kernel_size'],
                               gpd['sobel_out_depth'], vwr)
+    hls_thresh = iu.hls_thresh(undistorted,
+                               0.5, # FIXME: shdb in gpd
+                               1, #FIXME: shdb in gpd
+                               vwr)
     vwr.show()
 
-lane_finding_take_1('test_images/signs_vehicles_xygrad.png')
+def debug_hls(path):
+    vwr = iv.ImgViewer(w=5, h=5, rows=3, cols=4, title="lane_finding_take1")
+
+    gpd['cal_mtx'] , gpd['cal_dist'] = ut.calibrate_camera(None, gpd['chessboard_nx'],
+                                                           gpd['chessboard_ny'], gpd['objpoints'],
+                                                           gpd['imgpoints'])
+    tmp = iu.img_read(path, vwr)
+    tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
+    undistorted = np.copy(tmp)
+    tmp = iu.img_rgb2gray(tmp, vwr)
+    gray = np.copy(tmp) # make a copy to ensure no accidental aliasing
+
+    vwr.flush()
+    for (thresh_lo, thresh_hi) in [
+            #(0,0),    # all black as expected
+            #(0,1),    # mostly, but not entirely, white
+            #(0, .2),  # kind of inverted(the lane lines are black)
+            (.1, .3), # lane lines start to turn white but fuzzier than 0, .2
+            (.2, .5),
+            (.2, .7),
+            (.3, .8),
+            (.3, .9),
+            (.5, .7), # sort of what we're going for
+            (.5, .8), # ??
+            (.6, .8), # ??
+            (.5, .9), # pretty clear and sharp lane lines
+            (.5, 1),  # ??
+            (.7, .9),
+            (.7, 1),
+            (.8,1)
+    ]:
+        print("FIXME: (%d, %d)" % (thresh_lo, thresh_hi))
+        hls_thresh = iu.hls_thresh(undistorted,
+                                   thresh_lo, # FIXME: shdb in gpd
+                                   thresh_hi, #FIXME: shdb in gpd
+                                   vwr)
+    vwr.show(clear=True)
+
+debug_hls('test_images/signs_vehicles_xygrad.png')
+#lane_finding_take_1('test_images/signs_vehicles_xygrad.png')
 
 
