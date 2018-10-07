@@ -95,3 +95,24 @@ def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      binary_output[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
      iv._push(vwr, np.squeeze(binary_output), "sobel mag thresh", cmap='Greys_r') 
      return binary_output
+    
+#from lesson 6 "Gradients and Color Spaces", ch 3 "Direction of the Gradient"
+# 
+# Define a function that applies Sobel x and y, 
+# then computes the direction of the gradient
+# and applies a threshold.
+def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
+               out_depth=cv2.CV_64F, vwr=None):
+     ut.hash_ndarray(img, "gray") #FIXME: matches udacity lesson
+
+     sobel_x = img_sobel(img, out_depth, 1, 0, ksize)
+     sobel_y = img_sobel(img, out_depth, 0, 1, ksize)
+     ut.hash_ndarray(sobel_y, "sobel_y")
+     abs_sobel_x = np.absolute(sobel_x)
+     abs_sobel_y = np.absolute(sobel_y)
+     grad_dir = np.arctan2(abs_sobel_y, abs_sobel_x)
+     binary_output = np.zeros_like(grad_dir)
+     binary_output[(grad_dir >= thresh_min) & (grad_dir <= thresh_max)] = 1
+     iv._push(vwr, np.squeeze(binary_output), "sobel dir thresh", cmap='Greys_r') 
+     return binary_output
+
