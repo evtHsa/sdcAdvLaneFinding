@@ -72,3 +72,14 @@ def hash_ndarray(nda, title):
         s = nda.tostring()
         hash = hashlib.md5(s).hexdigest()
         return hash
+
+def frange(lo, hi, nsteps):
+    return [lo + (hi - lo) * float(step)/(nsteps - 1) for step in range(nsteps)]
+        
+def paired_frange(lo_start, lo_end, lo_steps, hi_start, hi_end, hi_steps):
+    return [(x, y)
+            for x in frange(lo_start, lo_end, lo_steps)
+            for y in frange(hi_start, hi_end, hi_steps)
+            if x < y]
+
+    
