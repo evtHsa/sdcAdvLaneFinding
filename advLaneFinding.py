@@ -38,6 +38,7 @@ def lane_finding_take_1(path):
                                                            gpd['imgpoints'])
     tmp = iu.img_read(path, vwr)
     tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
+    undistorted = np.copy(tmp)
     tmp = iu.img_rgb2gray(tmp, vwr)
     gray = np.copy(tmp) # make a copy to ensure no accidental aliasing
 
