@@ -116,3 +116,14 @@ def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      iv._push(vwr, np.squeeze(binary_output), "sobel dir thresh", cmap='Greys_r') 
      return binary_output
 
+# from lesson 6.11 "HLS quiz"
+def hls_thresh(img, thresh_lo, thresh_hi, vwr):
+     hls = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
+     s_chan = hls[:,:,2] # s channel is 2
+     # FIXME: hmmmm, looking at s_chan, the values are in [0,1], so our thresholds
+     #            of 90 & 255 are a bit off which explains the 
+     binary_output = np.zeros_like(s_chan)
+     binary_output[(s_chan > thresh_lo) & (s_chan <= thresh_hi)] = 1
+     iv._push(vwr, np.squeeze(binary_output), "hls thresh" + str((thresh_lo, thresh_hi)),
+              cmap='gray')
+     return binary_output
