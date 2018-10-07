@@ -5,8 +5,7 @@ import os.path
 
 class ImgSaver:
     # abstracts saving a bunch of files in a timestamp directory
-    def __init__(self):
-        d = "test_out/"
+    def __init__(self, d="test_out/"):
         d = d + dt.datetime.now().strftime("%a_%m%d%y_%H%M%S") + "/"
         self.outdir = d
         os.mkdir(d)
