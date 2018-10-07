@@ -5,6 +5,7 @@ import ImgSaver as imgsvr
 import ImgViewer as iv
 import ImgUtil as iu
 import cv2
+import numpy as np
 
 # FIXME: may want to tweak some of thse parms
 # gpd -> global parm dict
@@ -37,7 +38,9 @@ def lane_finding_take_1(path):
                                                            gpd['imgpoints'])
     tmp = iu.img_read(path, vwr)
     tmp = iu.img_undistort(tmp, gpd['cal_mtx'], gpd['cal_dist'], vwr)
-    gray = iu.img_rgb2gray(tmp, vwr)
+    tmp = iu.img_rgb2gray(tmp, vwr)
+    gray = np.copy(tmp) # make a copy to ensure no accidental aliasing
+
     abs_sobel = iu.abs_sobel_thresh(gray, 'x', gpd['sobel_min_thresh'],
                               gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
                               gpd['sobel_out_depth'], vwr)
