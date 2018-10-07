@@ -127,3 +127,18 @@ def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi)
      iv._push(vwr, np.squeeze(binary_output), title, cmap='gray')
      return binary_output
+
+# for this to be industrial strength:
+#         FIXME: ensure that the type of the arg is list
+#         FIXME: ensure that every element of the list is an ndarry
+#         FIXME: ensure that every array has the same shap
+#         FIXME: ensure that every value in every array is either 0 or 1
+
+def combined_thresh(btnl, title, vwr): # bin_thresh_ndarray_list
+     if not btnl:
+          raise Exception("seriously?")
+     ret = btnl[0]
+     for btn in btnl[1:]:
+          ret = np.logical_and(ret, btn)
+     iv._push(vwr, np.squeeze(ret), title, cmap='gray')
+     return ret
