@@ -48,16 +48,6 @@ def lane_finding_take_1(path):
     mag_sobel = iu.mag_thresh(gray, gpd['sobel_min_thresh'],
                               gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
                               gpd['sobel_out_depth'], vwr)
-    vwr.show()
-
-lane_finding_take_1('test_images/test1.jpg')
-print("FIXME: need to review get perspective transform and my code in the excercise")
-print("FIXME:specifically how I chose the poiints")
-
-#snippets from notes(srch ntbk for goober_pease
-#Compute the perspective transform, M, given source and destination points:
-#M = cv2.getPerspectiveTransform(src, dst)
-
 
     dir_sobel = iu.dir_thresh(gray,
                               0.7, # FIXME: need new gpd['sobel_dir_thresh_min'] ?
@@ -66,5 +56,6 @@ print("FIXME:specifically how I chose the poiints")
                               gpd['sobel_out_depth'], vwr)
     vwr.show()
 
+lane_finding_take_1('test_images/signs_vehicles_xygrad.png')
 
 
