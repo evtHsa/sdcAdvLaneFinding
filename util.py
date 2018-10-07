@@ -65,9 +65,6 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints,
                                                            tmp.shape[::-1],None,None)
         iv._show(vwr, clear=True)
-        #print("FIXME:ret = " + str(ret))
-        #print("mtx = " + str(mtx))
-        #print("objp.shape = %s" % str(objp.shape))
         return mtx, dist
 
 
