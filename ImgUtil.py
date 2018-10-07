@@ -44,7 +44,8 @@ def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
 
      assert(len(img.shape) == 2) # grayscale
      assert(dx_order != dy_order)
-     assert(ksize == 1 or ksize == 3 or ksize == 5 or ksize == 7)
+     assert(ksize > 0)
+     assert(ksize % 2 != 0)
 
      tmp = cv2.Sobel(img, out_depth, dx_order, dy_order, ksize)
      iv._push(vwr, tmp, "sobel", cmap='Greys_r') 
