@@ -66,8 +66,7 @@ class ImgViewer:
             plt.imshow(img, cmap=cmap)
         else:
             plt.imshow(img)
-        plt.show()    
-
+        plt.show()
 
 def _view(vwr, img, title, cmap=None):
     # turn off viewing by passing None as viewer
