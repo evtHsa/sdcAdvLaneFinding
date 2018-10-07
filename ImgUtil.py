@@ -124,6 +124,6 @@ def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      #            of 90 & 255 are a bit off which explains the 
      binary_output = np.zeros_like(s_chan)
      binary_output[(s_chan > thresh_lo) & (s_chan <= thresh_hi)] = 1
-     iv._push(vwr, np.squeeze(binary_output), "hls thresh" + str((thresh_lo, thresh_hi)),
-              cmap='gray')
+     title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi)
+     iv._push(vwr, np.squeeze(binary_output), title, cmap='gray')
      return binary_output
