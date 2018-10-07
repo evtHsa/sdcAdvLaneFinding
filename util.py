@@ -6,6 +6,7 @@ import matplotlib.image as mpimg
 import numpy as np
 import glob
 import os
+import hashlib
 
 def ohBother(img):
         plt.figure()
@@ -67,5 +68,7 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         iv._show(vwr, clear=True)
         return mtx, dist
 
-
-    
+def hash_ndarray(nda, title):
+        s = nda.tostring()
+        hash = hashlib.md5(s).hexdigest()
+        return hash
