@@ -67,7 +67,6 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
                                                            tmp.shape[::-1],None,None)
         iv._show(vwr, clear=True)
         return mtx, dist
-
 def hash_ndarray(nda, title):
         s = nda.tostring()
         hash = hashlib.md5(s).hexdigest()
