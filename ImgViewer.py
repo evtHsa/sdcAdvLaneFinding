@@ -7,19 +7,22 @@ class ImgViewer:
     #    
 
 
-    def __init__(self, w=4, h=4, rows=1, cols=1, title = "",):
+    def __init__(self, w=4, h=4, rows=1, cols=1, title = "", svr=None):
         self.img_parms_list = []
         self.w = w
         self.h = h
         self.title = title
         self.rows = rows
         self.cols = cols
+        self.svr = svr
 
     def push(self, img_ref, title="", debug=False, cmap=None):
         L = self.img_parms_list
         L.append({'img_ref' : np.copy(img_ref), 'title' : title, 'cmap': cmap})
         if (debug):
             print("push: len = %d, title = %s, cmap = %s"  %  (len(L), title, cmap))
+        if self.svr:
+            self.svr.save(img_ref, title)
 
     def pop(self):
         return self.img_parms_list.pop()
