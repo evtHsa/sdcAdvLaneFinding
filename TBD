@@ -7,18 +7,38 @@
     - happened when find corners failed, we didn't show and prev push wasn't nuked
 *** why are some imgs showing green background
 *** find corners fails for some calibration images (5,1,4)
-** implement sobel
+*** implement sobel
+**** _notes_
+**** _done_
+***** adapt code from lesson to save imgs
+****** _done_
+******* get it to work w/hardcoded parms
+******* add hyperparms to gpd
+******* save the image to the viewer
+******* think about using saver to save the stuff we display in the viewer(@least on flush)
+******* how to enforce input to sobel is gray scale?(#chans?)
+******** _done_
+******** maybe control this via gpd
+****** xx
+***** go back to dir_thresh & try Lesson 6.7 combining thresholds
+****** _notes_
+     https://classroom.udacity.com/nanodegrees/nd013/parts/edf28735-efc1-4b99-8fbb-ba9c432239c8/modules/5d1efbaa-27d0-4ad5-a67a-48729ccebd9c/lessons/144d538f-335d-454d-beb2-b1736ec204cb/concepts/c53a9a18-d31b-4fd7-bc44-07070507abd8
+****** _done_
+******* nuke debug_sobel and below
+******* clean up lane_finding_take_1
+****** implement combining thresholds
+******* _done_
+******** implement hls thresh
+******* hack the current 3 threshold fns to return the grad_binary, mag_binary, dir_binary in output arg
+******* implement combined
+******* put blank line b4 hls call in advLaneFinding_take1
+** pipeline6_12 
 *** _notes_
 *** _done_
-**** adapt code from lesson to save imgs
-***** _done_
-****** get it to work w/hardcoded parms
-****** add hyperparms to gpd
-****** save the image to the viewer
-****** think about using saver to save the stuff we display in the viewer(@least on flush)
-****** how to enforce input to sobel is gray scale?(#chans?)
-******* _done_
-******* maybe control this via gpd
-***** xx
-*** xx xxxxxxxxxxxxxxxxxxxxxx
-*** xx
+*** get it to run afap
+**** _done_
+*** create a new file just for this w/none of my code involved and see iff it works
+*** separate it into demo.py
+*** fling into git
+*** 
+** what does numpy.dstack() do
