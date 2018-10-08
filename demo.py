@@ -91,6 +91,7 @@ def pipeline_6_12(path, s_thresh=(170, 255), sx_thresh=(20, 100), vwr=None):
      sobelx = cv2.Sobel(l_channel, cv2.CV_64F, 1, 0) # Take the derivative in x
      abs_sobelx = np.absolute(sobelx) # Abs x drvtv to accentuate lines away from horizontal
      scaled_sobel = np.uint8(255*abs_sobelx/np.max(abs_sobelx))
+     iv._push(vwr, np.squeeze(scaled_sobel), "scaled_sobel", cmap='gray')
      ##
      
      # Threshold x gradient
@@ -100,6 +101,7 @@ def pipeline_6_12(path, s_thresh=(170, 255), sx_thresh=(20, 100), vwr=None):
      # Threshold color channel
      s_binary = np.zeros_like(s_channel)
      s_binary[(s_channel >= s_thresh[0]) & (s_channel <= s_thresh[1])] = 1
+     iv._push(vwr, np.squeeze(s_binary), "s_binary", cmap='gray')
      # Stack each channel
      color_binary = np.dstack(( np.zeros_like(sxbinary), sxbinary, s_binary)) * 255
      iv._push(vwr, np.squeeze(color_binary), "color_binary", cmap='gray')
