@@ -38,3 +38,13 @@ S1 = (np.sum([ npA[:,:,i] for i in range(3)], axis = 2))
 print("S1 = " + str(S1))
 print ("S1 = " + str(S1))
 
+print(" last " + str(np.sum(A,axis=0)))
+
+
+#what I wanted which sums all the color channel values down to n x n
+# and then takes a column sum of that is
+S2= np.sum(np.sum(npA,axis=0), axis=0)
+#s2 is now the result of elementwise adding all the color channels and then column sum
+print ("S2 = " + str(S2))
+
+ 
