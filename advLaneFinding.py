@@ -29,6 +29,8 @@ vwr = iv.ImgViewer(w=5, h=5, rows=2, cols=2, title="lane_finding_take1", svr=sav
 
 #lane_finding_take_1('test_images/signs_vehicles_xygrad.png')
 
-demo.doit_6_12('test_images/bridge_shadow.jpg', vwr=vwr)
+#demo.doit_6_12_hls('test_images/bridge_shadow.jpg', vwr=vwr)
+#demo.pipeline_6_12_mk2('test_images/bridge_shadow.jpg', cv2.COLOR_RGB2HLS, vwr=vwr)
+demo.pipeline_6_12_mk2('test_images/bridge_shadow.jpg', cv2.COLOR_RGB2HSV, vwr=vwr)
 
 vwr.show()
