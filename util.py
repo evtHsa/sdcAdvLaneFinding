@@ -1,10 +1,10 @@
 import pdb
+import util as ut
 import ImgViewer as iv
 import ImgUtil as iu
 import cv2
 import matplotlib.image as mpimg
 import numpy as np
-import glob
 import os
 import hashlib
 
@@ -29,7 +29,7 @@ def brk(msg=""):
         print("\n==========\n" +msg + "\n==========\n")
         pdb.set_trace()
 
-def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
+def calibrate_camera(vwr, fname_list, nx, ny, objpoints, imgpoints):
         # inputs:
         #         vwr: for showing intermediate images, may be None
         #         nx: number of corners in x dim of chessboard
@@ -45,7 +45,7 @@ def calibrate_camera(vwr, nx, ny, objpoints, imgpoints):
         objp = np.zeros((nx*ny,3), np.float32)
         objp[:,:2] = np.mgrid[0:nx,0:ny].T.reshape(-1, 2)
         
-        for fname in glob.glob("camera_cal/*.jpg"):
+        for fname in fname_list:
                 tmp = iu.img_read(fname, None)
                 orig = np.copy(tmp)
                 # they're not all 720x1280
