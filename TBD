@@ -32,13 +32,17 @@
 ******* hack the current 3 threshold fns to return the grad_binary, mag_binary, dir_binary in output arg
 ******* implement combined
 ******* put blank line b4 hls call in advLaneFinding_take1
-** pipeline6_12 
-*** _notes_
-*** _done_
-*** get it to run afap
+*** pipeline6_12 
+**** _notes_
 **** _done_
-*** create a new file just for this w/none of my code involved and see iff it works
-*** separate it into demo.py
-*** fling into git
-*** 
-** what does numpy.dstack() do
+**** get it to run afap
+***** _done_
+**** create a new file just for this w/none of my code involved and see iff it works
+**** separate it into demo.py
+**** fling into git
+**** 
+
+** move the globbing up to level above calibrate_camera
+** choose glob or just one for speed
+** settle on thresholded binary image
+
