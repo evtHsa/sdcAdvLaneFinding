@@ -42,7 +42,7 @@
 **** fling into git
 **** 
 
-** move the globbing up to level above calibrate_camera
-** choose glob or just one for speed
+*** move the globbing up to level above calibrate_camera
+*** choose glob or just one for speed
 ** settle on thresholded binary image
 
