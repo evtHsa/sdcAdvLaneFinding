@@ -3,8 +3,9 @@
 import util as ut
 import demo
 import  cv2
-import ImgViewer as iv
 import ImgSaver as iS
+import ImgUtil as iu
+import ImgViewer as iv
 import glob
 
 # FIXME: may want to tweak some of thse parms
@@ -35,5 +36,7 @@ if gpd['quick_calibrate']:
 gpd['cal_mtx'] , gpd['cal_dist'] = ut.calibrate_camera(None, fname_list,
                                                        gpd['chessboard_nx'], gpd['chessboard_ny'],
                                                        gpd['objpoints'], gpd['imgpoints'])
+
+tmp = iu.img_read("test_images/straight_lines2.jpg", vwr) # walk first then...
 
 vwr.show()
