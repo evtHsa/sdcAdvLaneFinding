@@ -17,6 +17,11 @@ type_2_cmap = {
      'bgr' : None
 }
 
+color_2_src_type = {
+     str(cv2.COLOR_RGB2GRAY) : 'rgb',
+     str(cv2.COLOR_BGR2GRAY) : 'bgr'
+}
+
 class Image:
      def __init__(self, img_data=None, title="", type='bgr'):
           self.img_data = img_data
@@ -31,13 +36,18 @@ class Image:
           return self.img_data.shape
 
      def plot(self, _plt):
+          rgb = self.img_data
           if self.type == 'bgr':
                rgb = cv2.cvtColor(self.img_data, cv2.COLOR_BGR2RGB)
           _plt.imshow(rgb, cmap=self.cmap)
           _plt.xlabel(self.title)
-
+          
+     def legalColorConversion(self, color):
+          return self.type == color_2_src_type[str(color)]
+     
 def cv2CvtColor(img_obj, color, vwr=None):
      assert(type(img_obj) is Image)
+     assert(img_obj.legalColorConversion(color))
 
      ret = Image(img_data = cv2.cvtColor(img_obj.img_data, color),
                  title = "cvtColor: " + str(color),
