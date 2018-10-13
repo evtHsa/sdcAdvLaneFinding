@@ -85,14 +85,14 @@ def Sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
      #
      assert(type(img) is Image)
 
-     assert(len(img.shape) == 2) # grayscale
+     assert(img.type == 'gray') # grayscale
      assert(dx_order != dy_order)
      assert(ksize > 0)
      assert(ksize % 2 != 0)
 
-     tmp = cv2.Sobel(img, out_depth, dx_order, dy_order, ksize)
-     iv._push(vwr, tmp, "sobel", type='FIXME:gray')
-     ut.oneShotMsg("FIXME:enforce supported types in push")
+     tmp = Image(img_data = cv2.Sobel(img.img_data, out_depth, dx_order,
+                                      dy_order, ksize), title="Sobel", type='gray')
+     iv._push(vwr, tmp)
      return tmp
         
     
@@ -106,14 +106,13 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
                      out_depth=cv2.CV_64F, vwr=None):
 
      assert(type(img) is Image)
-     # Apply the following steps to img
      # 2) Take the derivative in x or y given orient = 'x' or 'y'
      if orient == 'x':
-          sobel = img_sobel(img, out_depth, 1, 0, ksize)
+          sobel = Sobel(img, out_depth, 1, 0, ksize)
      else:
-          sobel = img_sobel(img, out_depth, 0, 1, ksize)
+          sobel = Sobel(img, out_depth, 0, 1, ksize)
      # 3) Take the absolute value of the derivative or gradient
-     abs_sobel = np.absolute(sobel)
+     abs_sobel = np.absolute(sobel.img_data)
      # 4) Scale to 8-bit (0 - 255) then convert to type = np.uint8
      scaled_sobel = np.uint8(255*abs_sobel/np.max(abs_sobel))
      # 5) Create a mask of 1's where the scaled gradient magnitude 
@@ -121,8 +120,12 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      sxbinary = np.zeros_like(scaled_sobel)
      sxbinary[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
      # 6) Return this mask as your binary_output image
-     #FIXME: this squeeze thing may be a problem
-     iv._push(vwr, np.squeeze(sxbinary), "scaled sobel", type='FIXME:gray')
+     ut.oneShotMsg("FIXME: this squeeze thing may be a problem")
+     
+     binary_image = Image(img_data=np.squeeze(sxbinary),
+                          title="scaled_sobel", type = 'gray')
+     iv._push(vwr, binary_image)
+     iv._show(vwr)
      return sxbinary
 
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Magnitude of the Gradient"
@@ -133,8 +136,8 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
 def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
                out_depth=cv2.CV_64F, vwr=None):
      assert(type(img) is Image)
-     sobel_x = img_sobel(img, out_depth, 1, 0, ksize)
-     sobel_y = img_sobel(img, out_depth, 0, 1, ksize)
+     sobel_x = sobel(img, out_depth, 1, 0, ksize)
+     sobel_y = sobel(img, out_depth, 0, 1, ksize)
      sobel_abs = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
      sobel_max = np.max(sobel_abs)
      scaled_sobel = np.uint8(255 * sobel_abs / sobel_max)
@@ -153,8 +156,8 @@ def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      assert(type(img) is Image)
      ut.hash_ndarray(img, "gray") #FIXME: matches udacity lesson
 
-     sobel_x = img_sobel(img, out_depth, 1, 0, ksize)
-     sobel_y = img_sobel(img, out_depth, 0, 1, ksize)
+     sobel_x = sobel(img, out_depth, 1, 0, ksize)
+     sobel_y = sobel(img, out_depth, 0, 1, ksize)
      ut.hash_ndarray(sobel_y, "sobel_y")
      abs_sobel_x = np.absolute(sobel_x)
      abs_sobel_y = np.absolute(sobel_y)
