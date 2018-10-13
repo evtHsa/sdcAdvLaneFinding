@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from moviepy.editor import VideoFileClip
 import ImgViewer as iv
+import ImgSaver as iS
 import ImgUtil as iu
 from collections import deque
 import parm_dict as pd
@@ -16,8 +17,8 @@ import parm_dict as pd
 parm_dict = pd.parm_dict
 cache_dict = pd.cache_dict
 
+#saver = iS.ImgSaver()
 saver = None
-print("FIXME: bring up and retest the saver")
 
 vwr = iv.ImgViewer(w=5, h=5, rows=2, cols=2, title="lane_finding_take1", svr=saver)
 
