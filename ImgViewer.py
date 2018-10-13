@@ -1,14 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import util as ut
-
+import ImgUtil as iu
+    
 class ImgViewer:
-    # for debug - usage demo
-    #    
-
-
+    
     def __init__(self, w=4, h=4, rows=1, cols=1, title = "", svr=None):
-        self.img_parms_list = []
+        self.img_obj_list = []
         self.w = w
         self.h = h
         self.title = title
@@ -16,22 +14,26 @@ class ImgViewer:
         self.cols = cols
         self.svr = svr
 
-    def push(self, img_ref, title="", debug=False, cmap=None):
-        L = self.img_parms_list
-        L.append({'img_ref' : np.copy(img_ref), 'title' : title, 'cmap': cmap})
+    def push(self, img_obj,  debug=False):
+        assert(type(img_obj) is iu.Image)
+
+        self.img_obj_list.append(img_obj)
+
+        debug =  True
         if (debug):
-            print("push: len = %d, title = %s, cmap = %s"  %  (len(L), title, cmap))
+            img_obj.show()
+    
         if self.svr:
-            self.svr.save(img_ref, title)
+            self.svr.save(img, title)
 
     def pop(self):
-        return self.img_parms_list.pop()
+        return self.img_obj_list.pop()
 
     def flush(self):
-        self.img_parms_list = []
+        self.img_parms = []
 
     def show_1_grid(self, start):
-        L = self.img_parms_list
+        L = self.img_obj_list
         n_imgs = len(L)
 
         plt.figure(figsize=(self.w, self.h))
@@ -39,21 +41,14 @@ class ImgViewer:
             ix = start + i
             if ix >= n_imgs:
                 break
-            img_parms = L[ix]
             plt.subplot(self.rows, self.cols, i + 1)
-            img_parms = L[ix]
-            cmap = img_parms['cmap']
-            if cmap:
-                plt.imshow(img_parms['img_ref'], cmap=cmap)
-            else:
-                plt.imshow(img_parms['img_ref'])
-            plt.xlabel(img_parms['title'])
+            L[ix].plot(_plt=plt)
             plt.xticks([], [])
             plt.yticks([], [])
         plt.show()
         
     def show(self, clear=False):
-        L = self.img_parms_list
+        L = self.img_obj_list
         n_imgs = len(L)
         grid_size = self.rows * self.cols
 
@@ -76,9 +71,9 @@ def _view(vwr, img, title, cmap=None):
     if vwr:
         vwr.show_immed(img, title, cmap)
     
-def _push(vwr, img, title, cmap=None):
+def _push(vwr, img_obj):
     if vwr:
-        vwr.push(img, title, cmap=cmap)
+        vwr.push(img_obj)
 
 def _flush(vwr):
     if vwr:
