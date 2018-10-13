@@ -24,7 +24,7 @@ saver = None
 vwr=None
 vwr = iv.ImgViewer(w=5, h=5, rows=2, cols=2, title="lane_finding_take1", svr=saver)
 
-img = iu.img_read('test_images/straight_lines1.jpg', vwr)
+img = iu.imRead('test_images/straight_lines1.jpg', reader='mpimg', vwr=vwr)
 print("img.shape = " + str(img.shape))
 gray = iu.img_rgb2gray(img, vwr)
 print("gray.shape = " + str(gray.shape))
@@ -44,7 +44,7 @@ def hist(img, vwr):
     print("bottom_half.shape = " + str(bottom_half.shape))
     print("gray.shape = " + str(gray.shape))
     print("histogram.shape = " + str(histogram.shape))
-    #iv._push(vwr, histogram, "")
+    #iv._push(vwr, histogram, "", type='FIXME:gray')
     return histogram
 
 # Create histogram of image binary activations

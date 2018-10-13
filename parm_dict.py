@@ -12,8 +12,6 @@ parm_dict ={
     'objpoints' : [],
     'imgpoints': [],
     'quick_calibrate': True,
-    'cal_mtx' : None,   # camera calibration matrix
-    'cal_dist': None,     # camera distortion coefficients
     'sobel_min_thresh' : 30,
     'sobel_max_thresh' : 100,
     'sobel_kernel_size' : 3,
