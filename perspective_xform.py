@@ -33,7 +33,7 @@ def test_undistort(vwr, max_files):
     for fname in get_fnames("test_images/", "test*.jpg", max_files):
         img = iu.imRead(fname, reader='cv2', vwr=vwr)
         img = iu.undistort(img, cache_dict, vwr)
-        iv._push(vwr, img, title="undist", type="FIXME:shd come from img via imread")
+        iv._push_deprecated(vwr, img, title="undist", type="FIXME:shd come from img via imread")
     
 #test_undistort(vwr, max_files=3)
 

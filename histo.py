@@ -44,7 +44,7 @@ def hist(img, vwr):
     print("bottom_half.shape = " + str(bottom_half.shape))
     print("gray.shape = " + str(gray.shape))
     print("histogram.shape = " + str(histogram.shape))
-    #iv._push(vwr, histogram, "", type='FIXME:gray')
+    #iv._push_deprecated(vwr, histogram, "", type='FIXME:gray')
     return histogram
 
 # Create histogram of image binary activations

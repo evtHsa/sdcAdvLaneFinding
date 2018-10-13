@@ -70,11 +70,11 @@ def cv2Undistort(img, mtx, dist, vwr=None):
 def img_drawChessboardCorners(img, nx, ny, corners, ret, vwr=None):
      assert(type(img) is Image)
      cv2.drawChessboardCorners(img, (nx, ny), corners, ret)
-     iv._push(vwr, img, "with corners", type='FIXME:gray')
+     iv._push_deprecated(vwr, img, "with corners", type='FIXME:gray')
      return None
 
 
-def img_sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
+def Sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
      # CV=https://docs.opencv.org/3.0-beta
      # $CV/doc/py_tutorials/py_imgproc/py_gradients/py_gradients.html
      # $CV/modules/imgproc/doc/filtering.html?highlight=sobel#cv2.Sobel
@@ -140,7 +140,7 @@ def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      scaled_sobel = np.uint8(255 * sobel_abs / sobel_max)
      binary_output = np.zeros_like(scaled_sobel)
      binary_output[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
-     iv._push(vwr, np.squeeze(binary_output), "sobel mag thresh", type='FIXME:gray')
+     iv._push_deprecated(vwr, np.squeeze(binary_output), "sobel mag thresh", type='FIXME:gray')
      return binary_output
     
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Direction of the Gradient"
@@ -161,7 +161,7 @@ def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      grad_dir = np.arctan2(abs_sobel_y, abs_sobel_x)
      binary_output = np.zeros_like(grad_dir)
      binary_output[(grad_dir >= thresh_min) & (grad_dir <= thresh_max)] = 1
-     iv._push(vwr, np.squeeze(binary_output), "sobel dir thresh", type='FIXME:gray')
+     iv._push_deprecated(vwr, np.squeeze(binary_output), "sobel dir thresh", type='FIXME:gray')
      return binary_output
 
 # from lesson 6.11 "HLS quiz"
@@ -174,7 +174,7 @@ def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      binary_output = np.zeros_like(s_chan)
      binary_output[(s_chan > thresh_lo) & (s_chan <= thresh_hi)] = 1
      title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi)
-     iv._push(vwr, np.squeeze(binary_output), title, type='FIXME:gray')
+     iv._push_deprecated(vwr, np.squeeze(binary_output), title, type='FIXME:gray')
      return binary_output
 
 # for this to be industrial strength:
@@ -190,7 +190,7 @@ def combined_thresh(btnl, title, vwr): # bin_thresh_ndarray_list
      for btn in btnl[1:]:
           assert(type(btn) is Image)
           ret = np.logical_and(ret, btn)
-     iv._push(vwr, np.squeeze(ret), title, type='FIXME:gray')
+     iv._push_deprecated(vwr, np.squeeze(ret), title, type='FIXME:gray')
      return ret
 
 def imRead(path, reader=None, vwr=None):

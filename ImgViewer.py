@@ -74,6 +74,11 @@ def _push(vwr, img_obj):
     if vwr:
         vwr.push(img_obj)
 
+def _push_deprecated(vwr, img_obj):
+    ut.brk("you didn't mean that")
+    raise Exception("I TOLD you that you didn't mean that")
+
+
 def _flush(vwr):
     if vwr:
         vwr.flush()
