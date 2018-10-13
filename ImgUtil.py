@@ -218,10 +218,10 @@ def cv2WarpPerspective(img, xformMatrix, size, vwr=None):
      iv._push(vwr, img)
      return img
           
-def calibrateCamera(cache, vwr):
+def calibrateCamera(parms=None, cache = None, vwr = None):
      ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(cache['obj_points'],
                                                         cache['img_points'],
-                                                        cache['camera_resolution'],
+                                                        parms['camera_resolution'],
                                                         None, None)
      cache['mtx'] = mtx
      cache['dist'] = dist
@@ -243,9 +243,6 @@ def undistort(img_obj, cache, vwr=None):
 def look_down(img, cache, vwr=None):
      assert(type(img) is Image)
      img_size = (img.shape()[1], img.shape()[0])
-     print("FIXME(down): M = %s, img_size = %s" % (
-          str(cache['M_lookdown']),
-          str(img_size)))
      warped = cv2WarpPerspective(img, cache['M_lookdown'], img_size)
      iv._push(vwr, warped)
      return warped
