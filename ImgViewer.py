@@ -14,16 +14,16 @@ class ImgViewer:
         self.cols = cols
         self.svr = svr
 
-    def push(self, img_obj,  debug=False):
-        assert(type(img_obj) is iu.Image)
+    def push(self, img,  debug=False):
+        assert(type(img) is iu.Image)
 
-        self.img_obj_list.append(img_obj)
+        self.img_obj_list.append(img)
 
         if (debug):
-            img_obj.show()
+            img.show()
     
         if self.svr:
-            self.svr.save(img, title)
+            self.svr.save(img)
 
     def pop(self):
         return self.img_obj_list.pop()
