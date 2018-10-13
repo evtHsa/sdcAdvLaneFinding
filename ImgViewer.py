@@ -19,7 +19,6 @@ class ImgViewer:
 
         self.img_obj_list.append(img_obj)
 
-        debug =  True
         if (debug):
             img_obj.show()
     
