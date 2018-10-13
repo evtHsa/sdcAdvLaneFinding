@@ -34,15 +34,16 @@ def lane_finding_take_1(path, pd =None, cd = None):
     vwr.flush()
     tmp = iu.imRead(path, reader='cv2', vwr=vwr)
     undistorted = iu.cv2Undistort(tmp, cd['mtx'], cd['dist'], vwr)
+    raise Exception("DOH!!!, must do perspective xform")
     
     gray = iu.cv2CvtColor(tmp, cv2.COLOR_BGR2GRAY, vwr)
 
+    abs_sobel = iu.abs_sobel_thresh(gray, 'x', pd['sobel_min_thresh'],
+                              pd['sobel_max_thresh'], pd['sobel_kernel_size'],
+                              pd['sobel_out_depth'], vwr)
+    
     vwr.show()
     ut.brk("shut er down ma, she's a suckin mud: fix gpd refs and hard coded stuff")
-    abs_sobel = iu.abs_sobel_thresh(gray, 'x', gpd['sobel_min_thresh'],
-                              gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
-                              gpd['sobel_out_depth'], vwr)
-    
     ut.brk("hurl")
     mag_sobel = iu.mag_thresh(gray, gpd['sobel_min_thresh'],
                               gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
