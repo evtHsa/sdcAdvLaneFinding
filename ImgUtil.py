@@ -10,6 +10,7 @@ import numpy as np
 import glob
 import os
 import util as ut
+import parm_dict as pd
 
 type_2_cmap = {
      'gray': 'Greys_r',
@@ -263,3 +264,35 @@ def look_down(img, cache, vwr=None):
      iv._push(vwr, warped)
      return warped
 
+def infrastructure_setup(viewer, saver, title):
+     # setup the saver and viewer keys in cache_diict
+     # returns: parm_dict, cache_dict
+     cd   = pd.cache_dict
+     pd_ = pd.parm_dict
+
+     cd['viewer'] = None
+     cd['saver'] = None
+     if saver:
+          cd['saver'] = iS.ImgSaver()
+     if viewer:
+          cd['viewer'] = iv.ImgViewer(w=pd_['viewer_width'], h=pd_['viewer_height'],
+                                      rows=pd_['viewer_rows'], cols=pd_['viewer_cols'],
+                                      title=title, svr=cd['saver'])
+     return cd, pd_
+
+def camera_setup(cache_dict=None, parm_dict=None):
+     vwr = cache_dict['viewer']
+     ut.cb_corners(parm_dict, cache_dict, max_files=0, verbose=False,
+                   vwr=None) #(obj,img)_points in cache
+     calibrateCamera(parms=parm_dict, cache = cache_dict, vwr=vwr)
+     # now have mtx and dist in cache
+     
+     getLookDownXform(cache_dict) # cache['M_lookdown[_inv]']
+
+def app_init(viewer=False, saver=False, title=""):
+     # on return these keys will be set in cache_dict
+     #        viewer, saver, mtx, dist, M_lookdown, M_lookdown_inv
+     # returns: parm_dict, cache_dict
+     cache_dict, parm_dict = infrastructure_setup(viewer, saver, title)
+     camera_setup(cache_dict = cache_dict, parm_dict = parm_dict)
+     return (cache_dict, parm_dict)
