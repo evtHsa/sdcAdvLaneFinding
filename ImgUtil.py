@@ -156,17 +156,17 @@ def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
 def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
                out_depth=cv2.CV_64F, vwr=None):
      assert(type(img) is Image)
-     ut.hash_ndarray(img, "gray") #FIXME: matches udacity lesson
 
-     sobel_x = sobel(img, out_depth, 1, 0, ksize)
-     sobel_y = sobel(img, out_depth, 0, 1, ksize)
-     ut.hash_ndarray(sobel_y, "sobel_y")
-     abs_sobel_x = np.absolute(sobel_x)
-     abs_sobel_y = np.absolute(sobel_y)
+     sobel_x = Sobel(img, out_depth, 1, 0, ksize)
+     sobel_y = Sobel(img, out_depth, 0, 1, ksize)
+     abs_sobel_x = np.absolute(sobel_x.img_data)
+     abs_sobel_y = np.absolute(sobel_y.img_data)
      grad_dir = np.arctan2(abs_sobel_y, abs_sobel_x)
      binary_output = np.zeros_like(grad_dir)
      binary_output[(grad_dir >= thresh_min) & (grad_dir <= thresh_max)] = 1
-     iv._push_deprecated(vwr, np.squeeze(binary_output), "sobel dir thresh", type='FIXME:gray')
+     binary_image = Image(img_data = np.squeeze(binary_output),
+                          title = "sobel dir thresh", type = 'gray')
+     iv._push(vwr, binary_image)
      return binary_output
 
 # from lesson 6.11 "HLS quiz"
