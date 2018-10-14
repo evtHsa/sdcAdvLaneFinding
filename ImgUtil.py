@@ -19,7 +19,10 @@ type_2_cmap = {
 
 color_2_src_type = {
      str(cv2.COLOR_RGB2GRAY) : 'rgb',
-     str(cv2.COLOR_BGR2GRAY) : 'bgr'
+     str(cv2.COLOR_BGR2GRAY) : 'bgr',
+     str(cv2.COLOR_BGR2GRAY) : 'bgr',
+     str(cv2.COLOR_RGB2HLS)   : 'rgb',
+     str(cv2.COLOR_BGR2HLS)   : 'bgr'
 }
 
 class Image:
@@ -36,6 +39,7 @@ class Image:
           return self.img_data.shape
 
      def plot(self, _plt):
+          #self.show()
           rgb = self.img_data
           if self.type == 'bgr':
                rgb = cv2.cvtColor(self.img_data, cv2.COLOR_BGR2RGB)
@@ -125,8 +129,7 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      binary_image = Image(img_data=np.squeeze(sxbinary),
                           title="scaled_sobel", type = 'gray')
      iv._push(vwr, binary_image)
-     iv._show(vwr)
-     return sxbinary
+     return binary_image
 
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Magnitude of the Gradient"
 # 
@@ -167,35 +170,31 @@ def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      binary_image = Image(img_data = np.squeeze(binary_output),
                           title = "sobel dir thresh", type = 'gray')
      iv._push(vwr, binary_image)
-     return binary_output
+     return binary_image
 
 # from lesson 6.11 "HLS quiz"
 def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      assert(type(img) is Image)
-     hls = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
-     s_chan = hls[:,:,2] # s channel is 2
-     # FIXME: hmmmm, looking at s_chan, the values are in [0,1], so our thresholds
-     #            of 90 & 255 are a bit off which explains the 
+     hls = cv2CvtColor(img, cv2.COLOR_BGR2HLS, vwr)
+     s_chan = hls.img_data[:,:,2] # s channel is 2
      binary_output = np.zeros_like(s_chan)
      binary_output[(s_chan > thresh_lo) & (s_chan <= thresh_hi)] = 1
-     title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi)
-     iv._push_deprecated(vwr, np.squeeze(binary_output), title, type='FIXME:gray')
-     return binary_output
-
-# for this to be industrial strength:
-#         FIXME: ensure that the type of the arg is list
-#         FIXME: ensure that every element of the list is an ndarry
-#         FIXME: ensure that every array has the same shap
-#         FIXME: ensure that every value in every array is either 0 or 1
+     binary_image = Image(img_data = np.squeeze(binary_output),
+                          title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi),
+                          type = 'gray')
+     iv._push(vwr, binary_image)
+     return binary_image
 
 def combined_thresh(btnl, title, vwr): # bin_thresh_ndarray_list
      if not btnl:
           raise Exception("seriously?")
-     ret = btnl[0]
+     assert(type(btnl) is list)
+     img_data = btnl[0].img_data
      for btn in btnl[1:]:
           assert(type(btn) is Image)
-          ret = np.logical_and(ret, btn)
-     iv._push_deprecated(vwr, np.squeeze(ret), title, type='FIXME:gray')
+          img_data = np.logical_and(img_data, btn.img_data)
+     ret = Image(img_data = np.squeeze(img_data), title = title, type = 'gray')
+     iv._push(vwr, ret)
      return ret
 
 def imRead(path, reader=None, vwr=None):
@@ -243,7 +242,9 @@ def calibrateCamera(parms=None, cache = None, vwr = None):
 
 color2NameDict = {
      str(cv2.COLOR_RGB2GRAY) : 'gray',
-     str(cv2.COLOR_BGR2GRAY) : 'gray'
+     str(cv2.COLOR_BGR2GRAY) : 'gray',
+     str(cv2.COLOR_RGB2HLS)   : 'gray',
+     str(cv2.COLOR_BGR2HLS)   : 'gray',
 }
 
 def getColorName(color):
