@@ -41,12 +41,12 @@ def lane_finding_take_1(path, pd =None, cd = None):
                               pd['sobel_max_thresh'], pd['sobel_kernel_size'],
                               pd['sobel_out_depth'], vwr)
     
+    mag_sobel = iu.mag_thresh(gray, pd['sobel_min_thresh'],
+                              pd['sobel_max_thresh'], pd['sobel_kernel_size'],
+                              pd['sobel_out_depth'], vwr)
+
     vwr.show()
     ut.brk("shut er down ma, she's a suckin mud: fix gpd refs and hard coded stuff")
-    ut.brk("hurl")
-    mag_sobel = iu.mag_thresh(gray, gpd['sobel_min_thresh'],
-                              gpd['sobel_max_thresh'], gpd['sobel_kernel_size'],
-                              gpd['sobel_out_depth'], vwr)
 
     dir_sobel = iu.dir_thresh(gray,
                               0.7, # FIXME: need new gpd['sobel_dir_thresh_min'] ?
