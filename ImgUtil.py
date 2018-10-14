@@ -136,15 +136,17 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
 def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
                out_depth=cv2.CV_64F, vwr=None):
      assert(type(img) is Image)
-     sobel_x = sobel(img, out_depth, 1, 0, ksize)
-     sobel_y = sobel(img, out_depth, 0, 1, ksize)
-     sobel_abs = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
+     sobel_x = Sobel(img, out_depth, 1, 0, ksize)
+     sobel_y = Sobel(img, out_depth, 0, 1, ksize)
+     sobel_abs = np.sqrt(sobel_x.img_data ** 2 + sobel_y.img_data ** 2)
      sobel_max = np.max(sobel_abs)
      scaled_sobel = np.uint8(255 * sobel_abs / sobel_max)
      binary_output = np.zeros_like(scaled_sobel)
      binary_output[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
-     iv._push_deprecated(vwr, np.squeeze(binary_output), "sobel mag thresh", type='FIXME:gray')
-     return binary_output
+     ret = Image(img_data = np.squeeze(binary_output), title="sobel_mag_thresh",
+                 type='gray')
+     iv._push(vwr, ret)
+     return ret
     
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Direction of the Gradient"
 # 
