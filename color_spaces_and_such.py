@@ -5,8 +5,7 @@ import ImgViewer as iv
 import ImgUtil as iu
 import cv2
 
-cache_dict, parm_dict = iu.app_init(viewer=True, saver=False, title="whatever")
-
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
 vwr = cache_dict['viewer']
 
 def lane_finding_take_1(path, pd =None, cd = None):
