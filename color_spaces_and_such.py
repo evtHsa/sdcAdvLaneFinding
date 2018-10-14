@@ -12,7 +12,7 @@ cache_dict = pd.cache_dict
 #saver = iS.ImgSaver()
 saver = None
 
-vwr = iv.ImgViewer(w=5, h=5, rows=2, cols=2, title="lane_finding_take1", svr=saver)
+vwr = iv.ImgViewer(w=5, h=5, rows=3, cols=3, title="lane_finding_take1", svr=saver)
 
 ut.cb_corners(parm_dict, cache_dict, max_files=0, verbose=False,
               vwr=None) #(obj,img)_points in cache
@@ -45,20 +45,22 @@ def lane_finding_take_1(path, pd =None, cd = None):
                               pd['sobel_max_thresh'], pd['sobel_kernel_size'],
                               pd['sobel_out_depth'], vwr)
 
-    vwr.show()
-    ut.brk("shut er down ma, she's a suckin mud: fix gpd refs and hard coded stuff")
 
+    ut.oneShotMsg("FIXME: need parms for sobel_dir_thresh_(max,min), ksizse")
     dir_sobel = iu.dir_thresh(gray,
                               0.7, # FIXME: need new gpd['sobel_dir_thresh_min'] ?
                               1.3, # FIXME: need new gpd['sobel_dir_thresh_min'] ?
                               15, # FIXME: gpd['sobel_kernel_size'],
-                              gpd['sobel_out_depth'], vwr)
+                              pd['sobel_out_depth'], vwr)
+    ut.oneShotMsg("FIXME: need parm dict entries for hls thresh")
     hls_thresh = iu.hls_thresh(undistorted,
-                               0.35, # FIXME: shdb in gpd
-                               1, #FIXME: shdb in gpd
+                               80, # FIXME: shdb in gpd
+                               255, #FIXME: shdb in gpd
                                vwr)
-    vwr.show()
     # 4 combo
+
+    vwr.flush()
+    print("FIXME: remove this flush")
     combined = iu.combined_thresh([abs_sobel, dir_sobel, hls_thresh, mag_sobel ],
                                   "abs+dir+hls+mag", vwr)
     #3 combos
@@ -76,6 +78,7 @@ def lane_finding_take_1(path, pd =None, cd = None):
     combined = iu.combined_thresh([abs_sobel, mag_sobel ],
                                   "abs+mag", vwr)
     vwr.show()
+    print("FIXME: combined thresholds not working too well right now")
 
 lane_finding_take_1('test_images/signs_vehicles_xygrad.png',
                     pd=parm_dict, cd = cache_dict)
