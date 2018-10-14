@@ -5,7 +5,11 @@
 import cv2
 
 # gpd -> global parm dict
-parm_dict ={ 
+parm_dict ={
+    'viewer_width': 5,
+    'viewer_height': 5,
+    'viewer_rows': 3,
+    'viewer_cols': 3,
     'camera_resolution' : (720, 1280), # rows, cols
     'chessboard_nx' : 9,
     'chessboard_ny' : 6,
