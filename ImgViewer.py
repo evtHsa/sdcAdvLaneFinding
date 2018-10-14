@@ -29,7 +29,7 @@ class ImgViewer:
         return self.img_obj_list.pop()
 
     def flush(self):
-        self.img_parms = []
+        self.img_obj_list = []
 
     def show_1_grid(self, start):
         L = self.img_obj_list
