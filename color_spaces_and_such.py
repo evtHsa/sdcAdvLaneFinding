@@ -3,23 +3,11 @@
 import util as ut
 import ImgViewer as iv
 import ImgUtil as iu
-import parm_dict as pd
 import cv2
 
-parm_dict = pd.parm_dict
-cache_dict = pd.cache_dict
+cache_dict, parm_dict = iu.app_init(viewer=True, saver=False, title="whatever")
 
-#saver = iS.ImgSaver()
-saver = None
-
-vwr = iv.ImgViewer(w=5, h=5, rows=3, cols=3, title="lane_finding_take1", svr=saver)
-
-ut.cb_corners(parm_dict, cache_dict, max_files=0, verbose=False,
-              vwr=None) #(obj,img)_points in cache
-iu.calibrateCamera(parms=parm_dict, cache = cache_dict, vwr=vwr)
-# now have mtx and dist in cache
-
-iu.getLookDownXform(cache_dict) # cache['M_lookdown[_inv]']
+vwr = cache_dict['viewer']
 
 def lane_finding_take_1(path, pd =None, cd = None):
     #@Undistort the image using cv2.undistort() with mtx and dist from cache
