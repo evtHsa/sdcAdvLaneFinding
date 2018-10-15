@@ -403,3 +403,14 @@ def hist(img, vwr):
     histogram = Image(img_data = histogram, title="", type='gray')
     return histogram
 
+def get_LR_hist_max(hist):
+    # see lesson 7.4
+    ut.oneShotMsg("move this to ImgUtil")
+    width = hist.img_data.shape[0]
+    midway = width // 2
+    
+    left_max_ix    = np.argmax(hist.img_data[0:midway])
+    right_max_ix = midway + np.argmax(hist.img_data[midway:width])
+    return (left_max_ix, right_max_ix)
+
+
