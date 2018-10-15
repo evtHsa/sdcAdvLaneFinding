@@ -11,6 +11,7 @@ class ImgSaver:
     def __init__(self, d="test_out/"):
         d = d + dt.datetime.now().strftime("%a_%m%d%y_%H%M%S") + "/"
         self.outdir = d
+        self.ix = 0
         os.mkdir(d)
 
     def save(self, img, msg=""):
@@ -18,6 +19,9 @@ class ImgSaver:
         img_data = img.img_data
         if img.type == 'bgr':
             img_data = cv2.cvtColor(img.img_data, cv2.COLOR_BGR2RGB)
-        outf = self.outdir + os.path.basename(img.title) + "_" + msg + ".png"
+            
+        outf = self.outdir + "%03d" % self.ix + "_" + os.path.basename(img.title)
+        outf = outf +  "_" + msg + ".png"
+        self.ix = self.ix + 1
         mpimg.imsave(outf, img_data, cmap=img.cmap)
 
