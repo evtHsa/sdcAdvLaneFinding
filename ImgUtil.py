@@ -1,4 +1,3 @@
-#
 # functions in this file should be only those that operate on images and/or
 # return images
 
