@@ -368,7 +368,7 @@ def oneChannelInAlternateColorspace2BinaryinaryImage(img, color_space_id=-1,
                          title="thresh::" + title_sfx, type='gray')
      return tb_image
 
-def hls_lab_line_detect(img, cache_dict = None, parm_dict = None):
+def hls_lab_lane_detect(img, cache_dict = None, parm_dict = None):
      assert(type(img) is Image)
      hls_binary_l = oneChannelInAlternateColorspace2BinaryinaryImage(img,
                                                                      cv2.COLOR_BGR2HLS, 1, cd = cache_dict,
@@ -383,9 +383,7 @@ def hls_lab_line_detect(img, cache_dict = None, parm_dict = None):
 
 def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
     img = imRead(path, reader='cv2', vwr=None)
-    iv._push(vwr,img) # initial img
     undistorted = undistort(img, cd, vwr=None)
-    top_down = look_down(undistorted, cd, None)
-    ret = hls_lab_line_detect(top_down, cache_dict = cd, parm_dict = pd)
-    iv._push(vwr,ret) # result img
+    top_down = look_down(undistorted, cd, vwr)
+    ret = hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     return ret
