@@ -6,9 +6,6 @@ import ImgUtil as iu
 import cv2
 import numpy as np
 
-cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
-vwr = cache_dict['viewer']
-
 def lane_finding_take_1(path, cd = None, pd =None):
     #@Undistort the image using cv2.undistort() with mtx and dist from cache
     #@Convert to grayscale
@@ -19,7 +16,6 @@ def lane_finding_take_1(path, cd = None, pd =None):
     # Use cv2.getPerspectiveTransform() to get M, the transform matrix
     # use cv2.warpPerspective() to apply M and warp your image to a top-down view
 
-    vwr.flush()
     tmp = iu.imRead(path, reader='cv2', vwr=vwr)
     undistorted = iu.cv2Undistort(tmp, cd['mtx'], cd['dist'], vwr)
     top_down = iu.look_down(undistorted, cd, vwr)
@@ -47,24 +43,24 @@ def lane_finding_take_1(path, cd = None, pd =None):
                                vwr)
     # 4 combo
 
-    vwr.flush()
-    print("FIXME: remove this flush")
     combined = iu.combined_thresh([abs_sobel, dir_sobel, hls_thresh, mag_sobel ],
-                                  "abs+dir+hls+mag", vwr)
+                                  "abs+dir+hls+mag")
     #3 combos
     combined = iu.combined_thresh([abs_sobel, dir_sobel, hls_thresh ],
-                                  "abs+dir+hls", vwr)
+                                  "abs+dir+hls")
     combined = iu.combined_thresh([abs_sobel, dir_sobel, mag_sobel ],
-                                  "abs+dir+mag", vwr)
+                                  "abs+dir+mag")
     combined = iu.combined_thresh([abs_sobel, hls_thresh, mag_sobel ],
-                                  "abs+hls+mag", vwr)
+                                  "abs+hls+mag")
     #2 combos
     combined = iu.combined_thresh([abs_sobel, dir_sobel ],
-                                  "abs+dir", vwr)
+                                  "abs+dir")
     combined = iu.combined_thresh([abs_sobel,  hls_thresh ],
-                                  "abs+hls", vwr)
+                                  "abs+hls")
     combined = iu.combined_thresh([abs_sobel, mag_sobel ],
-                                  "abs+mag", vwr)
+                                  "abs+mag")
+    combined = iu.combined_thresh([mag_sobel, dir_sobel ],
+                                  "mag+dir")
     vwr.show()
     print("FIXME: combined thresholds not working too well right now")
 
@@ -161,16 +157,86 @@ def pipeline_6_12_mk2(path, color_space_id=-1, ch_slct=-1,  ch_name="",
     # there is really no advantage to this that I can see over hsv v-chan alone
     return cb_image
 
+def more_better_ch_slct(path, color_space_id=-1, ch_slct=-1, cd =None, pd=None,
+                        vwr=None):
+    cs_short_name = iu.colorConversion2DestColorName[str(color_space_id)]
+    thresh_key = cs_short_name + "_thresh"
+    thresh = pd[thresh_key][ch_slct]
+    img = iu.imRead(path, reader='cv2', vwr=vwr)
+    undistorted = iu.undistort(img, cd, vwr)
+    top_down = iu.look_down(undistorted, cd, vwr)
+     # Convert to color_space_id and isolate desired channel
+    # https://en.wikipedia.org/wiki/List_of_color_spaces_and_their_uses
+    acs = iu.cv2CvtColor(top_down, color_space_id) # acs -> alternate color space
+    slct_channel = acs.img_data[:,:,ch_slct]
+    title_sfx = cs_short_name + "_" +str(ch_slct)
+    print("\tFIXME:title_sfx(%d) = %s" % (ch_slct, title_sfx))
+
+    iv._push(vwr,
+             iu.Image(img_data = np.squeeze(slct_channel),
+                      title="raw:" + title_sfx, type='gray'))
+
+    # Threshold color channel
+    s_binary = np.zeros_like(slct_channel)
+    s_binary[(slct_channel >= thresh[0]) & (slct_channel <= thresh[1])] = 1
+    tb_image = iu.Image(img_data = np.squeeze(s_binary),
+                      title="thresh::" + title_sfx, type='gray')
+    return tb_image
+  
+
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
+vwr = cache_dict['viewer']
+
 #lane_finding_take_1('test_images/signs_vehicles_xygrad.png',
 #                    cd = cache_dict, pd=parm_dict)
-
 #doit_6_12('test_images/bridge_shadow.jpg', cd = cache_dict, pd=parm_dict, vwr=vwr)
-pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=2, ch_name="hls:s",
-                  cd = cache_dict, pd = parm_dict, vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=2, ch_name="hls:s",
+#                  cd = cache_dict, pd = parm_dict, vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=1, ch_name="hls:l",
+#                  cd = cache_dict, pd = parm_dict, vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
+#                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
+#                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
 
-pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
-                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
+test_imgs = [
+    #'test_images/signs_vehicles_xygrad.png',
+    'test_images/bridge_shadow.jpg'
+]
+
+def test_more_better_ch_slct():
+    conversions = [cv2.COLOR_BGR2HLS, cv2.COLOR_BGR2Lab, cv2.COLOR_BGR2Luv]
+               
+    vwr.flush()
+    for path in test_imgs:
+        for conversion in conversions:
+            for chan in range(3):
+                print("%s, %d, %d" % (path, conversion, chan))
+                img_out = more_better_ch_slct(path, color_space_id = conversion,
+                                              ch_slct = chan, cd = cache_dict, pd = parm_dict, vwr=vwr)
+                iv._push(vwr, img_out)
+
+#test_more_better_ch_slct()
+# from above we see the best performance from HLS channel 1(L) and Lab channel 2(B)
+# sooooo, let's try to combine them
+
+def more_bueno_line_detect(path):
+    hls_binary_l = more_better_ch_slct(path, cv2.COLOR_BGR2HLS, 1, cd = cache_dict,
+                                         pd = parm_dict, vwr=vwr)
+    lab_binary_b = more_better_ch_slct(path, cv2.COLOR_BGR2Lab, 2, cd = cache_dict,
+                                         pd = parm_dict, vwr=vwr)
+    combined = np.zeros_like(hls_binary_l.img_data)
+    combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
+    ret = iu.Image(img_data = combined, title = "hls+lab", type='gray')
+    return ret
+
+vwr.flush()
+
+combined_hls_lab = more_bueno_line_detect('test_images/bridge_shadow.jpg')
+iv._push(vwr, combined_hls_lab)
+
 vwr.show()
-
