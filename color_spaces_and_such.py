@@ -155,40 +155,14 @@ def pipeline_6_12_mk2(path, color_space_id=-1, ch_slct=-1,  ch_name="",
                                       title = ch_name + "+sobelx",
                                       type = 'gray'))
     # there is really no advantage to this that I can see over hsv v-chan alone
-    return cb_image
-
-def more_better_ch_slct(path, color_space_id=-1, ch_slct=-1, cd =None, pd=None,
-                        vwr=None):
-    cs_short_name = iu.colorConversion2DestColorName[str(color_space_id)]
-    thresh_key = cs_short_name + "_thresh"
-    thresh = pd[thresh_key][ch_slct]
-    img = iu.imRead(path, reader='cv2', vwr=vwr)
-    undistorted = iu.undistort(img, cd, vwr)
-    top_down = iu.look_down(undistorted, cd, vwr)
-     # Convert to color_space_id and isolate desired channel
-    # https://en.wikipedia.org/wiki/List_of_color_spaces_and_their_uses
-    acs = iu.cv2CvtColor(top_down, color_space_id) # acs -> alternate color space
-    slct_channel = acs.img_data[:,:,ch_slct]
-    title_sfx = cs_short_name + "_" +str(ch_slct)
-
-    iv._push(vwr,
-             iu.Image(img_data = np.squeeze(slct_channel),
-                      title="raw:" + title_sfx, type='gray'))
-
-    # Threshold color channel
-    s_binary = np.zeros_like(slct_channel)
-    s_binary[(slct_channel >= thresh[0]) & (slct_channel <= thresh[1])] = 1
-    tb_image = iu.Image(img_data = np.squeeze(s_binary),
-                      title="thresh::" + title_sfx, type='gray')
-    return tb_image
-  
+    return cb_image  
 
 test_imgs = [
     #'test_images/signs_vehicles_xygrad.png',
     'test_images/bridge_shadow.jpg'
 ]
 
-def test_more_better_ch_slct():
+def test_oneChannelInAlternateColorspace2BinaryinaryImage():
     conversions = [cv2.COLOR_BGR2HLS, cv2.COLOR_BGR2Lab, cv2.COLOR_BGR2Luv]
                
     vwr.flush()
@@ -196,26 +170,15 @@ def test_more_better_ch_slct():
         for conversion in conversions:
             for chan in range(3):
                 print("%s, %d, %d" % (path, conversion, chan))
-                img_out = more_better_ch_slct(path, color_space_id = conversion,
-                                              ch_slct = chan, cd = cache_dict, pd = parm_dict, vwr=vwr)
+                img_out = oneChannelInAlternateColorspace2BinaryinaryImage(path,
+                                                                           color_space_id = conversion,
+                                                                           ch_slct = chan, cd = cache_dict,
+                                                                           pd = parm_dict, vwr=vwr)
                 iv._push(vwr, img_out)
 
-#test_more_better_ch_slct()
+#test_oneChannelInAlternateColorspace2BinaryinaryImage()
 # from above we see the best performance from HLS channel 1(L) and Lab channel 2(B)
 # sooooo, let's try to combine them
-
-def more_bueno_line_detect(path):
-    hls_binary_l = more_better_ch_slct(path, cv2.COLOR_BGR2HLS, 1, cd = cache_dict,
-                                         pd = parm_dict, vwr=vwr)
-    lab_binary_b = more_better_ch_slct(path, cv2.COLOR_BGR2Lab, 2, cd = cache_dict,
-                                         pd = parm_dict, vwr=vwr)
-    combined = np.zeros_like(hls_binary_l.img_data)
-    combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
-    ret = iu.Image(img_data = combined, title = "hls+lab", type='gray')
-    return ret
-
-cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
-vwr = cache_dict['viewer']
 
 #lane_finding_take_1('test_images/signs_vehicles_xygrad.png',
 #                    cd = cache_dict, pd=parm_dict)
@@ -233,7 +196,11 @@ vwr = cache_dict['viewer']
 #                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
 #                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
 
-combined_hls_lab = more_bueno_line_detect('test_images/bridge_shadow.jpg')
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
+vwr = cache_dict['viewer']
+
+combined_hls_lab = iu.hls_lab_line_detect('test_images/bridge_shadow.jpg',
+                                          cache_dict = cache_dict, parm_dict = parm_dict)
 iv._push(vwr, combined_hls_lab)
 
 vwr.show()

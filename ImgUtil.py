@@ -343,3 +343,36 @@ def cb_corners(parm_dict, cache_dict, max_files=0, verbose=False, vwr=None):
     iv._show(vwr, clear=True)
     cache_dict['obj_points'] = obj_points
     cache_dict['img_points'] = img_points
+
+def oneChannelInAlternateColorspace2BinaryinaryImage(path,
+                                                     color_space_id=-1, ch_slct=-1, cd =None, pd=None):
+     cs_short_name = colorConversion2DestColorName[str(color_space_id)]
+     thresh_key = cs_short_name + "_thresh"
+     thresh = pd[thresh_key][ch_slct]
+     img = imRead(path, reader='cv2', vwr=None)
+     undistorted = undistort(img, cd, vwr=None)
+     top_down = look_down(undistorted, cd, None)
+     # Convert to color_space_id and isolate desired channel
+     # https://en.wikipedia.org/wiki/List_of_color_spaces_and_their_uses
+     acs = cv2CvtColor(top_down, color_space_id) # acs -> alternate color space
+     slct_channel = acs.img_data[:,:,ch_slct]
+     title_sfx = cs_short_name + "_" +str(ch_slct)
+     
+     # Threshold color channel
+     s_binary = np.zeros_like(slct_channel)
+     s_binary[(slct_channel >= thresh[0]) & (slct_channel <= thresh[1])] = 1
+     tb_image = Image(img_data = np.squeeze(s_binary),
+                         title="thresh::" + title_sfx, type='gray')
+     return tb_image
+
+def hls_lab_line_detect(path, cache_dict = None, parm_dict = None):
+    hls_binary_l = oneChannelInAlternateColorspace2BinaryinaryImage(path,
+                                                                    cv2.COLOR_BGR2HLS, 1, cd = cache_dict,
+                                                                    pd = parm_dict)
+    lab_binary_b = oneChannelInAlternateColorspace2BinaryinaryImage(path,
+                                                                    cv2.COLOR_BGR2Lab, 2, cd = cache_dict,
+                                                                    pd = parm_dict)
+    combined = np.zeros_like(hls_binary_l.img_data)
+    combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
+    ret = Image(img_data = combined, title = "hls+lab", type='gray')
+    return ret
