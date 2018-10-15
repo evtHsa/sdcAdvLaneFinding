@@ -24,7 +24,35 @@ color_2_src_type = {
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
      str(cv2.COLOR_RGB2HLS)   : 'rgb',
      str(cv2.COLOR_BGR2HLS)   : 'bgr',
-     str(cv2.COLOR_BGR2HSV)   : 'bgr'
+     str(cv2.COLOR_BGR2HSV)   : 'bgr',
+     str(cv2.COLOR_RGB2Lab)   : 'rgb',
+     str(cv2.COLOR_BGR2Lab)    : 'bgr',
+     str(cv2.COLOR_RGB2Luv)    : 'rgb',
+     str(cv2.COLOR_BGR2Luv)    : 'bgr'
+}
+
+colorConversion2DestTypeDict = { # FIXME: this is misguided, misleading, and bad
+     str(cv2.COLOR_RGB2GRAY) : 'gray',
+     str(cv2.COLOR_BGR2GRAY) : 'gray',
+     str(cv2.COLOR_RGB2HLS)   : 'gray',
+     str(cv2.COLOR_BGR2HLS)   : 'gray',
+     str(cv2.COLOR_BGR2HSV)   : 'gray',
+     str(cv2.COLOR_RGB2Lab) : 'gray',
+     str(cv2.COLOR_BGR2Lab) : 'gray',
+     str(cv2.COLOR_RGB2Luv) : 'gray',
+     str(cv2.COLOR_BGR2Luv) : 'gray'
+}
+
+colorConversion2DestColorName = {
+     str(cv2.COLOR_RGB2GRAY) : 'gray',
+     str(cv2.COLOR_BGR2GRAY) : 'gray',
+     str(cv2.COLOR_RGB2HLS)   : 'hls',
+     str(cv2.COLOR_BGR2HLS)   : 'hls',
+     str(cv2.COLOR_BGR2HSV)   : 'hsv',
+     str(cv2.COLOR_RGB2Lab)   : 'lab',
+     str(cv2.COLOR_BGR2Lab)   : 'lab',
+     str(cv2.COLOR_RGB2Luv)   : 'luv',
+     str(cv2.COLOR_BGR2Luv)   : 'luv'
 }
 
 class Image:
@@ -57,7 +85,7 @@ def cv2CvtColor(img_obj, color, vwr=None):
 
      ret = Image(img_data = cv2.cvtColor(img_obj.img_data, color),
                  title = "cvtColor: " + str(color),
-                 type=getColorName(color))
+                 type=getColorConversionDestType(color))
      iv._push(vwr, ret)
      return ret
 
@@ -187,7 +215,7 @@ def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      iv._push(vwr, binary_image)
      return binary_image
 
-def combined_thresh(btnl, title, vwr): # bin_thresh_ndarray_list
+def combined_thresh(btnl, title): # bin_thresh_ndarray_list
      if not btnl:
           raise Exception("seriously?")
      assert(type(btnl) is list)
@@ -196,20 +224,16 @@ def combined_thresh(btnl, title, vwr): # bin_thresh_ndarray_list
           assert(type(btn) is Image)
           img_data = np.logical_and(img_data, btn.img_data)
      ret = Image(img_data = np.squeeze(img_data), title = title, type = 'gray')
-     iv._push(vwr, ret)
      return ret
 
 def imRead(path, reader=None, vwr=None):
      assert(reader == 'cv2' or reader == 'mpimg')
 
+     title = reader + ":imread(" + path + ")"
      if (reader == 'cv2'):
-          img_obj = Image(img_data = cv2.imread(path),
-                          title = reader + ":imread(" + path + ")",
-                          type = 'bgr')
+          img_obj = Image(img_data = cv2.imread(path), title = title, type = 'bgr')
      else:
-          img_obj = Image(img_data = mpimg.imread(path),
-                          title = reader + ":imread(" + path + ")",
-                          type = 'rgb')
+          img_obj = Image(img_data = cv2.imread(path), title = title, type = 'rgb')
      iv._push(vwr, img_obj)
      return img_obj
 
@@ -234,17 +258,8 @@ def cv2WarpPerspective(img, xformMatrix, size, vwr=None):
      iv._push(vwr, img)
      return img
 
-# FIXME: this is buggy and a misnomer
-color2NameDict = {
-     str(cv2.COLOR_RGB2GRAY) : 'gray',
-     str(cv2.COLOR_BGR2GRAY) : 'gray',
-     str(cv2.COLOR_RGB2HLS)   : 'gray',
-     str(cv2.COLOR_BGR2HLS)   : 'gray',
-     str(cv2.COLOR_BGR2HSV)   : 'gray'
-}
-
-def getColorName(color):
-     return color2NameDict[str(color)]
+def getColorConversionDestType(color):
+     return colorConversion2DestTypeDict[str(color)]
 
 def undistort(img_obj, cache, vwr=None):
     assert(type(img_obj) is Image)
