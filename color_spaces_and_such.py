@@ -4,11 +4,12 @@ import util as ut
 import ImgViewer as iv
 import ImgUtil as iu
 import cv2
+import numpy as np
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
 vwr = cache_dict['viewer']
 
-def lane_finding_take_1(path, pd =None, cd = None):
+def lane_finding_take_1(path, cd = None, pd =None):
     #@Undistort the image using cv2.undistort() with mtx and dist from cache
     #@Convert to grayscale
     #@ Find the chessboard corners
@@ -68,29 +69,33 @@ def lane_finding_take_1(path, pd =None, cd = None):
     print("FIXME: combined thresholds not working too well right now")
 
 def pipeline_6_12_hls(path, s_thresh=(170, 255), sx_thresh=(20, 100),
-                      pd =None, cd = None, vwr=None):
+                      cd=None, pd =None, vwr=None):
      
-    ut.oneShotMsg("FIXEM: need parms for s_thresh and sx_thres")
-    ut.brk("stuff needs porting to new scheme wicked bad")
+    ut.oneShotMsg("FIXME: need parms for s_thresh and sx_thres")
     img = iu.imRead(path, reader='cv2', vwr=vwr)
-    undistorted = iu.cv2Undistort(img, cd['mtx'], cd['dist'], vwr)
+    undistorted = iu.undistort(img, cd, vwr)
     top_down = iu.look_down(undistorted, cd, vwr)
     
     # Convert to HLS color space and separate the V channel
-    hls = iu.cv2CvtColor(top_down, cv2.COLOR_RGB2HLS)
+    hls = iu.cv2CvtColor(top_down, cv2.COLOR_BGR2HLS)
     h_channel = hls.img_data[:,:,0]
     l_channel = hls.img_data[:,:,1]
     s_channel = hls.img_data[:,:,2]
-    ut.brk("debug this line by line")
-    iv._push_deprecated(vwr, np.squeeze(h_channel), "h_channel", cmap='gray')
-    iv._push_deprecated(vwr, np.squeeze(l_channel), "l_channel", cmap='gray')
-    iv._push_deprecated(vwr, np.squeeze(s_channel), "s_channel", cmap='gray') # shows lines well
-    
+
+    iv._push(vwr,
+             iu.Image(img_data=np.squeeze(h_channel), title="h_chan", type='gray'))
+    iv._push(vwr,
+             iu.Image(img_data=np.squeeze(l_channel), title="l_chan", type='gray'))
+    iv._push(vwr,
+             iu.Image(img_data=np.squeeze(s_channel), title="s_chan", type='gray'))
+
     # Sobel x
     sobelx = cv2.Sobel(l_channel, cv2.CV_64F, 1, 0) # Take the derivative in x
     abs_sobelx = np.absolute(sobelx) # Abs x drvtv to accentuate lines away from horizontal
     scaled_sobel = np.uint8(255*abs_sobelx/np.max(abs_sobelx))
-    iv._push_deprecated(vwr, np.squeeze(scaled_sobel), "scaled_sobel", cmap='gray')
+    iv._push(vwr,
+             iu.Image(img_data = np.squeeze(scaled_sobel), title="scaled_sobel",
+                      type='gray'))
     ##
     
     # Threshold x gradient
@@ -100,33 +105,72 @@ def pipeline_6_12_hls(path, s_thresh=(170, 255), sx_thresh=(20, 100),
     # Threshold color channel
     s_binary = np.zeros_like(s_channel)
     s_binary[(s_channel >= s_thresh[0]) & (s_channel <= s_thresh[1])] = 1
-    iv._push_deprecated(vwr, np.squeeze(s_binary), "s_binary", cmap='gray')
+    iv._push(vwr,
+             iu.Image(img_data = np.squeeze(s_binary), title="sobel binary", type='gray'))
+
     # Stack each channel
     color_binary = np.dstack(( np.zeros_like(sxbinary), sxbinary, s_binary)) * 255
-    iv._push_deprecated(vwr, np.squeeze(color_binary), "color_binary", cmap='gray')
+    iv._push(vwr, # it's clear that the combo of sobel_x and s channel is best so far
+             iu.Image(img_data = np.squeeze(color_binary), title="color_binary"))
+
     return color_binary
 
-def doit_6_12(path, pd =None, cd = None, vwr=None):
+def doit_6_12(path, cd = None, pd =None, vwr=None):
 
-     result =pipeline_6_12_hls(path, vwr=vwr)
-     ut.brk("get rid of this plot crap")
-     # Plot the result
-     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 9))
-     f.tight_layout()
-     
-     ax1.imshow(image)
-     ax1.set_title('Original Image', fontsize=40)
-     
-     ax2.imshow(result)
-     ax2.set_title('Pipeline Result', fontsize=40)
-     plt.subplots_adjust(left=0., right=1, top=0.9, bottom=0.)
+     result =pipeline_6_12_hls(path, cd=cd, pd=pd, vwr=vwr)
+     vwr.show()
+
+def pipeline_6_12_mk2(path, color_space_id=-1, ch_slct=-1,  ch_name="",
+                      s_thresh=(170, 255), sx_thresh=(20, 100), cd=None, pd=None,
+                      vwr=None):
+    
+    img = iu.imRead(path, reader='cv2', vwr=vwr)
+    undistorted = iu.undistort(img, cd, vwr)
+    top_down = iu.look_down(undistorted, cd, vwr)
+    
+    # Convert to color_space_id and isolate desired channel
+    # https://en.wikipedia.org/wiki/List_of_color_spaces_and_their_uses
+    acs = iu.cv2CvtColor(top_down, color_space_id) # acs -> alternate color space
+
+    slct_channel = acs.img_data[:,:,ch_slct]
+
+    iv._push(vwr,
+             iu.Image(img_data = np.squeeze(slct_channel), title=ch_name, type='gray'))
+
+    # Sobel x
+    sobelx = cv2.Sobel(slct_channel, cv2.CV_64F, 1, 0) # Take the derivative in x
+    abs_sobelx = np.absolute(sobelx) # Abs x drvtv to accentuate lines away from horizontal
+    scaled_sobel = np.uint8(255*abs_sobelx/np.max(abs_sobelx))
+    iv._push(vwr, iu.Image(img_data = np.squeeze(scaled_sobel),
+                           title = ch_name + ":scaled_sobel", type = 'gray'))
+
+
+    
+    # Threshold x gradient
+    sxbinary = np.zeros_like(scaled_sobel)
+    sxbinary[(scaled_sobel >= sx_thresh[0]) & (scaled_sobel <= sx_thresh[1])] = 1
+    
+    # Threshold color channel
+    s_binary = np.zeros_like(slct_channel)
+    s_binary[(slct_channel >= s_thresh[0]) & (slct_channel <= s_thresh[1])] = 1
+    # Stack each channel
+    color_binary = np.dstack(( np.zeros_like(sxbinary), sxbinary, s_binary)) * 255
+    cb_image = iv._push(vwr, iu.Image(img_data = np.squeeze(color_binary),
+                                      title = ch_name + "+sobelx",
+                                      type = 'gray'))
+    # there is really no advantage to this that I can see over hsv v-chan alone
+    return cb_image
 
 #lane_finding_take_1('test_images/signs_vehicles_xygrad.png',
-#                    pd=parm_dict, cd = cache_dict)
+#                    cd = cache_dict, pd=parm_dict)
 
-doit_6_12('test_images/bridge_shadow.jpg', pd=parm_dict, cd = cache_dict, vwr=vwr)
-#demo.pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-#                      cv2.COLOR_RGB2HLS, vwr=vwr)
-demo.pipeline_6_12_mk2('test_images/bridge_shadow.jpg', cv2.COLOR_RGB2HSV,
-                       vwr=vwr)
+#doit_6_12('test_images/bridge_shadow.jpg', cd = cache_dict, pd=parm_dict, vwr=vwr)
+pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=2, ch_name="hls:s",
+                  cd = cache_dict, pd = parm_dict, vwr=vwr)
+
+pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
+                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
+vwr.show()
 
