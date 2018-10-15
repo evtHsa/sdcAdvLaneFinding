@@ -9,12 +9,6 @@ import cv2
 binary_warped = mpimg.imread('warped_example.jpg')
 
 def find_lane_pixels(binary_warped):
-    # Set height of windows - based on nwindows above and image shape
-    window_height = np.int(binary_warped.shape[0]//nwindows)
-    # Identify the x and y positions of all nonzero pixels in the image
-    nonzero = binary_warped.nonzero()
-    nonzeroy = np.array(nonzero[0])
-    nonzerox = np.array(nonzero[1])
     # Current positions to be updated later for each window in nwindows
     leftx_current = leftx_base
     rightx_current = rightx_base

@@ -21,6 +21,16 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     hist = iu.hist(hls_lab, vwr)
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
     print("FIXME: histo maxen = %d, %d" % (left_max_ix, right_max_ix))
+    binary_warped = top_down.img_data # re-use code w/less typing
+
+    # Set height of windows - based on nwindows above and image shape
+    window_height = np.int(binary_warped.shape[0]//nwindows)
+    print("FIXME: window_height = %d" % window_height)
+
+    # Identify the x and y positions of all nonzero pixels in the image
+    nonzero = binary_warped.nonzero()
+    nonzeroy = np.array(nonzero[0])
+    nonzerox = np.array(nonzero[1])
     ut.brk("look what a fine mess you've got us into know ollie")
   
 def doit(path="", cd=None, pd=None, vwr=None):
