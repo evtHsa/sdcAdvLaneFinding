@@ -56,13 +56,11 @@ class ImgViewer:
         if clear:
             self.flush()
 
-    def show_immed(self, img, title="", cmap=None):
+    def show_immed(self, img, title=""):
+        assert(type(img) is iu.Image)
         plt.figure()
         plt.title(title)
-        if cmap:
-            plt.imshow(img, cmap=cmap)
-        else:
-            plt.imshow(img)
+        plt.imshow(img.img_data, cmap=img.cmap)
         plt.show()
 
 def _view(vwr, img, title, cmap=None):
