@@ -26,7 +26,23 @@ parm_dict ={
     'hough_max_gap' : 24,
     'hough_min_angle_deg' : 25, # 30 - 5
     'hough_max_angle_deg' : 65, # 60 + 5]
-    'hough_min_intersect' : 100
+    'hough_min_intersect' : 100,
+    # herewith we begin new style of threshold parms which hopefully is less painful 2use
+    'hls_thresh' : [
+        (180, 193), #not too useful
+        (221, 255), #best
+        (0,255) #not  too usful
+    ],
+    'lab_thresh' : [
+        (230, 255), #(L): not too useful
+        (133, 253), #(a): dubious utility
+        (190, 255)  #(b): not sure if this is picking up the right stuff
+    ],
+    'luv_thresh' : [
+        (99, 147),   #(L): seeems to pick up yellow and white lines well
+        (133, 253), #(U): picks up non blurry yellow
+        (0, 255)      #(V): seems useless
+    ]
 }
 
 # add things here as psuedo documentation
