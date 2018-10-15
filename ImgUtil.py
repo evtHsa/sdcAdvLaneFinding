@@ -405,7 +405,6 @@ def hist(img, vwr):
 
 def get_LR_hist_max_ix(hist):
     # see lesson 7.4
-    ut.oneShotMsg("move this to ImgUtil")
     width = hist.img_data.shape[0]
     midway = width // 2
     
