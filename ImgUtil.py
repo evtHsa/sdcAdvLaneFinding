@@ -378,3 +378,12 @@ def hls_lab_line_detect(img, cache_dict = None, parm_dict = None):
      combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
      ret = Image(img_data = combined, title = "hls+lab", type='gray')
      return ret
+
+def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
+    img = imRead(path, reader='cv2', vwr=None)
+    iv._push(vwr,img) # initial img
+    undistorted = undistort(img, cd, vwr=None)
+    top_down = look_down(undistorted, cd, None)
+    ret = hls_lab_line_detect(top_down, cache_dict = cd, parm_dict = pd)
+    iv._push(vwr,ret) # result img
+    return ret

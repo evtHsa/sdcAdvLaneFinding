@@ -5,22 +5,11 @@ import ImgViewer as iv
 import ImgUtil as iu
 import cv2
 import numpy as np
-
-
-def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
-    ut.oneShotMsg("FIXME: this probably should move to ImgUtil")
-    img = iu.imRead(path, reader='cv2', vwr=None)
-    iv._push(vwr,img) # initial img
-    undistorted = iu.undistort(img, cd, vwr=None)
-    top_down = iu.look_down(undistorted, cd, None)
-    ret = iu.hls_lab_line_detect(top_down, cache_dict = cd, parm_dict = pd)
-    iv._push(vwr,ret) # result img
-    return ret
     
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     for path in ut.get_fnames("test_images/", "*.jpg"):
-        img = hls_lab_pipeline(path, cd, pd, vwr)
+        img = iu.hls_lab_pipeline(path, cd, pd, vwr)
         #iv._push(vwr, img)
     vwr.show()
 
