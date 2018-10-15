@@ -23,7 +23,8 @@ color_2_src_type = {
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
      str(cv2.COLOR_RGB2HLS)   : 'rgb',
-     str(cv2.COLOR_BGR2HLS)   : 'bgr'
+     str(cv2.COLOR_BGR2HLS)   : 'bgr',
+     str(cv2.COLOR_BGR2HSV)   : 'bgr'
 }
 
 class Image:
@@ -232,12 +233,14 @@ def cv2WarpPerspective(img, xformMatrix, size, vwr=None):
      img.img_data = cv2.warpPerspective(img.img_data, xformMatrix, size)
      iv._push(vwr, img)
      return img
-          
+
+# FIXME: this is buggy and a misnomer
 color2NameDict = {
      str(cv2.COLOR_RGB2GRAY) : 'gray',
      str(cv2.COLOR_BGR2GRAY) : 'gray',
      str(cv2.COLOR_RGB2HLS)   : 'gray',
      str(cv2.COLOR_BGR2HLS)   : 'gray',
+     str(cv2.COLOR_BGR2HSV)   : 'gray'
 }
 
 def getColorName(color):
