@@ -72,7 +72,10 @@ class Image:
           rgb = self.img_data
           if self.type == 'bgr':
                rgb = cv2.cvtColor(self.img_data, cv2.COLOR_BGR2RGB)
-          _plt.imshow(rgb, cmap=self.cmap)
+          if len(rgb.shape) == 1:
+               _plt.plot(rgb) # histogram or other 1D thing
+          else:
+               _plt.imshow(rgb, cmap=self.cmap)
           _plt.xlabel(self.title)
           
      def legalColorConversion(self, color):
