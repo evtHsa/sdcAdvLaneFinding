@@ -170,7 +170,6 @@ def more_better_ch_slct(path, color_space_id=-1, ch_slct=-1, cd =None, pd=None,
     acs = iu.cv2CvtColor(top_down, color_space_id) # acs -> alternate color space
     slct_channel = acs.img_data[:,:,ch_slct]
     title_sfx = cs_short_name + "_" +str(ch_slct)
-    print("\tFIXME:title_sfx(%d) = %s" % (ch_slct, title_sfx))
 
     iv._push(vwr,
              iu.Image(img_data = np.squeeze(slct_channel),
@@ -183,25 +182,6 @@ def more_better_ch_slct(path, color_space_id=-1, ch_slct=-1, cd =None, pd=None,
                       title="thresh::" + title_sfx, type='gray')
     return tb_image
   
-
-cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
-vwr = cache_dict['viewer']
-
-#lane_finding_take_1('test_images/signs_vehicles_xygrad.png',
-#                    cd = cache_dict, pd=parm_dict)
-#doit_6_12('test_images/bridge_shadow.jpg', cd = cache_dict, pd=parm_dict, vwr=vwr)
-#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-#                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=2, ch_name="hls:s",
-#                  cd = cache_dict, pd = parm_dict, vwr=vwr)
-#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-#                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=1, ch_name="hls:l",
-#                  cd = cache_dict, pd = parm_dict, vwr=vwr)
-#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-#                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
-#                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
-#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
-#                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
-#                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
 
 test_imgs = [
     #'test_images/signs_vehicles_xygrad.png',
@@ -234,7 +214,24 @@ def more_bueno_line_detect(path):
     ret = iu.Image(img_data = combined, title = "hls+lab", type='gray')
     return ret
 
-vwr.flush()
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
+vwr = cache_dict['viewer']
+
+#lane_finding_take_1('test_images/signs_vehicles_xygrad.png',
+#                    cd = cache_dict, pd=parm_dict)
+#doit_6_12('test_images/bridge_shadow.jpg', cd = cache_dict, pd=parm_dict, vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=2, ch_name="hls:s",
+#                  cd = cache_dict, pd = parm_dict, vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HLS, ch_slct=1, ch_name="hls:l",
+#                  cd = cache_dict, pd = parm_dict, vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
+#                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
+#pipeline_6_12_mk2('test_images/bridge_shadow.jpg',
+#                  color_space_id = cv2.COLOR_BGR2HSV, ch_slct =2, ch_name="hsv:v", 
+#                  cd = cache_dict, pd = parm_dict,  vwr=vwr)
 
 combined_hls_lab = more_bueno_line_detect('test_images/bridge_shadow.jpg')
 iv._push(vwr, combined_hls_lab)
