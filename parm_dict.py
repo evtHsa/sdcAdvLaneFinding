@@ -42,7 +42,9 @@ parm_dict ={
         (99, 147),   #(L): seeems to pick up yellow and white lines well
         (133, 253), #(U): picks up non blurry yellow
         (0, 255)      #(V): seems useless
-    ]
+    ],
+    # from lesson 7.4
+    'sliding_windows' : {'nwindows' : 9, 'margin' : 100, 'minpix' : 50}
 }
 
 # add things here as psuedo documentation
