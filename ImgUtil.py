@@ -387,3 +387,19 @@ def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
     top_down = look_down(undistorted, cd, vwr)
     ret = hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     return ret
+
+def histo_pipe(path="", cd=None, pd=None, vwr=None):
+    hls_lab = hls_lab_pipeline(path, cd, pd, vwr)
+    ret = hist(hls_lab, vwr)
+    hist.title = "hist: " + path
+    return ret
+
+def hist(img, vwr):
+    assert(type(img) is Image)
+    bottom_half = img.img_data[img.img_data.shape[0]//2:,:]
+    # Sum across image pixels vertically - make sure to set `axis`
+    # i.e. the highest areas of vertical lines should be larger values
+    histogram = np.sum(bottom_half, axis=0)
+    histogram = Image(img_data = histogram, title="", type='gray')
+    return histogram
+
