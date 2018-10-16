@@ -10,13 +10,6 @@ binary_warped = mpimg.imread('warped_example.jpg')
 
 def find_lane_pixels(binary_warped):
     # Current positions to be updated later for each window in nwindows
-    leftx_current = leftx_base
-    rightx_current = rightx_base
-
-    # Create empty lists to receive left and right lane pixel indices
-    left_lane_inds = []
-    right_lane_inds = []
-
     # Step through the windows one by one
     for window in range(nwindows):
         # Identify window boundaries in x and y (and right and left)

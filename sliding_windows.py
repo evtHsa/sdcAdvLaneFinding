@@ -10,6 +10,7 @@ import numpy as np
 import ImgUtil as iu
 import matplotlib.pyplot as plt
 
+#adapted from lesson 7.4 solution
 def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     # FIXME: subsume from tmp.py from 7.4 solution to here
     wp = pd['sliding_windows']
@@ -31,6 +32,18 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     nonzero = binary_warped.nonzero()
     nonzeroy = np.array(nonzero[0])
     nonzerox = np.array(nonzero[1])
+
+    # Current positions to be updated later for each window in nwindows
+    leftx_current = left_max_ix
+    rightx_current = right_max_ix
+    
+    # Create empty lists to receive left and right lane pixel indices
+    left_lane_inds = []
+    right_lane_inds = []
+
+    for window in range(nwindows):
+        print("FIXME: window = %d" % window)
+        
     ut.brk("look what a fine mess you've got us into know ollie")
   
 def doit(path="", cd=None, pd=None, vwr=None):
