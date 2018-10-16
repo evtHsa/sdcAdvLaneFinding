@@ -8,21 +8,35 @@ import ImgViewer as iv
 import cv2
 import numpy as np
 import ImgUtil as iu
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt #FIXME: nuke?
+import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
 class Window:
-    def __init__(self, img, win_ix, win_height, x_base, margin, title):
+    def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr):
+        ut.oneShotMsg("FIXME: assert img is an ndarray")
         self.y_lo = img.shape[0] - (win_ix + 1) * win_height
         self.y_hi = img.shape[0] - win_ix  * win_height
         self.x_lo = x_base - margin
         self.x_hi = x_base + margin
         self.ix = win_ix
         self.title = title
+        self.vwr = vwr
 
     def print(self):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
               (self.title, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
+
+    def draw(self, out_img):
+        ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
+        ut.brk("debug draw - next line is busted")
+        cv2.rectangle(out_img, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
+                      (0, 255, 0), 2)
+        FIXME = iu.Image(image_data = out_img, title=self.title, type='bgr')
+        self.vwr.flush()
+        iv.push(self.vwr, FIXME)
+        self.vwr.show()
+        ut.brk("FIXME: implement draw via cv2.rectangle")
         
 def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     # FIXME: subsume from tmp.py from 7.4 solution to here
@@ -36,6 +50,7 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
     print("FIXME: histo maxen = %d, %d" % (left_max_ix, right_max_ix))
     binary_warped = top_down.img_data # re-use code w/less typing
+    out_img = np.dstack((binary_warped, binary_warped, binary_warped))
 
     # Set height of windows - based on nwindows above and image shape
     window_height = np.int(binary_warped.shape[0]//nwindows)
@@ -55,10 +70,12 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     right_lane_inds = []
 
     for window in range(nwindows):
-        win_L = Window(binary_warped, window, window_height, leftx_current, margin, "L")
-        win_L.print()
-        win_R = Window(binary_warped, window, window_height, rightx_current, margin, "R")
-        win_R.print()
+        win_L = Window(binary_warped, window, window_height, leftx_current, margin,
+                       "L", vwr)
+        win_L.draw(out_img)
+        win_R = Window(binary_warped, window, window_height, rightx_current, margin,
+                       "R", vwr)
+        win_R.draw(out_img)
         
     ut.brk("look what a fine mess you've got us into know ollie")
   
