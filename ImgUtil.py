@@ -55,14 +55,14 @@ colorConversion2DestColorName = {
 }
 
 class Image:
-     def __init__(self, img_data=None, title="", type='bgr'):
+     def __init__(self, img_data=None, title="", img_type='bgr'):
           self.img_data = img_data
-          self.cmap = type_2_cmap[type] # fall down if not in dict
-          self.type = type
+          self.cmap = type_2_cmap[img_type] # fall down if not in dict
+          self.img_type = img_type
           self.title = title
           
      def show(self):
-          print("title = %s, type = %s" % (self.title, self.type))
+          print("title = %s, img_type = %s" % (self.title, self.img_type))
           
      def shape(self):
           return self.img_data.shape
@@ -70,7 +70,7 @@ class Image:
      def plot(self, _plt):
           #self.show()
           rgb = self.img_data
-          if self.type == 'bgr':
+          if self.img_type == 'bgr':
                rgb = cv2.cvtColor(self.img_data, cv2.COLOR_BGR2RGB)
           if len(rgb.shape) == 1:
                _plt.plot(rgb) # histogram or other 1D thing
@@ -79,7 +79,7 @@ class Image:
           _plt.xlabel(self.title)
           
      def legalColorConversion(self, color):
-          return self.type == color_2_src_type[str(color)]
+          return self.img_type == color_2_src_type[str(color)]
      
 def cv2CvtColor(img_obj, color, vwr=None):
      assert(type(img_obj) is Image)
@@ -87,7 +87,7 @@ def cv2CvtColor(img_obj, color, vwr=None):
 
      ret = Image(img_data = cv2.cvtColor(img_obj.img_data, color),
                  title = "cvtColor: " + str(color),
-                 type=getColorConversionDestType(color))
+                 img_type=getColorConversionDestType(color))
      iv._push(vwr, ret)
      return ret
 
@@ -99,14 +99,14 @@ def img_rgb2gray(img, vwr=None):
 def cv2Undistort(img, mtx, dist, vwr=None):
      assert(type(img) is Image)
      undist = Image(img_data= cv2.undistort(img.img_data, mtx, dist, None, mtx),
-                    title="undistorted", type=img.type)
+                    title="undistorted", img_type=img.img_type)
      iv._push(vwr, undist)
      return undist
 
 def img_drawChessboardCorners(img, nx, ny, corners, ret, vwr=None):
      assert(type(img) is Image)
      cv2.drawChessboardCorners(img, (nx, ny), corners, ret)
-     iv._push_deprecated(vwr, img, "with corners", type='FIXME:gray')
+     iv._push_deprecated(vwr, img, "with corners", img_type='FIXME:gray')
      return None
 
 
@@ -121,13 +121,13 @@ def Sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
      #
      assert(type(img) is Image)
 
-     assert(img.type == 'gray') # grayscale
+     assert(img.img_type == 'gray') # grayscale
      assert(dx_order != dy_order)
      assert(ksize > 0)
      assert(ksize % 2 != 0)
 
      tmp = Image(img_data = cv2.Sobel(img.img_data, out_depth, dx_order,
-                                      dy_order, ksize), title="Sobel", type='gray')
+                                      dy_order, ksize), title="Sobel", img_type='gray')
      iv._push(vwr, tmp)
      return tmp
         
@@ -159,7 +159,7 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      ut.oneShotMsg("FIXME: this squeeze thing may be a problem")
      
      binary_image = Image(img_data=np.squeeze(sxbinary),
-                          title="scaled_sobel", type = 'gray')
+                          title="scaled_sobel", img_type = 'gray')
      iv._push(vwr, binary_image)
      return binary_image
 
@@ -179,7 +179,7 @@ def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      binary_output = np.zeros_like(scaled_sobel)
      binary_output[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
      ret = Image(img_data = np.squeeze(binary_output), title="sobel_mag_thresh",
-                 type='gray')
+                 img_type='gray')
      iv._push(vwr, ret)
      return ret
     
@@ -200,7 +200,7 @@ def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      binary_output = np.zeros_like(grad_dir)
      binary_output[(grad_dir >= thresh_min) & (grad_dir <= thresh_max)] = 1
      binary_image = Image(img_data = np.squeeze(binary_output),
-                          title = "sobel dir thresh", type = 'gray')
+                          title = "sobel dir thresh", img_type = 'gray')
      iv._push(vwr, binary_image)
      return binary_image
 
@@ -213,7 +213,7 @@ def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      binary_output[(s_chan > thresh_lo) & (s_chan <= thresh_hi)] = 1
      binary_image = Image(img_data = np.squeeze(binary_output),
                           title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi),
-                          type = 'gray')
+                          img_type = 'gray')
      iv._push(vwr, binary_image)
      return binary_image
 
@@ -225,7 +225,7 @@ def combined_thresh(btnl, title): # bin_thresh_ndarray_list
      for btn in btnl[1:]:
           assert(type(btn) is Image)
           img_data = np.logical_and(img_data, btn.img_data)
-     ret = Image(img_data = np.squeeze(img_data), title = title, type = 'gray')
+     ret = Image(img_data = np.squeeze(img_data), title = title, img_type = 'gray')
      return ret
 
 def imRead(path, reader=None, vwr=None):
@@ -233,9 +233,9 @@ def imRead(path, reader=None, vwr=None):
 
      title = reader + ":imread(" + path + ")"
      if (reader == 'cv2'):
-          img_obj = Image(img_data = cv2.imread(path), title = title, type = 'bgr')
+          img_obj = Image(img_data = cv2.imread(path), title = title, img_type = 'bgr')
      else:
-          img_obj = Image(img_data = cv2.imread(path), title = title, type = 'rgb')
+          img_obj = Image(img_data = cv2.imread(path), title = title, img_type = 'rgb')
      iv._push(vwr, img_obj)
      return img_obj
 
@@ -365,7 +365,7 @@ def oneChannelInAlternateColorspace2BinaryinaryImage(img, color_space_id=-1,
      s_binary = np.zeros_like(slct_channel)
      s_binary[(slct_channel >= thresh[0]) & (slct_channel <= thresh[1])] = 1
      tb_image = Image(img_data = np.squeeze(s_binary),
-                         title="thresh::" + title_sfx, type='gray')
+                         title="thresh::" + title_sfx, img_type='gray')
      return tb_image
 
 def hls_lab_lane_detect(img, cache_dict = None, parm_dict = None):
@@ -378,7 +378,7 @@ def hls_lab_lane_detect(img, cache_dict = None, parm_dict = None):
                                                                      pd = parm_dict)
      combined = np.zeros_like(hls_binary_l.img_data)
      combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
-     ret = Image(img_data = combined, title = "hls+lab", type='gray')
+     ret = Image(img_data = combined, title = "hls+lab", img_type='gray')
      return ret
 
 def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
@@ -400,7 +400,7 @@ def hist(img, vwr):
     # Sum across image pixels vertically - make sure to set `axis`
     # i.e. the highest areas of vertical lines should be larger values
     histogram = np.sum(bottom_half, axis=0)
-    histogram = Image(img_data = histogram, title="", type='gray')
+    histogram = Image(img_data = histogram, title="", img_type='gray')
     return histogram
 
 def get_LR_hist_max_ix(hist):
