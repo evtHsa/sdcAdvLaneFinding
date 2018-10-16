@@ -32,7 +32,6 @@ class Window:
         cv2.rectangle(out_img, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       (0, 255, 0), 2)
         self.vwr.show_immed_ndarray(img = out_img, title = self.title, img_type = 'bgr')
-        ut.brk("FIXME: implement draw via cv2.rectangle")
         
 def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     # FIXME: subsume from tmp.py from 7.4 solution to here
