@@ -11,6 +11,19 @@ import ImgUtil as iu
 import matplotlib.pyplot as plt
 
 #adapted from lesson 7.4 solution
+class Window:
+    def __init__(self, img, win_ix, win_height, x_base, margin, title):
+        self.y_lo = img.shape[0] - (win_ix + 1) * win_height
+        self.y_hi = img.shape[0] - win_ix  * win_height
+        self.x_lo = x_base - margin
+        self.x_hi = x_base + margin
+        self.ix = win_ix
+        self.title = title
+
+    def print(self):
+        print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
+              (self.title, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
+        
 def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     # FIXME: subsume from tmp.py from 7.4 solution to here
     wp = pd['sliding_windows']
@@ -42,7 +55,10 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     right_lane_inds = []
 
     for window in range(nwindows):
-        print("FIXME: window = %d" % window)
+        win_L = Window(binary_warped, window, window_height, leftx_current, margin, "L")
+        win_L.print()
+        win_R = Window(binary_warped, window, window_height, rightx_current, margin, "R")
+        win_R.print()
         
     ut.brk("look what a fine mess you've got us into know ollie")
   

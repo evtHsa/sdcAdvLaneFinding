@@ -12,13 +12,6 @@ def find_lane_pixels(binary_warped):
     # Current positions to be updated later for each window in nwindows
     # Step through the windows one by one
     for window in range(nwindows):
-        # Identify window boundaries in x and y (and right and left)
-        win_y_low = binary_warped.shape[0] - (window+1)*window_height
-        win_y_high = binary_warped.shape[0] - window*window_height
-        win_xleft_low = leftx_current - margin
-        win_xleft_high = leftx_current + margin
-        win_xright_low = rightx_current - margin
-        win_xright_high = rightx_current + margin
         
         # Draw the windows on the visualization image
         cv2.rectangle(out_img,(win_xleft_low,win_y_low),
