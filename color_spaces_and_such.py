@@ -79,11 +79,11 @@ def pipeline_6_12_hls(path, s_thresh=(170, 255), sx_thresh=(20, 100),
     s_channel = hls.img_data[:,:,2]
 
     iv._push(vwr,
-             iu.Image(img_data=np.squeeze(h_channel), title="h_chan", type='gray'))
+             iu.Image(img_data=np.squeeze(h_channel), title="h_chan", img_type='gray'))
     iv._push(vwr,
-             iu.Image(img_data=np.squeeze(l_channel), title="l_chan", type='gray'))
+             iu.Image(img_data=np.squeeze(l_channel), title="l_chan", img_type='gray'))
     iv._push(vwr,
-             iu.Image(img_data=np.squeeze(s_channel), title="s_chan", type='gray'))
+             iu.Image(img_data=np.squeeze(s_channel), title="s_chan", img_type='gray'))
 
     # Sobel x
     sobelx = cv2.Sobel(l_channel, cv2.CV_64F, 1, 0) # Take the derivative in x
@@ -91,7 +91,7 @@ def pipeline_6_12_hls(path, s_thresh=(170, 255), sx_thresh=(20, 100),
     scaled_sobel = np.uint8(255*abs_sobelx/np.max(abs_sobelx))
     iv._push(vwr,
              iu.Image(img_data = np.squeeze(scaled_sobel), title="scaled_sobel",
-                      type='gray'))
+                      img_type='gray'))
     ##
     
     # Threshold x gradient
@@ -102,7 +102,7 @@ def pipeline_6_12_hls(path, s_thresh=(170, 255), sx_thresh=(20, 100),
     s_binary = np.zeros_like(s_channel)
     s_binary[(s_channel >= s_thresh[0]) & (s_channel <= s_thresh[1])] = 1
     iv._push(vwr,
-             iu.Image(img_data = np.squeeze(s_binary), title="sobel binary", type='gray'))
+             iu.Image(img_data = np.squeeze(s_binary), title="sobel binary", img_type='gray'))
 
     # Stack each channel
     color_binary = np.dstack(( np.zeros_like(sxbinary), sxbinary, s_binary)) * 255
@@ -131,14 +131,14 @@ def pipeline_6_12_mk2(path, color_space_id=-1, ch_slct=-1,  ch_name="",
     slct_channel = acs.img_data[:,:,ch_slct]
 
     iv._push(vwr,
-             iu.Image(img_data = np.squeeze(slct_channel), title=ch_name, type='gray'))
+             iu.Image(img_data = np.squeeze(slct_channel), title=ch_name, img_type='gray'))
 
     # Sobel x
     sobelx = cv2.Sobel(slct_channel, cv2.CV_64F, 1, 0) # Take the derivative in x
     abs_sobelx = np.absolute(sobelx) # Abs x drvtv to accentuate lines away from horizontal
     scaled_sobel = np.uint8(255*abs_sobelx/np.max(abs_sobelx))
     iv._push(vwr, iu.Image(img_data = np.squeeze(scaled_sobel),
-                           title = ch_name + ":scaled_sobel", type = 'gray'))
+                           title = ch_name + ":scaled_sobel", img_type = 'gray'))
 
 
     
@@ -153,7 +153,7 @@ def pipeline_6_12_mk2(path, color_space_id=-1, ch_slct=-1,  ch_name="",
     color_binary = np.dstack(( np.zeros_like(sxbinary), sxbinary, s_binary)) * 255
     cb_image = iv._push(vwr, iu.Image(img_data = np.squeeze(color_binary),
                                       title = ch_name + "+sobelx",
-                                      type = 'gray'))
+                                      img_type = 'gray'))
     # there is really no advantage to this that I can see over hsv v-chan alone
     return cb_image  
 

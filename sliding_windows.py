@@ -29,13 +29,9 @@ class Window:
 
     def draw(self, out_img):
         ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
-        ut.brk("debug draw - next line is busted")
         cv2.rectangle(out_img, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       (0, 255, 0), 2)
-        FIXME = iu.Image(image_data = out_img, title=self.title, type='bgr')
-        self.vwr.flush()
-        iv.push(self.vwr, FIXME)
-        self.vwr.show()
+        self.vwr.show_immed_ndarray(img = out_img, title = self.title, img_type = 'bgr')
         ut.brk("FIXME: implement draw via cv2.rectangle")
         
 def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
@@ -49,7 +45,8 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     hist = iu.hist(hls_lab, vwr)
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
     print("FIXME: histo maxen = %d, %d" % (left_max_ix, right_max_ix))
-    binary_warped = top_down.img_data # re-use code w/less typing
+
+    binary_warped = hls_lab.img_data # re-use code w/less typing
     out_img = np.dstack((binary_warped, binary_warped, binary_warped))
 
     # Set height of windows - based on nwindows above and image shape
