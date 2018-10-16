@@ -63,13 +63,10 @@ class ImgViewer:
         plt.imshow(img.img_data, cmap=img.cmap)
         plt.show()
 
-    def show_immed_ndarray(self, img, title, type):
-        tmp = iu.Image(img_data = img, title=title, type=type)
-        self.flush()
-        self.push(tmp)
-        self.show()
-        ut.brk("what's wrong")
-        tmp.plot(_plt=plt)
+    def show_immed_ndarray(self, img=None, title=None, img_type=None):
+        assert(type(img) is np.ndarray)
+        tmp = iu.Image(img_data = img, title=title, img_type=img_type)
+        self.show_immed(tmp, title)
 
 def _view(vwr, img, title, cmap=None):
     # turn off viewing by passing None as viewer
