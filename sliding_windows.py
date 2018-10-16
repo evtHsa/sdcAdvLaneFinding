@@ -13,7 +13,8 @@ import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
 class Window:
-    def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr):
+    def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
+                 nonzeroy):
         ut.oneShotMsg("FIXME: assert img is an ndarray")
         self.y_lo = img.shape[0] - (win_ix + 1) * win_height
         self.y_hi = img.shape[0] - win_ix  * win_height
@@ -22,6 +23,8 @@ class Window:
         self.ix = win_ix
         self.title = title
         self.vwr = vwr
+        self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
+                          (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi))
 
     def print(self):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
@@ -67,12 +70,23 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
 
     for window in range(nwindows):
         win_L = Window(binary_warped, window, window_height, leftx_current, margin,
-                       "L", vwr)
+                       "L", vwr, nonzerox, nonzeroy)
         win_L.draw(out_img)
         win_R = Window(binary_warped, window, window_height, rightx_current, margin,
-                       "R", vwr)
+                       "R", vwr, nonzerox, nonzeroy)
         win_R.draw(out_img)
-        
+        left_lane_inds.append(win_L.good_ixes)
+        right_lane_inds.append(win_R.good_ixes)
+
+        # If you found > minpix pixels, recenter next window on their mean position
+        if len(win_L.good_ixes) > minpix:
+            leftx_current = np.int(np.mean(nonzerox[win_L.good_ixes]))
+            print("FIXME: leftx_current = %d" % leftx_current)
+        if len(win_R.good_ixes) > minpix:        
+            rightx_current = np.int(np.mean(nonzerox[win_R.good_ixes]))
+            print("FIXME: rightx_current = %d" % rightx_current)
+        ut.brk("NaN problem")
+    
     ut.brk("look what a fine mess you've got us into know ollie")
   
 def doit(path="", cd=None, pd=None, vwr=None):
