@@ -13,12 +13,6 @@ def find_lane_pixels(binary_warped):
     # Step through the windows one by one
     for window in range(nwindows):
         
-        # Draw the windows on the visualization image
-        cv2.rectangle(out_img,(win_xleft_low,win_y_low),
-        (win_xleft_high,win_y_high),(0,255,0), 2) 
-        cv2.rectangle(out_img,(win_xright_low,win_y_low),
-        (win_xright_high,win_y_high),(0,255,0), 2) 
-        
         # Identify the nonzero pixels in x and y within the window #
         good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
         (nonzerox >= win_xleft_low) &  (nonzerox < win_xleft_high)).nonzero()[0]
