@@ -19,6 +19,10 @@ class Lane:
         self.x_current = init_x_current
         self.ix_list = list()
         
+    def concat_ixes(self):
+        # Concatenate the arrays of indices (previously was a list of lists of pixels)
+        self.ix_list = np.concatenate(self.ix_list)
+        
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy):
@@ -92,9 +96,8 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
 
     # Concatenate the arrays of indices (previously was a list of lists of pixels)
     try:
-        left_lane_inds = np.concatenate(left_lane_inds)
-        lanes['L'].ix_list = np.concatenate(lanes['L'].ix_list)
-        right_lane_inds = np.concatenate(right_lane_inds)
+        lanes['L'].concat_ixes()
+        lanes['R'].concat_ixes()
     except ValueError:
         # Avoids an error if the above is not implemented fully
         pass
@@ -102,8 +105,8 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     # Extract left and right line pixel positions
     leftx = nonzerox[lanes['L'].ix_list]
     lefty = nonzeroy[lanes['L'].ix_list]
-    rightx = nonzerox[right_lane_inds]
-    righty = nonzeroy[right_lane_inds]
+    rightx = nonzerox[lanes['R'].ix_list]
+    righty = nonzeroy[lanes['R'].ix_list]
 
     return leftx, lefty, rightx, righty, out_img
 
