@@ -12,6 +12,13 @@ import matplotlib.pyplot as plt #FIXME: nuke?
 import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
+class Lane:
+    def __init__(self, init_x_current):
+        self.x = -1
+        self.y = -1
+        self.x_current = init_x_current
+        self.ix_list = list()
+        
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy):
@@ -60,28 +67,27 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     nonzerox = np.array(nonzero[1])
 
     # Current positions to be updated later for each window in nwindows
-    leftx_current = left_max_ix
-    rightx_current = right_max_ix
+    lanes =  { 'L' : Lane(left_max_ix), 'R': Lane(right_max_ix)}
     
     # Create empty lists to receive left and right lane pixel indices
     left_lane_inds = []
     right_lane_inds = []
 
     for window in range(nwindows):
-        win_L = Window(binary_warped, window, window_height, leftx_current, margin,
-                       "L", vwr, nonzerox, nonzeroy)
+        win_L = Window(binary_warped, window, window_height, lanes['L'].x_current,
+                       margin, "L", vwr, nonzerox, nonzeroy)
         win_L.draw(out_img)
-        win_R = Window(binary_warped, window, window_height, rightx_current, margin,
-                       "R", vwr, nonzerox, nonzeroy)
+        win_R = Window(binary_warped, window, window_height, lanes['R'].x_current,
+                       margin, "R", vwr, nonzerox, nonzeroy)
         win_R.draw(out_img)
         left_lane_inds.append(win_L.good_ixes)
         right_lane_inds.append(win_R.good_ixes)
 
         # If you found > minpix pixels, recenter next window on their mean position
         if len(win_L.good_ixes) > minpix:
-            leftx_current = np.int(np.mean(nonzerox[win_L.good_ixes]))
+            lanes['L'].x_current = np.int(np.mean(nonzerox[win_L.good_ixes]))
         if len(win_R.good_ixes) > minpix:        
-            rightx_current = np.int(np.mean(nonzerox[win_R.good_ixes]))
+            lanes['R'].x_current = np.int(np.mean(nonzerox[win_R.good_ixes]))
 
     # Concatenate the arrays of indices (previously was a list of lists of pixels)
     try:
