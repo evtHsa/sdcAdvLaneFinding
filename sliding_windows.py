@@ -76,10 +76,6 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     # Current positions to be updated later for each window in nwindows
     lanes =  { 'L' : Lane(left_max_ix), 'R': Lane(right_max_ix)}
     
-    # Create empty lists to receive left and right lane pixel indices
-    left_lane_inds = []
-    right_lane_inds = []
-
     for window in range(nwindows):
         win_L = Window(binary_warped, window, window_height, lanes['L'].x_current,
                        margin, "L", vwr, nonzerox, nonzeroy)
