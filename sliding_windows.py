@@ -83,22 +83,17 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     lanes =  { 'L' : Lane(left_max_ix), 'R': Lane(right_max_ix)}
     
     for window in range(nwindows):
-        lanes['L'] .window_update(Window(binary_warped, window, window_height,
-                                         lanes['L'].x_current, margin, "L", vwr, nonzerox, nonzeroy))
-        lanes['L'].draw_window(out_img)
-         
-        lanes['R'].window_update(Window(binary_warped, window, window_height,
-                                        lanes['R'].x_current, margin, "R", vwr, nonzerox, nonzeroy))
-        lanes['R'].draw_window(out_img)
+        for lane in ['L', 'R']:
+            lanes[lane] .window_update(Window(binary_warped, window, window_height,
+                                             lanes['L'].x_current, margin, "L", vwr, nonzerox,
+                                             nonzeroy))
+            lanes[lane].draw_window(out_img)
+            lanes[lane].append_ixes()
 
-        lanes['L'].append_ixes()
-        lanes['R'].append_ixes()
-
-        # If you found > minpix pixels, recenter next window on their mean position
-        if len(lanes['L'].window.good_ixes) > minpix:
-            lanes['L'].x_current = np.int(np.mean(nonzerox[lanes['L'].window.good_ixes]))
-        if len(lanes['R'].window.good_ixes) > minpix:        
-            lanes['R'].x_current = np.int(np.mean(nonzerox[lanes['R'].window.good_ixes]))
+            # If you found > minpix pixels, recenter next window on their mean position
+            if len(lanes[lane].window.good_ixes) > minpix:
+                lanes[lane].x_current = np.int(np.mean(
+                    nonzerox[lanes[lane].window.good_ixes]))
 
     # Concatenate the arrays of indices (previously was a list of lists of pixels)
     try:
@@ -109,6 +104,7 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
         pass
 
     # Extract left and right line pixel positions
+    print("FIXME:return lanes objs")
     leftx = nonzerox[lanes['L'].ix_list]
     lefty = nonzeroy[lanes['L'].ix_list]
     rightx = nonzerox[lanes['R'].ix_list]
