@@ -23,6 +23,9 @@ class Lane:
         # Concatenate the arrays of indices (previously was a list of lists of pixels)
         self.ix_list = np.concatenate(self.ix_list)
         
+    def append_ixes(self, ixes):
+        self.ix_list.append(ixes)
+        
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy):
@@ -84,9 +87,9 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
         win_R = Window(binary_warped, window, window_height, lanes['R'].x_current,
                        margin, "R", vwr, nonzerox, nonzeroy)
         win_R.draw(out_img)
-        left_lane_inds.append(win_L.good_ixes)
-        lanes['L'].ix_list.append(win_L.good_ixes)
-        right_lane_inds.append(win_R.good_ixes)
+
+        lanes['L'].append_ixes(win_L.good_ixes)
+        lanes['R'].ix_list.append(win_R.good_ixes)
 
         # If you found > minpix pixels, recenter next window on their mean position
         if len(win_L.good_ixes) > minpix:
