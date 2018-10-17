@@ -9,10 +9,6 @@ import cv2
 binary_warped = mpimg.imread('warped_example.jpg')
 
 def find_lane_pixels(binary_warped):
-    # Current positions to be updated later for each window in nwindows
-    # Step through the windows one by one
-    for window in range(nwindows):
-        
     # Concatenate the arrays of indices (previously was a list of lists of pixels)
     try:
         left_lane_inds = np.concatenate(left_lane_inds)

@@ -15,7 +15,7 @@ import ImgViewer as iv
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy):
-        ut.oneShotMsg("FIXME: assert img is an ndarray")
+        assert(type(img) is np.ndarray)
         self.y_lo = img.shape[0] - (win_ix + 1) * win_height
         self.y_hi = img.shape[0] - win_ix  * win_height
         self.x_lo = x_base - margin
@@ -24,7 +24,7 @@ class Window:
         self.title = title
         self.vwr = vwr
         self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
-                          (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi))
+                          (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi)).nonzero()[0]
 
     def print(self):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
@@ -34,9 +34,10 @@ class Window:
         ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
         cv2.rectangle(out_img, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       (0, 255, 0), 2)
-        self.vwr.show_immed_ndarray(img = out_img, title = self.title, img_type = 'bgr')
+        #FIXME:self.vwr.show_immed_ndarray(img = out_img, title = self.title,
+        #                                 img_type = 'bgr')
         
-def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
+def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     # FIXME: subsume from tmp.py from 7.4 solution to here
     wp = pd['sliding_windows']
     nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
@@ -46,14 +47,12 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
     hls_lab = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     hist = iu.hist(hls_lab, vwr)
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
-    print("FIXME: histo maxen = %d, %d" % (left_max_ix, right_max_ix))
 
     binary_warped = hls_lab.img_data # re-use code w/less typing
     out_img = np.dstack((binary_warped, binary_warped, binary_warped))
 
     # Set height of windows - based on nwindows above and image shape
     window_height = np.int(binary_warped.shape[0]//nwindows)
-    print("FIXME: window_height = %d" % window_height)
 
     # Identify the x and y positions of all nonzero pixels in the image
     nonzero = binary_warped.nonzero()
@@ -81,19 +80,30 @@ def sliding_windows_pipe(path="", cd=None, pd=None, vwr=None):
         # If you found > minpix pixels, recenter next window on their mean position
         if len(win_L.good_ixes) > minpix:
             leftx_current = np.int(np.mean(nonzerox[win_L.good_ixes]))
-            print("FIXME: leftx_current = %d" % leftx_current)
         if len(win_R.good_ixes) > minpix:        
             rightx_current = np.int(np.mean(nonzerox[win_R.good_ixes]))
-            print("FIXME: rightx_current = %d" % rightx_current)
-        ut.brk("NaN problem")
-    
-    ut.brk("look what a fine mess you've got us into know ollie")
-  
+
+    # Concatenate the arrays of indices (previously was a list of lists of pixels)
+    try:
+        left_lane_inds = np.concatenate(left_lane_inds)
+        right_lane_inds = np.concatenate(right_lane_inds)
+    except ValueError:
+        # Avoids an error if the above is not implemented fully
+        pass
+
+    # Extract left and right line pixel positions
+    leftx = nonzerox[left_lane_inds]
+    lefty = nonzeroy[left_lane_inds] 
+    rightx = nonzerox[right_lane_inds]
+    righty = nonzeroy[right_lane_inds]
+
+    return leftx, lefty, rightx, righty, out_img
+
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     for path in ut.get_fnames("test_images/", "*.jpg"):
-        sliding_windows_pipe(path, cd, pd, vwr)
-        ut.brk('what ed koch said')
+        lx, ly, rx, ry, img = find_lane_pixels(path, cd, pd, vwr)
+        iv._push(vwr, iu.Image(img_data=img, title = "sliding winders"))
     vwr.show()
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
