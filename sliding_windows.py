@@ -81,6 +81,7 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
                        margin, "R", vwr, nonzerox, nonzeroy)
         win_R.draw(out_img)
         left_lane_inds.append(win_L.good_ixes)
+        lanes['L'].ix_list.append(win_L.good_ixes)
         right_lane_inds.append(win_R.good_ixes)
 
         # If you found > minpix pixels, recenter next window on their mean position
@@ -92,14 +93,15 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     # Concatenate the arrays of indices (previously was a list of lists of pixels)
     try:
         left_lane_inds = np.concatenate(left_lane_inds)
+        lanes['L'].ix_list = np.concatenate(lanes['L'].ix_list)
         right_lane_inds = np.concatenate(right_lane_inds)
     except ValueError:
         # Avoids an error if the above is not implemented fully
         pass
 
     # Extract left and right line pixel positions
-    leftx = nonzerox[left_lane_inds]
-    lefty = nonzeroy[left_lane_inds] 
+    leftx = nonzerox[lanes['L'].ix_list]
+    lefty = nonzeroy[lanes['L'].ix_list]
     rightx = nonzerox[right_lane_inds]
     righty = nonzeroy[right_lane_inds]
 
