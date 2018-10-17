@@ -23,8 +23,14 @@ class Lane:
         # Concatenate the arrays of indices (previously was a list of lists of pixels)
         self.ix_list = np.concatenate(self.ix_list)
         
-    def append_ixes(self, ixes):
-        self.ix_list.append(ixes)
+    def append_ixes(self):
+        self.ix_list.append(self.window.good_ixes)
+
+    def window_update(self, window):
+        self.window = window
+        
+    def draw_window(self,out_img):
+        self.window.draw(out_img)
         
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
@@ -77,21 +83,22 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     lanes =  { 'L' : Lane(left_max_ix), 'R': Lane(right_max_ix)}
     
     for window in range(nwindows):
-        win_L = Window(binary_warped, window, window_height, lanes['L'].x_current,
-                       margin, "L", vwr, nonzerox, nonzeroy)
-        win_L.draw(out_img)
-        win_R = Window(binary_warped, window, window_height, lanes['R'].x_current,
-                       margin, "R", vwr, nonzerox, nonzeroy)
-        win_R.draw(out_img)
+        lanes['L'] .window_update(Window(binary_warped, window, window_height,
+                                         lanes['L'].x_current, margin, "L", vwr, nonzerox, nonzeroy))
+        lanes['L'].draw_window(out_img)
+         
+        lanes['R'].window_update(Window(binary_warped, window, window_height,
+                                        lanes['R'].x_current, margin, "R", vwr, nonzerox, nonzeroy))
+        lanes['R'].draw_window(out_img)
 
-        lanes['L'].append_ixes(win_L.good_ixes)
-        lanes['R'].ix_list.append(win_R.good_ixes)
+        lanes['L'].append_ixes()
+        lanes['R'].append_ixes()
 
         # If you found > minpix pixels, recenter next window on their mean position
-        if len(win_L.good_ixes) > minpix:
-            lanes['L'].x_current = np.int(np.mean(nonzerox[win_L.good_ixes]))
-        if len(win_R.good_ixes) > minpix:        
-            lanes['R'].x_current = np.int(np.mean(nonzerox[win_R.good_ixes]))
+        if len(lanes['L'].window.good_ixes) > minpix:
+            lanes['L'].x_current = np.int(np.mean(nonzerox[lanes['L'].window.good_ixes]))
+        if len(lanes['R'].window.good_ixes) > minpix:        
+            lanes['R'].x_current = np.int(np.mean(nonzerox[lanes['R'].window.good_ixes]))
 
     # Concatenate the arrays of indices (previously was a list of lists of pixels)
     try:
