@@ -84,9 +84,9 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
-            lanes[lane] .window_update(Window(binary_warped, window, window_height,
-                                             lanes['L'].x_current, margin, "L", vwr, nonzerox,
-                                             nonzeroy))
+            win = Window(binary_warped, window, window_height, lanes['L'].x_current,
+                         margin, "L", vwr, nonzerox, nonzeroy)
+            lanes[lane] .window_update(win)
             lanes[lane].draw_window(out_img)
             lanes[lane].append_ixes()
 
