@@ -32,6 +32,18 @@ class Lane:
     def draw_window(self,out_img):
         self.window.draw(out_img)
         
+    def finis(self, nonzerox, nonzeroy):
+        try:
+            self.concat_ixes()
+        except:
+            # Avoids an error if the above is not implemented fully
+            pass
+        self.x = nonzerox[self.ix_list]
+        self.y = nonzeroy[self.ix_list]
+        
+    def show(self, title):
+        print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
+        
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy):
@@ -95,27 +107,17 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
                 lanes[lane].x_current = np.int(np.mean(
                     nonzerox[lanes[lane].window.good_ixes]))
 
-    # Concatenate the arrays of indices (previously was a list of lists of pixels)
-    try:
-        lanes['L'].concat_ixes()
-        lanes['R'].concat_ixes()
-    except ValueError:
-        # Avoids an error if the above is not implemented fully
-        pass
+    lanes['L'].finis(nonzerox, nonzeroy)
+    lanes['R'].finis(nonzerox, nonzeroy)
 
-    # Extract left and right line pixel positions
-    print("FIXME:return lanes objs")
-    leftx = nonzerox[lanes['L'].ix_list]
-    lefty = nonzeroy[lanes['L'].ix_list]
-    rightx = nonzerox[lanes['R'].ix_list]
-    righty = nonzeroy[lanes['R'].ix_list]
-
-    return leftx, lefty, rightx, righty, out_img
+    return lanes['L'], lanes['R'], out_img
 
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     for path in ut.get_fnames("test_images/", "*.jpg"):
-        lx, ly, rx, ry, img = find_lane_pixels(path, cd, pd, vwr)
+        lane_L, lane_R, img = find_lane_pixels(path, cd, pd, vwr)
+        lane_L.show(path + 'L')
+        lane_R.show(path + 'R')
         iv._push(vwr, iu.Image(img_data=img, title = "sliding winders"))
     vwr.show()
 
