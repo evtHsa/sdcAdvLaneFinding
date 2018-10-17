@@ -8,24 +8,6 @@ import cv2
 # Load our image
 binary_warped = mpimg.imread('warped_example.jpg')
 
-def find_lane_pixels(binary_warped):
-    # Concatenate the arrays of indices (previously was a list of lists of pixels)
-    try:
-        left_lane_inds = np.concatenate(left_lane_inds)
-        right_lane_inds = np.concatenate(right_lane_inds)
-    except ValueError:
-        # Avoids an error if the above is not implemented fully
-        pass
-
-    # Extract left and right line pixel positions
-    leftx = nonzerox[left_lane_inds]
-    lefty = nonzeroy[left_lane_inds] 
-    rightx = nonzerox[right_lane_inds]
-    righty = nonzeroy[right_lane_inds]
-
-    return leftx, lefty, rightx, righty, out_img
-
-
 def fit_polynomial(binary_warped):
     # Find our lane pixels first
     leftx, lefty, rightx, righty, out_img = find_lane_pixels(binary_warped)
