@@ -68,10 +68,10 @@ class ImgViewer:
         tmp = iu.Image(img_data = img, title=title, img_type=img_type)
         self.show_immed(tmp, title)
 
-def _view(vwr, img, title, cmap=None):
+def _view(vwr, img, title):
     # turn off viewing by passing None as viewer
     if vwr:
-        vwr.show_immed(img, title, cmap)
+        vwr.show_immed(img, title)
     
 def _push(vwr, img_obj):
     if vwr:
