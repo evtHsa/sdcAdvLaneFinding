@@ -235,8 +235,12 @@ def imRead(path, flags = None, reader=None, vwr=None):
      if flags is None:
           flags = cv2.IMREAD_COLOR
      title = reader + ":imread(" + path + ")"
-     if (reader == 'cv2'):
-          img_obj = Image(img_data = cv2.imread(path, flags), title = title, img_type = 'bgr')
+     if (reader == 'cv2'):          
+          if flags == cv2.IMREAD_GRAYSCALE:
+               _type = 'gray'
+          else:
+               _type = 'bgr'
+          img_obj = Image(img_data = cv2.imread(path, flags), title = title, img_type = _type)
      else:
           img_obj = Image(img_data = mpimg.imread(path), title = title, img_type = 'rgb')
      iv._push(vwr, img_obj)
