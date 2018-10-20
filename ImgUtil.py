@@ -228,9 +228,12 @@ def combined_thresh(btnl, title): # bin_thresh_ndarray_list
      ret = Image(img_data = np.squeeze(img_data), title = title, img_type = 'gray')
      return ret
 
-def imRead(path, reader=None, vwr=None):
+def imRead(path, flags = None, reader=None, vwr=None):
+     # note: see cv dox for imread and remember cv2.IMREAD_GRAYSCALE
      assert(reader == 'cv2' or reader == 'mpimg')
 
+     if flags is None:
+          flags = cv2.IMREAD_COLOR
      title = reader + ":imread(" + path + ")"
      if (reader == 'cv2'):
           img_obj = Image(img_data = cv2.imread(path), title = title, img_type = 'bgr')
