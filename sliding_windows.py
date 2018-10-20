@@ -13,7 +13,9 @@ import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
 class Lane:
-    def __init__(self, init_x_current):
+    def __init__(self, init_x_current, img):
+        assert(type(img) is np.ndarray)
+        self.img = img
         self.x = -1
         self.y = -1
         self.x_current = init_x_current
@@ -29,7 +31,8 @@ class Lane:
     def window_update(self, window):
         self.window = window
         
-    def draw_window(self,out_img):
+    def draw_window(self, img):
+        assert(type(img) is iu.Image)
         self.window.draw(out_img)
         
     def finis(self, nonzerox, nonzeroy):
@@ -63,22 +66,35 @@ class Window:
               (self.title, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
 
     def draw(self, out_img):
+        assert(type(img) is iu.Image)
         ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
-        cv2.rectangle(out_img, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
+        cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       (0, 255, 0), 2)
         #FIXME:self.vwr.show_immed_ndarray(img = out_img, title = self.title,
         #                                 img_type = 'bgr')
-        
-def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
-    # FIXME: subsume from tmp.py from 7.4 solution to here
-    wp = pd['sliding_windows']
-    nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
+
+def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
     img = iu.imRead(path, reader='cv2', vwr=None)
     undistorted = iu.undistort(img, cd, vwr=None)
     top_down = iu.look_down(undistorted, cd, vwr)
     hls_lab = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
-    hist = iu.hist(hls_lab, vwr)
+    
+def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
+    img = iu.imRead(path, reader='cv2', flags = cv2.IMREAD_GRAYSCALE, vwr=None)
+    iv._push(vwr, img)
+    return img
+    
+def find_lane_pixels(binary_warped_image, cd=None, pd=None, vwr=None):
+    assert(type(binary_warped_image) is iu.Image)
+    assert(binary_warped_image.is2D())
+    
+    wp = pd['sliding_windows']
+    nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
+    hist = iu.hist(binary_warped_image, vwr)
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
+    img_data = binary_warped_image.img_data
+    out_img = iu.Image(img_data = np.dstack((img_data, img_data, img_data)),
+                       title="find_lane_pixels", img_type='gray')
 
     binary_warped = hls_lab.img_data # re-use code w/less typing
     out_img = np.dstack((binary_warped, binary_warped, binary_warped))
@@ -111,6 +127,23 @@ def find_lane_pixels(path="", cd=None, pd=None, vwr=None):
     lanes['R'].finis(nonzerox, nonzeroy)
 
     return lanes['L'], lanes['R'], out_img
+
+def fit_polynomial(lane):
+    x = lane.x
+    ut.brk("FIXME:mine:do we agree with 7.4")
+    y = lane.y
+    fit = np.polyfit(y, x, 2)
+    ploty = np.linspace(0, lane.img.shape[0] - 1, lane.img.shape[0])
+    try:
+        fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
+    except TypeError:
+        # Avoids an error if `left` and `right_fit` are still none or incorrect
+        print('fit_polynomal: failed to fit a line!')
+        fit = 1*ploty**2 + 1*ploty
+    lane.img  = [255, 0, 0]
+    print("FIXME:??: where exactly is plot drawing, how do we return that image")
+    plt.plot(fit, ploty, color='yellow')
+
 
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
