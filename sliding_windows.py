@@ -162,8 +162,9 @@ def doit(path="", cd=None, pd=None, vwr=None):
         binary_warped = get_binary_warped_image(path, cd, pd, vwr)
         lanes = find_lane_pixels(binary_warped, cd, pd, vwr)
         fit_polynomial(lanes['L'])
+        iv._push(vwr, lanes['L'].out_img)
         fit_polynomial(lanes['R'])
-        iv._push(vwr, iu.Image(img_data=img, title = "sliding winders"))
+        iv._push(vwr, lanes['R'].out_img)
         vwr.show()
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
