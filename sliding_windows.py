@@ -145,14 +145,16 @@ def fit_polynomial(lane):
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
     lane.out_img.img_data[y,x]  = lane.color_rgb
-    FIXME_dark_magic(fit, ploty, lane.out_img)
+    FIXME_dark_magic(fit, ploty, lane.out_img, line_color = [255, 255, 0],
+                     line_thickness=10)
     iv._view(lane.vwr, img=lane.out_img, title="duh?")
 
-def FIXME_dark_magic(x_pts, y_pts, out_img):
+def FIXME_dark_magic(x_pts, y_pts, out_img, line_color=[255, 255, 0],
+                     line_thickness=10):
     assert(type(out_img) is iu.Image)
     pts = np.array(list(zip(x_pts, y_pts)), dtype=np.int32)
     print("pts.shape = " + str(pts.shape))
-    cv2.polylines(out_img.img_data, [pts], False, [255, 255, 0], thickness=15)
+    cv2.polylines(out_img.img_data, [pts], False, line_color, line_thickness)
 
 def doit(path="", cd=None, pd=None, vwr=None):
     #for path in ut.get_fnames("test_images/", "*.jpg"):
