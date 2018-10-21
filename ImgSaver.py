@@ -17,6 +17,7 @@ class ImgSaver:
     def save(self, img, msg=""):
         assert(type(img) is iu.Image)
         img_data = img.img_data
+
         if img.img_type == 'bgr':
             img_data = cv2.cvtColor(img.img_data, cv2.COLOR_BGR2RGB)
             
