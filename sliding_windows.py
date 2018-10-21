@@ -147,9 +147,6 @@ def fit_polynomial(lane):
     lane.out_img.img_data[y,x]  = lane.color_rgb
     FIXME_dark_magic(fit, ploty, lane.out_img)
     iv._view(lane.vwr, img=lane.out_img, title="duh?")
-    print("FIXME:??: where exactly is plot drawing, how do we return that image")
-    plt.plot(fit, ploty, color='yellow')
-    plt.show()
 
 def FIXME_dark_magic(x_pts, y_pts, out_img):
     assert(type(out_img) is iu.Image)
