@@ -157,13 +157,11 @@ def doit(path="", cd=None, pd=None, vwr=None):
         vwr.flush()
         print("FIXME: path = %s" % path)
         binary_warped = get_binary_warped_image(path, cd, pd, vwr)
-        #ut.brk("FIXME:step by tedious step")
         lanes = find_lane_pixels(binary_warped, cd, pd, vwr)
         fit_polynomial(lanes['L'])
-        fit_polynomial(lane['R'])
+        fit_polynomial(lanes['R'])
         iv._push(vwr, iu.Image(img_data=img, title = "sliding winders"))
         vwr.show()
-    ut.brk("FIXME:we expect lane lines on imgs with colored pixels")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
