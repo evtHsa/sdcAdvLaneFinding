@@ -108,8 +108,8 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
 
     # Current positions to be updated later for each window in nwindows
     lanes =  {
-        'L' : Lane(left_max_ix, binary_warped, [255, 0, 0], 'L', vwr),
-        'R': Lane(right_max_ix, binary_warped, [0, 0, 255], 'R', vwr)}
+        'L' : Lane(left_max_ix, binary_warped, pd['rgb']['red'], 'L', vwr),
+        'R': Lane(right_max_ix, binary_warped, pd['rgb']['blue'], 'R', vwr)}
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
