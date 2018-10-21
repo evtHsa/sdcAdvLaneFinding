@@ -154,6 +154,7 @@ def fit_polynomial(lane):
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
     lane.out_img.img_data[y,x]  = lane.color_rgb
+    iv._view(lane.vwr, img=lane.out_img, title="duh?")
     print("FIXME:??: where exactly is plot drawing, how do we return that image")
     plt.plot(fit, ploty, color='yellow')
     plt.show()
