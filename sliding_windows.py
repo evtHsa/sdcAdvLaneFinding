@@ -8,7 +8,6 @@ import ImgViewer as iv
 import cv2
 import numpy as np
 import ImgUtil as iu
-import matplotlib.pyplot as plt #FIXME: nuke?
 import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
@@ -66,7 +65,6 @@ class Window:
         self.vwr = vwr
         self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
                           (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi)).nonzero()[0]
-        # FIXME: good_ixes are confirmed 2b in sync w/lesson 7.4
 
     def print(self):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
@@ -77,15 +75,12 @@ class Window:
         ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       (0, 255, 0), 2)
-        #FIXME:self.vwr.show_immed_ndarray(img = out_img, title = self.title,
-        #                                 img_type = 'bgr')
 
 def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
     img = iu.imRead(path, reader='cv2', vwr=None)
     undistorted = iu.undistort(img, cd, vwr=None)
     top_down = iu.look_down(undistorted, cd, vwr)
     hls_lab = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
-    ut.brk("FIXME:step by tedious step:this needs to result in grayscale")
     iv._push(vwr, hls_lab)
     
 def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
@@ -110,7 +105,6 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     nonzero = binary_warped.img_data.nonzero()
     nonzeroy = np.array(nonzero[0])
     nonzerox = np.array(nonzero[1])
-    # FIXME: agreed to here
 
     # Current positions to be updated later for each window in nwindows
     lanes =  {
@@ -125,7 +119,6 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
             # ok to here, good ixes on prev line
             _lane .window_update(win)
             _lane.draw_window(_lane.out_img)
-            # FIXME: coords of draw are correct
             _lane.append_ixes()
 
             # If you found > minpix pixels, recenter next window on their mean position
@@ -133,10 +126,8 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
                 _lane.x_current = np.int(np.mean(
                     nonzerox[_lane.window.good_ixes]))
             # x_current is updated correctly
-    #FIXME: we're good to here
     lanes['L'].finis(nonzerox, nonzeroy)
     lanes['R'].finis(nonzerox, nonzeroy)
-    ut.oneShotMsg("FIXME: maybe(or not) caller shd combine the l & r lane images??")
     return lanes
 
 def fit_polynomial(lane):
