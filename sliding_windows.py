@@ -14,7 +14,7 @@ import ImgViewer as iv
 #adapted from lesson 7.4 solution
 class Lane:
     def __init__(self, init_x_current, img):
-        assert(type(img) is np.ndarray)
+        assert(type(img) is iu.Image)
         self.img = img
         self.x = -1
         self.y = -1
