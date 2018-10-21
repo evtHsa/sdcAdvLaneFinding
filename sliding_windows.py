@@ -13,7 +13,7 @@ import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
 class Lane:
-    def __init__(self, init_x_current, img, color_rgb, lane_title):
+    def __init__(self, init_x_current, img, color_rgb, lane_title, vwr=None):
         assert(type(img) is iu.Image)
         assert(img.is2D())
         self.in_img = img
@@ -25,6 +25,7 @@ class Lane:
         self.x_current = init_x_current
         self.ix_list = list()
         self.color_rgb = color_rgb
+        self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
 
     def concat_ixes(self):
         # Concatenate the arrays of indices (previously was a list of lists of pixels)
@@ -113,8 +114,8 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
 
     # Current positions to be updated later for each window in nwindows
     lanes =  {
-        'L' : Lane(left_max_ix, binary_warped, [255, 0, 0], 'L'),
-        'R': Lane(right_max_ix, binary_warped, [0, 0, 255], 'R')}
+        'L' : Lane(left_max_ix, binary_warped, [255, 0, 0], 'L', vwr),
+        'R': Lane(right_max_ix, binary_warped, [0, 0, 255], 'R', vwr)}
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
