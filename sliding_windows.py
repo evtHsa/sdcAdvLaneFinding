@@ -33,7 +33,7 @@ class Lane:
         
     def draw_window(self, img):
         assert(type(img) is iu.Image)
-        self.window.draw(out_img)
+        self.window.draw(img)
         
     def finis(self, nonzerox, nonzeroy):
         try:
@@ -50,9 +50,9 @@ class Lane:
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy):
-        assert(type(img) is np.ndarray)
-        self.y_lo = img.shape[0] - (win_ix + 1) * win_height
-        self.y_hi = img.shape[0] - win_ix  * win_height
+        assert(type(img) is iu.Image)
+        self.y_lo = img.img_data.shape[0] - (win_ix + 1) * win_height
+        self.y_hi = img.img_data.shape[0] - win_ix  * win_height
         self.x_lo = x_base - margin
         self.x_hi = x_base + margin
         self.ix = win_ix
@@ -60,13 +60,14 @@ class Window:
         self.vwr = vwr
         self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
                           (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi)).nonzero()[0]
+        # FIXME: good_ixes are confirmed 2b in sync w/lesson 7.4
 
     def print(self):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
               (self.title, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
 
     def draw(self, out_img):
-        assert(type(img) is iu.Image)
+        assert(type(out_img) is iu.Image)
         ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       (0, 255, 0), 2)
@@ -78,83 +79,93 @@ def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
     undistorted = iu.undistort(img, cd, vwr=None)
     top_down = iu.look_down(undistorted, cd, vwr)
     hls_lab = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
+    ut.brk("FIXME:step by tedious step:this needs to result in grayscale")
+    iv._push(vwr, hls_lab)
     
 def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
     img = iu.imRead(path, reader='cv2', flags = cv2.IMREAD_GRAYSCALE, vwr=None)
     iv._push(vwr, img)
     return img
     
-def find_lane_pixels(binary_warped_image, cd=None, pd=None, vwr=None):
-    assert(type(binary_warped_image) is iu.Image)
-    assert(binary_warped_image.is2D())
+def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
+    assert(type(binary_warped) is iu.Image)
+    assert(binary_warped.is2D())
     
     wp = pd['sliding_windows']
     nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
-    hist = iu.hist(binary_warped_image, vwr)
+    hist = iu.hist(binary_warped, vwr)
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
-    img_data = binary_warped_image.img_data
+    img_data = binary_warped.img_data
     out_img = iu.Image(img_data = np.dstack((img_data, img_data, img_data)),
                        title="find_lane_pixels", img_type='gray')
 
-    binary_warped = hls_lab.img_data # re-use code w/less typing
-    out_img = np.dstack((binary_warped, binary_warped, binary_warped))
-
     # Set height of windows - based on nwindows above and image shape
-    window_height = np.int(binary_warped.shape[0]//nwindows)
+    window_height = np.int(binary_warped.img_data.shape[0]//nwindows)
 
     # Identify the x and y positions of all nonzero pixels in the image
-    nonzero = binary_warped.nonzero()
+    nonzero = binary_warped.img_data.nonzero()
     nonzeroy = np.array(nonzero[0])
     nonzerox = np.array(nonzero[1])
+    # FIXME: agreed to here
 
     # Current positions to be updated later for each window in nwindows
-    lanes =  { 'L' : Lane(left_max_ix), 'R': Lane(right_max_ix)}
+    lanes =  { 'L' : Lane(left_max_ix, binary_warped), 'R': Lane(right_max_ix, binary_warped)}
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
             win = Window(binary_warped, window, window_height, lanes['L'].x_current,
                          margin, "L", vwr, nonzerox, nonzeroy)
+            # ok to here, good ixes on prev line
             lanes[lane] .window_update(win)
             lanes[lane].draw_window(out_img)
+            # FIXME: coords of draw are correct
             lanes[lane].append_ixes()
 
             # If you found > minpix pixels, recenter next window on their mean position
             if len(lanes[lane].window.good_ixes) > minpix:
                 lanes[lane].x_current = np.int(np.mean(
                     nonzerox[lanes[lane].window.good_ixes]))
-
+            # x_current is updated correctly
+    #FIXME: we're good to here
     lanes['L'].finis(nonzerox, nonzeroy)
     lanes['R'].finis(nonzerox, nonzeroy)
-
     return lanes['L'], lanes['R'], out_img
 
 def fit_polynomial(lane):
+    assert(type(lane.img) is iu.Image)
     x = lane.x
-    ut.brk("FIXME:mine:do we agree with 7.4")
     y = lane.y
     fit = np.polyfit(y, x, 2)
-    ploty = np.linspace(0, lane.img.shape[0] - 1, lane.img.shape[0])
+    ploty = np.linspace(0, lane.img.img_data.shape[0] - 1, lane.img.img_data.shape[0])
+    ut.brk("FIXME:mine:do we agree with 7.4")
     try:
         fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
     except TypeError:
         # Avoids an error if `left` and `right_fit` are still none or incorrect
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
-    lane.img  = [255, 0, 0]
+    out_img.img_data  = [255, 0, 0]
+    ut.brk("this is wrong, shdb out_img")
     print("FIXME:??: where exactly is plot drawing, how do we return that image")
     plt.plot(fit, ploty, color='yellow')
+    plt.show()
 
 
 def doit(path="", cd=None, pd=None, vwr=None):
-    vwr.flush()
-    for path in ut.get_fnames("test_images/", "*.jpg"):
-        lane_L, lane_R, img = find_lane_pixels(path, cd, pd, vwr)
-        lane_L.show(path + 'L')
-        lane_R.show(path + 'R')
+    #for path in ut.get_fnames("test_images/", "*.jpg"):
+    for path in ut.get_fnames("./", "warped_example.jpg"):
+        vwr.flush()
+        print("FIXME: path = %s" % path)
+        binary_warped = get_binary_warped_image(path, cd, pd, vwr)
+        #ut.brk("FIXME:step by tedious step")
+        lane_L, lane_R, img = find_lane_pixels(binary_warped, cd, pd, vwr)
+        fit_polynomial(lane_L)
+        fit_polynomial(lane_R)
         iv._push(vwr, iu.Image(img_data=img, title = "sliding winders"))
-    vwr.show()
+        vwr.show()
+    ut.brk("FIXME:we expect line lines on imgs")
 
-cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
 doit(cd=cache_dict, pd=parm_dict, vwr=vwr)
 
