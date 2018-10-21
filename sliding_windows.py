@@ -146,7 +146,7 @@ def fit_polynomial(lane):
     fit = np.polyfit(y, x, 2)
     ploty = np.linspace(0, lane.in_img.img_data.shape[0] - 1,
                         lane.in_img.img_data.shape[0])
-    ut.brk("FIXME:why are polyfit coefficients close but not identical")
+    ut.oneShotMsg("FIXME:why are polyfit coefficients close but not identical")
     try:
         fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
     except TypeError:
