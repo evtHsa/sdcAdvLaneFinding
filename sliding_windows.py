@@ -147,7 +147,6 @@ def fit_polynomial(lane):
     lane.out_img.img_data[y,x]  = lane.color_rgb
     FIXME_dark_magic(fit, ploty, lane.out_img, line_color = [255, 255, 0],
                      line_thickness=10)
-    iv._view(lane.vwr, img=lane.out_img, title="duh?")
 
 def FIXME_dark_magic(x_pts, y_pts, out_img, line_color=[255, 255, 0],
                      line_thickness=10):
