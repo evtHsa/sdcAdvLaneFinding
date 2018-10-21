@@ -424,3 +424,9 @@ def get_LR_hist_max_ix(hist):
     return (left_max_ix, right_max_ix)
 
 
+def cv2Polylines(x_pts, y_pts, out_img, line_color=None, line_thickness=None):
+    assert(type(out_img) is Image)
+    pts = np.array(list(zip(x_pts, y_pts)), dtype=np.int32)
+    print("pts.shape = " + str(pts.shape))
+    cv2.polylines(out_img.img_data, [pts], False, line_color, line_thickness)
+
