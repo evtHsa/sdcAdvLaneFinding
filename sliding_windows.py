@@ -77,20 +77,6 @@ class Window:
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       self.parm_dict['sliding_window_color'], 2)
 
-def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
-    img = iu.imRead(path, reader='cv2', vwr=None)
-    iv._push(vwr, img)
-    undistorted = iu.undistort(img, cd, vwr=None)
-    top_down = iu.look_down(undistorted, cd, vwr)
-    hls_lab = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
-    iv._push(vwr, hls_lab)
-    return hls_lab
-    
-def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
-    img = iu.imRead(path, reader='cv2', flags = cv2.IMREAD_GRAYSCALE, vwr=None)
-    iv._push(vwr, img)
-    return img
-    
 def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     assert(type(binary_warped) is iu.Image)
     assert(binary_warped.is2D())
@@ -156,7 +142,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     for path in ut.get_fnames("test_images/", "*.jpg"):
         vwr.flush()
         print("FIXME: path = %s" % path)
-        binary_warped = get_binary_warped_image_v2(path, cd, pd, vwr)
+        binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr)
         lanes = find_lane_pixels(binary_warped, cd, pd, vwr)
         fit_polynomial(lanes['L'], pd)
         iv._push(vwr, lanes['L'].out_img)
