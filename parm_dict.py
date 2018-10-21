@@ -43,9 +43,19 @@ parm_dict ={
         (133, 253), #(U): picks up non blurry yellow
         (0, 255)      #(V): seems useless
     ],
+    'rgb' : {
+        'red' : [255, 0, 0],
+        'green' : [0, 255, 0],
+        'blue' : [0, 0,255],
+        'yellow' : [255, 255, 0]
+        },
     # from lesson 7.4
-    'sliding_windows' : {'nwindows' : 9, 'margin' : 100, 'minpix' : 50}
+    'sliding_windows' : {'nwindows' : 9, 'margin' : 100, 'minpix' : 50},
+    'lane_line_thickness' : 30
 }
+
+# stage 2
+parm_dict['lane_line_color'] = parm_dict['rgb']['yellow']
 
 # add things here as psuedo documentation
 cache_dict = {

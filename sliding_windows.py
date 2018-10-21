@@ -130,7 +130,7 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     lanes['R'].finis(nonzerox, nonzeroy)
     return lanes
 
-def fit_polynomial(lane):
+def fit_polynomial(lane, pd=None):
     assert(type(lane) is Lane)
     x = lane.x
     y = lane.y
@@ -145,11 +145,10 @@ def fit_polynomial(lane):
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
     lane.out_img.img_data[y,x]  = lane.color_rgb
-    FIXME_dark_magic(fit, ploty, lane.out_img, line_color = [255, 255, 0],
-                     line_thickness=10)
+    FIXME_dark_magic(fit, ploty, lane.out_img, line_color = pd['lane_line_color'],
+                     line_thickness = pd['lane_line_thickness'])
 
-def FIXME_dark_magic(x_pts, y_pts, out_img, line_color=[255, 255, 0],
-                     line_thickness=10):
+def FIXME_dark_magic(x_pts, y_pts, out_img, line_color=None, line_thickness=None):
     assert(type(out_img) is iu.Image)
     pts = np.array(list(zip(x_pts, y_pts)), dtype=np.int32)
     print("pts.shape = " + str(pts.shape))
@@ -162,9 +161,9 @@ def doit(path="", cd=None, pd=None, vwr=None):
         print("FIXME: path = %s" % path)
         binary_warped = get_binary_warped_image(path, cd, pd, vwr)
         lanes = find_lane_pixels(binary_warped, cd, pd, vwr)
-        fit_polynomial(lanes['L'])
+        fit_polynomial(lanes['L'], pd)
         iv._push(vwr, lanes['L'].out_img)
-        fit_polynomial(lanes['R'])
+        fit_polynomial(lanes['R'], pd)
         iv._push(vwr, lanes['R'].out_img)
         vwr.show()
 
