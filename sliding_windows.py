@@ -115,7 +115,7 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     for window in range(nwindows):
         for lane in ['L', 'R']:
             _lane = lanes[lane] # reduce typing
-            win = Window(binary_warped, window, window_height, lanes['L'].x_current,
+            win = Window(binary_warped, window, window_height, _lane.x_current,
                          margin, "L", vwr, nonzerox, nonzeroy, pd)
             # ok to here, good ixes on prev line
             _lane .window_update(win)
