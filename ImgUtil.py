@@ -64,6 +64,9 @@ class Image:
      def show(self):
           print("title = %s, img_type = %s" % (self.title, self.img_type))
           
+     def is2D(self):
+          return len(self.img_data.shape) == 2
+          
      def shape(self):
           return self.img_data.shape
 
@@ -403,6 +406,7 @@ def histo_pipe(path="", cd=None, pd=None, vwr=None):
 
 def hist(img, vwr):
     assert(type(img) is Image)
+    assert(img.is2D())
     bottom_half = img.img_data[img.img_data.shape[0]//2:,:]
     # Sum across image pixels vertically - make sure to set `axis`
     # i.e. the highest areas of vertical lines should be larger values
