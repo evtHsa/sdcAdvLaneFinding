@@ -13,13 +13,14 @@ import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
 class Lane:
-    def __init__(self, init_x_current, img):
+    def __init__(self, init_x_current, img, color_rgb):
         assert(type(img) is iu.Image)
         self.img = img
         self.x = -1
         self.y = -1
         self.x_current = init_x_current
         self.ix_list = list()
+        self.color_rgb = color_rgb
         
     def concat_ixes(self):
         # Concatenate the arrays of indices (previously was a list of lists of pixels)
@@ -109,7 +110,9 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     # FIXME: agreed to here
 
     # Current positions to be updated later for each window in nwindows
-    lanes =  { 'L' : Lane(left_max_ix, binary_warped), 'R': Lane(right_max_ix, binary_warped)}
+    lanes =  {
+        'L' : Lane(left_max_ix, binary_warped, [255, 0, 0]),
+        'R': Lane(right_max_ix, binary_warped, [0, 0, 255])}
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
@@ -144,7 +147,7 @@ def fit_polynomial(lane):
         # Avoids an error if `left` and `right_fit` are still none or incorrect
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
-    out_img.img_data  = [255, 0, 0]
+    out_img.img_data[x,y]  = lane.color_rgb
     ut.brk("this is wrong, shdb out_img")
     print("FIXME:??: where exactly is plot drawing, how do we return that image")
     plt.plot(fit, ploty, color='yellow')
