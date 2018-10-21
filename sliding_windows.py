@@ -13,15 +13,19 @@ import ImgViewer as iv
 
 #adapted from lesson 7.4 solution
 class Lane:
-    def __init__(self, init_x_current, img, color_rgb):
+    def __init__(self, init_x_current, img, color_rgb, lane_title):
         assert(type(img) is iu.Image)
-        self.img = img
+        assert(img.is2D())
+        self.in_img = img
+        _img_data = img.img_data
+        self.out_img = iu.Image(img_data = np.dstack((_img_data, _img_data, _img_data)),
+                           title = "lane pixels" + lane_title)
         self.x = -1
         self.y = -1
         self.x_current = init_x_current
         self.ix_list = list()
         self.color_rgb = color_rgb
-        
+
     def concat_ixes(self):
         # Concatenate the arrays of indices (previously was a list of lists of pixels)
         self.ix_list = np.concatenate(self.ix_list)
@@ -97,8 +101,6 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     hist = iu.hist(binary_warped, vwr)
     left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
     img_data = binary_warped.img_data
-    out_img = iu.Image(img_data = np.dstack((img_data, img_data, img_data)),
-                       title="find_lane_pixels", img_type='gray')
 
     # Set height of windows - based on nwindows above and image shape
     window_height = np.int(binary_warped.img_data.shape[0]//nwindows)
@@ -111,44 +113,46 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
 
     # Current positions to be updated later for each window in nwindows
     lanes =  {
-        'L' : Lane(left_max_ix, binary_warped, [255, 0, 0]),
-        'R': Lane(right_max_ix, binary_warped, [0, 0, 255])}
+        'L' : Lane(left_max_ix, binary_warped, [255, 0, 0], 'L'),
+        'R': Lane(right_max_ix, binary_warped, [0, 0, 255], 'R')}
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
+            _lane = lanes[lane] # reduce typing
             win = Window(binary_warped, window, window_height, lanes['L'].x_current,
                          margin, "L", vwr, nonzerox, nonzeroy)
             # ok to here, good ixes on prev line
-            lanes[lane] .window_update(win)
-            lanes[lane].draw_window(out_img)
+            _lane .window_update(win)
+            _lane.draw_window(_lane.out_img)
             # FIXME: coords of draw are correct
-            lanes[lane].append_ixes()
+            _lane.append_ixes()
 
             # If you found > minpix pixels, recenter next window on their mean position
-            if len(lanes[lane].window.good_ixes) > minpix:
-                lanes[lane].x_current = np.int(np.mean(
-                    nonzerox[lanes[lane].window.good_ixes]))
+            if len(_lane.window.good_ixes) > minpix:
+                _lane.x_current = np.int(np.mean(
+                    nonzerox[_lane.window.good_ixes]))
             # x_current is updated correctly
     #FIXME: we're good to here
     lanes['L'].finis(nonzerox, nonzeroy)
     lanes['R'].finis(nonzerox, nonzeroy)
-    return lanes['L'], lanes['R'], out_img
+    ut.oneShotMsg("FIXME: maybe(or not) caller shd combine the l & r lane images??")
+    return lanes
 
 def fit_polynomial(lane):
-    assert(type(lane.img) is iu.Image)
+    assert(type(lane) is Lane)
     x = lane.x
     y = lane.y
     fit = np.polyfit(y, x, 2)
-    ploty = np.linspace(0, lane.img.img_data.shape[0] - 1, lane.img.img_data.shape[0])
-    ut.brk("FIXME:mine:do we agree with 7.4")
+    ploty = np.linspace(0, lane.in_img.img_data.shape[0] - 1,
+                        lane.in_img.img_data.shape[0])
+    ut.brk("FIXME:why are polyfit coefficients close but not identical")
     try:
         fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
     except TypeError:
         # Avoids an error if `left` and `right_fit` are still none or incorrect
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
-    out_img.img_data[x,y]  = lane.color_rgb
-    ut.brk("this is wrong, shdb out_img")
+    lane.out_img.img_data[x,y]  = lane.color_rgb
     print("FIXME:??: where exactly is plot drawing, how do we return that image")
     plt.plot(fit, ploty, color='yellow')
     plt.show()
@@ -161,12 +165,12 @@ def doit(path="", cd=None, pd=None, vwr=None):
         print("FIXME: path = %s" % path)
         binary_warped = get_binary_warped_image(path, cd, pd, vwr)
         #ut.brk("FIXME:step by tedious step")
-        lane_L, lane_R, img = find_lane_pixels(binary_warped, cd, pd, vwr)
-        fit_polynomial(lane_L)
-        fit_polynomial(lane_R)
+        lanes = find_lane_pixels(binary_warped, cd, pd, vwr)
+        fit_polynomial(lanes['L'])
+        fit_polynomial(lane['R'])
         iv._push(vwr, iu.Image(img_data=img, title = "sliding winders"))
         vwr.show()
-    ut.brk("FIXME:we expect line lines on imgs")
+    ut.brk("FIXME:we expect lane lines on imgs with colored pixels")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
