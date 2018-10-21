@@ -141,7 +141,7 @@ def fit_polynomial(lane):
     try:
         fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
     except TypeError:
-        # Avoids an error if `left` and `right_fit` are still none or incorrect
+        # Avoids an error if fit is still none or incorrect
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
     lane.out_img.img_data[y,x]  = lane.color_rgb
