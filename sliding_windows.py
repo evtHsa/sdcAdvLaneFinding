@@ -54,7 +54,7 @@ class Lane:
         
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
-                 nonzeroy):
+                 nonzeroy,parm_dict = None):
         assert(type(img) is iu.Image)
         self.y_lo = img.img_data.shape[0] - (win_ix + 1) * win_height
         self.y_hi = img.img_data.shape[0] - win_ix  * win_height
@@ -65,6 +65,7 @@ class Window:
         self.vwr = vwr
         self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
                           (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi)).nonzero()[0]
+        self.parm_dict = parm_dict
 
     def print(self):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
@@ -74,7 +75,7 @@ class Window:
         assert(type(out_img) is iu.Image)
         ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
-                      (0, 255, 0), 2)
+                      self.parm_dict['sliding_window_color'], 2)
 
 def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
     img = iu.imRead(path, reader='cv2', vwr=None)
@@ -115,7 +116,7 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
         for lane in ['L', 'R']:
             _lane = lanes[lane] # reduce typing
             win = Window(binary_warped, window, window_height, lanes['L'].x_current,
-                         margin, "L", vwr, nonzerox, nonzeroy)
+                         margin, "L", vwr, nonzerox, nonzeroy, pd)
             # ok to here, good ixes on prev line
             _lane .window_update(win)
             _lane.draw_window(_lane.out_img)

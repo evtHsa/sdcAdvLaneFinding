@@ -56,6 +56,7 @@ parm_dict ={
 
 # stage 2
 parm_dict['lane_line_color'] = parm_dict['rgb']['yellow']
+parm_dict['sliding_window_color'] = parm_dict['rgb']['green']
 
 # add things here as psuedo documentation
 cache_dict = {
