@@ -12,6 +12,8 @@ import SlidingWindows as sw
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
+    iv._push(vwr, init_img)
+    iv._push(vwr, binary_warped)
     lanes = sw.find_lane_pixels(binary_warped, cd, pd, vwr=None)
     sw.fit_polynomial(lanes['L'], pd)
     iv._push(vwr, lanes['L'].out_img)
