@@ -26,6 +26,7 @@ class Lane:
         self.color_rgb = color_rgb
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
         self.fit = None # just a note that we'll use this l8r
+        self.ploty = None # just a note that we'll use this l8r
 
     def concat_ixes(self):
         # Concatenate the arrays of indices (previously was a list of lists of pixels)
@@ -135,6 +136,7 @@ def fit_polynomial(lane, pd=None):
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
     lane.fit = fit
+    lane.ploty = ploty
     lane.out_img.img_data[y,x]  = lane.color_rgb
     iu.cv2Polylines(fit, ploty, lane.out_img, line_color = pd['lane_line_color'],
                     line_thickness = pd['lane_line_thickness'])
