@@ -437,7 +437,7 @@ def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
     top_down = look_down(undistorted, cd, vwr)
     hls_lab = hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     iv._push(vwr, hls_lab)
-    return hls_lab
+    return img, hls_lab
     
 def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
     img = imRead(path, reader='cv2', flags = cv2.IMREAD_GRAYSCALE, vwr=None)
