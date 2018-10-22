@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 import ImgUtil as iu
 import ImgViewer as iv
+import pprint
 
 #adapted from lesson 7.4 solution
 class Lane:
@@ -51,8 +52,11 @@ class Lane:
         self.x = nonzerox[self.ix_list]
         self.y = nonzeroy[self.ix_list]
         
-    def show(self, title):
-        print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
+    def show(self, title=None, verbose=False):
+        if verbose:
+            pprint.pprint(self.__dict__)
+        else:
+            print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
         
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
