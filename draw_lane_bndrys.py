@@ -9,11 +9,25 @@ import ImgUtil as iu
 import ImgViewer as iv
 import SlidingWindows as sw
 
-def draw_lanes_on_blank_img(img, lanes):
-    # fit must be saved in lane d/s
-    lanes_img = np.zeros_like(img).astype(np.uint8)
-    ut.brk("FIXME: want fn to take lane, img & draw lane stuff on img")
-    ut.brk("FIXME: do new stuff")
+def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
+    assert(len(lanes) == 2) # eventually we may want more & forget here assumed 2
+    assert(type(img) is iu.Image)
+    
+    pts = {}
+    for lane_label in ['L', 'R']:
+        pts[lane_label] = lanes[lane_label].prep_fill_poly_points()
+    pts['combined'] = np.hstack([pts['L'], pts['R']])
+
+    lanes_img = iu.Image(img_data = np.zeros_like(img.img_data).astype(np.uint8),
+                         title = "lane image", img_type = 'rgb')
+    ut.brk("xxx")
+    cv2.fillPoly(lanes_img.img_data, np.int_([pts['combined']]), lane_color)
+
+    iv._push(vwr, lanes_img)
+    vwr.show()
+    
+    ut.brk("FIXME: do more stuff")
+    return lanes_image
     
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
@@ -25,7 +39,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     iv._push(vwr, lanes['L'].out_img)
     sw.fit_polynomial(lanes['R'], pd)
     iv._push(vwr, lanes['R'].out_img)
-    draw_lanes_on_blank_img(init_img, [lanes['L'], lanes['R']])
+    lane_img = draw_lanes_on_blank_img(init_img, lanes, pd['lane_line_color'], vwr)
     vwr.show()
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
