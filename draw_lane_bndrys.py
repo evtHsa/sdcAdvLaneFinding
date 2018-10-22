@@ -9,6 +9,12 @@ import ImgUtil as iu
 import ImgViewer as iv
 import SlidingWindows as sw
 
+def draw_lanes_on_blank_img(img, lanes):
+    # fit must be saved in lane d/s
+    lanes_img = np.zeros_like(img).astype(np.uint8)
+    ut.brk("FIXME: want fn to take lane, img & draw lane stuff on img")
+    ut.brk("FIXME: do new stuff")
+    
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
@@ -19,7 +25,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     iv._push(vwr, lanes['L'].out_img)
     sw.fit_polynomial(lanes['R'], pd)
     iv._push(vwr, lanes['R'].out_img)
-    ut.brk("do new stuff")
+    draw_lanes_on_blank_img(init_img, [lanes['L'], lanes['R']])
     vwr.show()
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
