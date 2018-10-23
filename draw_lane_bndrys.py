@@ -10,6 +10,16 @@ import ImgViewer as iv
 import SlidingWindows as sw
 
 def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
+    # object model is broken here. we want an entity that encompasses a left & right
+    # lane line and a polygon bounded by them and a region of interest
+    #
+    # the current model blurs lane  line and lane
+    # what probably should be done: ++FIXME++
+    #
+    # 1) rename current Lane class to LineLine
+    # 2) do some of the setup done in current doit() in Lane's ctor
+    # 3) do the rest in Lane::updateImage
+    # 4) put what's in this fn in Lane::draw()
     assert(len(lanes) == 2) # eventually we may want more & forget here assumed 2
     assert(type(img) is iu.Image)
 
@@ -40,7 +50,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     iv._push(vwr, lanes['L'].out_img)
     sw.fit_polynomial(lanes['R'], pd)
     iv._push(vwr, lanes['R'].out_img)
-    lane_img = draw_lanes_on_blank_img(init_img, lanes, pd['lane_line_color'], vwr)
+    lane_img = draw_lanes_on_blank_img(init_img, lanes, pd['lane_fill_color'], vwr)
     vwr.show()
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")

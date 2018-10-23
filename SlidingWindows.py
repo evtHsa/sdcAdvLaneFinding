@@ -47,7 +47,7 @@ class Lane:
         #    order so after drawing the bottom point of the first series we have a diagonal
         #    line to the top of the second series and another diagonal to close the polygon
         #    at the top of the first series(the "bowtie") so we flip one of the series of points
-
+        
         pts = np.vstack([self.fit, self.ploty]).T
         if flip:
             pts = np.flipud(pts)
