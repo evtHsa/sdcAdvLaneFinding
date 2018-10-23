@@ -29,8 +29,14 @@ class Lane:
         self.fit = None # just a note that we'll use this l8r
         self.ploty = None # just a note that we'll use this l8r
 
-    def prep_fill_poly_points(self):
-        return np.array([np.transpose(np.vstack([self.fit, self.ploty]))])
+    def fill_poly_points(self, flip):
+        # we need to flip 1 of the lists of points to avoid the bowtie effect
+        t1 = np.vstack([self.fit, self.ploty])
+        t2 = np.transpose(t1)
+        pts = t2
+        if flip:
+            pts = np.flipud(t2)
+        return np.array([pts])
     
     def concat_ixes(self):
         # Concatenate the arrays of indices (previously was a list of lists of pixels)

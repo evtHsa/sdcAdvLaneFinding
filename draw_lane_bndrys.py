@@ -12,16 +12,18 @@ import SlidingWindows as sw
 def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
     assert(len(lanes) == 2) # eventually we may want more & forget here assumed 2
     assert(type(img) is iu.Image)
-    
-    pts = {}
-    for lane_label in ['L', 'R']:
-        pts[lane_label] = lanes[lane_label].prep_fill_poly_points()
-    pts['combined'] = np.hstack([pts['L'], pts['R']])
+
+    L = lanes['L']
+    R = lanes['R']
+
+    left_pts = lanes['L'].fill_poly_points(True)
+    right_pts = lanes['R'].fill_poly_points(False)
+    pts = np.hstack((left_pts, right_pts))
+
 
     lanes_img = iu.Image(img_data = np.zeros_like(img.img_data).astype(np.uint8),
                          title = "lane image", img_type = 'rgb')
-    ut.brk("xxx")
-    cv2.fillPoly(lanes_img.img_data, np.int_([pts['combined']]), lane_color)
+    cv2.fillPoly(lanes_img.img_data, np.int_([pts]), lane_color)
 
     iv._push(vwr, lanes_img)
     vwr.show()
