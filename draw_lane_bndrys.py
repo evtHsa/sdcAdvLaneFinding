@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 import ImgUtil as iu
 import ImgViewer as iv
-import SlidingWindows as sw
+import LaneUtils as lu
 
 def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
     # object model is broken here. we want an entity that encompasses a left & right
@@ -45,10 +45,10 @@ def doit(path="", cd=None, pd=None, vwr=None):
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
     iv._push(vwr, init_img)
     iv._push(vwr, binary_warped)
-    lanes = sw.find_lane_pixels(binary_warped, cd, pd, vwr=None)
-    sw.fit_polynomial(lanes['L'], pd)
+    lanes = lu.find_lane_pixels(binary_warped, cd, pd, vwr=None)
+    lu.fit_polynomial(lanes['L'], pd)
     iv._push(vwr, lanes['L'].out_img)
-    sw.fit_polynomial(lanes['R'], pd)
+    lu.fit_polynomial(lanes['R'], pd)
     iv._push(vwr, lanes['R'].out_img)
     lane_img = draw_lanes_on_blank_img(init_img, lanes, pd['lane_fill_color'], vwr)
     vwr.show()
