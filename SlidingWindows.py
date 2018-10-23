@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#fill!/usr/bin/env python3
 #
 # demo code, usually from the lesson excercise
 # return images
@@ -31,6 +31,22 @@ class Lane:
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
+        #
+        # a bit more explanation:
+        #    - we start with two linear arrays <fit> and <ploty> which are the x & y
+        #      coordinates of the polynomial we fit to the lane pixels. so this looks like
+        #      F = [1, 2, 3] P = [10, 20, 30]
+        #    - vstack yields [[1, 2 3]
+        #                           [11, 12, 13]]
+        #    - transpose of that yields
+        #      [[1, 11],
+        #       [2, 12],
+        #       [3, 13]]
+        #    - now we just have to deal with the fact that both sets of points are in the same
+        #    order so after drawing the bottom point of the first series we have a diagonal
+        #    line to the top of the second series and another diagonal to close the polygon
+        #    at the top of the first series(the "bowtie") so we flip one of the series of points
+
         pts = np.vstack([self.fit, self.ploty]).T
         if flip:
             pts = np.flipud(pts)
