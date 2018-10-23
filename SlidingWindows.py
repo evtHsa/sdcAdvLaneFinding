@@ -84,6 +84,12 @@ class Lane:
         else:
             print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
         
+    def draw_lane_line(self, img):
+        assert(type(img) is iu.Image)
+        iu.cv2Polylines(self.fit, self.ploty, img,
+                        line_color = self.parm_dict['lane_line_color'],
+                        line_thickness = self.parm_dict['lane_line_thickness'])
+
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
                  nonzeroy,parm_dict = None):
@@ -167,7 +173,5 @@ def fit_polynomial(lane, pd=None):
         fit = 1*ploty**2 + 1*ploty
     lane.fit = fit
     lane.ploty = ploty
-    lane.out_img.img_data[y,x]  = lane.color_rgb
-    iu.cv2Polylines(fit, ploty, lane.out_img, line_color = pd['lane_line_color'],
-                    line_thickness = pd['lane_line_thickness'])
-    #iv._view(lane.vwr, img=lane.out_img, title="duh?")
+
+    

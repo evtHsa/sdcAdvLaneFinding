@@ -20,7 +20,8 @@ def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
     lanes_img = iu.Image(img_data = np.zeros_like(img.img_data).astype(np.uint8),
                          title = "lane image", img_type = 'rgb')
     cv2.fillPoly(lanes_img.img_data, np.int_([pts]), lane_color)
-
+    lanes['L'].draw_lane_line(lanes_img)
+    lanes['R'].draw_lane_line(lanes_img)
     iv._push(vwr, lanes_img)
     vwr.show()
     
