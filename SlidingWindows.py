@@ -28,6 +28,7 @@ class Lane:
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
         self.fit = None # just a note that we'll use this l8r
         self.ploty = None # just a note that we'll use this l8r
+        self.parm_dict = None # set lazily on first window update
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
@@ -60,6 +61,8 @@ class Lane:
         self.ix_list.append(self.window.good_ixes)
 
     def window_update(self, window):
+        if self.parm_dict is None:
+            self.parm_dict = window.parm_dict
         self.window = window
         
     def draw_window(self, img):

@@ -51,11 +51,12 @@ parm_dict ={
         },
     # from lesson 7.4
     'sliding_windows' : {'nwindows' : 9, 'margin' : 100, 'minpix' : 50},
-    'lane_line_thickness' : 15
+    'lane_line_thickness' : 25
 }
 
 # stage 2
-parm_dict['lane_line_color'] = parm_dict['rgb']['yellow']
+parm_dict['lane_line_color'] = parm_dict['rgb']['blue']
+parm_dict['lane_fill_color'] = parm_dict['rgb']['yellow']
 parm_dict['sliding_window_color'] = parm_dict['rgb']['green']
 
 # add things here as psuedo documentation
