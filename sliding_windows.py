@@ -15,7 +15,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
         vwr.flush()
         print("FIXME: path = %s" % path)
         init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr)
-        lanes = lu.find_lane_pixels(binary_warped, cd, pd, vwr)
+        lanes = lu.lane__find_pixels(binary_warped, cd, pd, vwr)
         lu.fit_polynomial(lanes['L'], pd)
         iv._push(vwr, lanes['L'].out_img)
         lu.fit_polynomial(lanes['R'], pd)

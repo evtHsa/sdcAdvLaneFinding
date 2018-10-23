@@ -12,14 +12,14 @@ import ImgViewer as iv
 import pprint
 
 #adapted from lesson 7.4 solution
-class Lane:
-    def __init__(self, init_x_current, img, color_rgb, lane_title, vwr=None):
+class LaneBoundary:
+    def __init__(self, init_x_current, img, color_rgb, bndry_title, vwr=None):
         assert(type(img) is iu.Image)
         assert(img.is2D())
         self.in_img = img
         _img_data = img.img_data
         self.out_img = iu.Image(img_data = np.dstack((_img_data, _img_data, _img_data)),
-                           title = "lane pixels" + lane_title)
+                           title = "lane pixels" + bndry_title)
         self.x = -1
         self.y = -1
         self.x_current = init_x_current
@@ -84,7 +84,7 @@ class Lane:
         else:
             print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
         
-    def draw_lane_line(self, img):
+    def draw(self, img):
         assert(type(img) is iu.Image)
         iu.cv2Polylines(self.fit, self.ploty, img,
                         line_color = self.parm_dict['lane_line_color'],
@@ -115,7 +115,7 @@ class Window:
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       self.parm_dict['sliding_window_color'], 2)
 
-def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
+def lane__find_pixels(binary_warped, cd=None, pd=None, vwr=None):
     assert(type(binary_warped) is iu.Image)
     assert(binary_warped.is2D())
     
@@ -134,36 +134,36 @@ def find_lane_pixels(binary_warped, cd=None, pd=None, vwr=None):
     nonzerox = np.array(nonzero[1])
 
     # Current positions to be updated later for each window in nwindows
-    lanes =  {
-        'L' : Lane(left_max_ix, binary_warped, pd['rgb']['red'], 'L', vwr),
-        'R': Lane(right_max_ix, binary_warped, pd['rgb']['blue'], 'R', vwr)}
+    lane_bndrys =  {
+        'L' : LaneBoundary(left_max_ix, binary_warped, pd['rgb']['red'], 'L', vwr),
+        'R': LaneBoundary(right_max_ix, binary_warped, pd['rgb']['blue'], 'R', vwr)}
     
     for window in range(nwindows):
         for lane in ['L', 'R']:
-            _lane = lanes[lane] # reduce typing
-            win = Window(binary_warped, window, window_height, _lane.x_current,
+            _lane_boundary = lane_bndrys[lane] # reduce typing
+            win = Window(binary_warped, window, window_height, _lane_boundary.x_current,
                          margin, "L", vwr, nonzerox, nonzeroy, pd)
             # ok to here, good ixes on prev line
-            _lane .window_update(win)
-            _lane.draw_window(_lane.out_img)
-            _lane.append_ixes()
+            _lane_boundary .window_update(win)
+            _lane_boundary.draw_window(_lane_boundary.out_img)
+            _lane_boundary.append_ixes()
 
             # If you found > minpix pixels, recenter next window on their mean position
-            if len(_lane.window.good_ixes) > minpix:
-                _lane.x_current = np.int(np.mean(
-                    nonzerox[_lane.window.good_ixes]))
+            if len(_lane_boundary.window.good_ixes) > minpix:
+                _lane_boundary.x_current = np.int(np.mean(
+                    nonzerox[_lane_boundary.window.good_ixes]))
             # x_current is updated correctly
-    lanes['L'].finis(nonzerox, nonzeroy)
-    lanes['R'].finis(nonzerox, nonzeroy)
-    return lanes
+    lane_bndrys['L'].finis(nonzerox, nonzeroy)
+    lane_bndrys['R'].finis(nonzerox, nonzeroy)
+    return lane_bndrys
 
-def fit_polynomial(lane, pd=None):
-    assert(type(lane) is Lane)
-    x = lane.x
-    y = lane.y
+def fit_polynomial(lane_boundary, pd=None):
+    assert(type(lane_boundary) is LaneBoundary)
+    x = lane_boundary.x
+    y = lane_boundary.y
     fit = np.polyfit(y, x, 2)
-    ploty = np.linspace(0, lane.in_img.img_data.shape[0] - 1,
-                        lane.in_img.img_data.shape[0])
+    ploty = np.linspace(0, lane_boundary.in_img.img_data.shape[0] - 1,
+                        lane_boundary.in_img.img_data.shape[0])
     ut.oneShotMsg("FIXME:why are polyfit coefficients close but not identical")
     try:
         fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
@@ -171,7 +171,7 @@ def fit_polynomial(lane, pd=None):
         # Avoids an error if fit is still none or incorrect
         print('fit_polynomal: failed to fit a line!')
         fit = 1*ploty**2 + 1*ploty
-    lane.fit = fit
-    lane.ploty = ploty
+    lane_boundary.fit = fit
+    lane_boundary.ploty = ploty
 
     
