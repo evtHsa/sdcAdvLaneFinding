@@ -9,6 +9,7 @@ import ImgUtil as iu
 import ImgViewer as iv
 import LaneUtils as lu
 
+ut.brk("this is broken w.r.t expectations since lane line drawing moved to Lane")
 def doit(path="", cd=None, pd=None, vwr=None):
     for path in ut.get_fnames("test_images/", "*.jpg"):
         vwr.flush()
