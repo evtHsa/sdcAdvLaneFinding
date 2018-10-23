@@ -13,9 +13,6 @@ def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
     assert(len(lanes) == 2) # eventually we may want more & forget here assumed 2
     assert(type(img) is iu.Image)
 
-    L = lanes['L']
-    R = lanes['R']
-
     left_pts = lanes['L'].fill_poly_points(True)
     right_pts = lanes['R'].fill_poly_points(False)
     pts = np.hstack((left_pts, right_pts))
