@@ -31,11 +31,9 @@ class Lane:
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
-        t1 = np.vstack([self.fit, self.ploty])
-        t2 = t1.T
-        pts = t2
+        pts = np.vstack([self.fit, self.ploty]).T
         if flip:
-            pts = np.flipud(t2)
+            pts = np.flipud(pts)
         return np.array([pts])
     
     def concat_ixes(self):

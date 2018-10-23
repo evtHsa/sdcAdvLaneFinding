@@ -13,9 +13,8 @@ def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
     assert(len(lanes) == 2) # eventually we may want more & forget here assumed 2
     assert(type(img) is iu.Image)
 
-    left_pts = lanes['L'].fill_poly_points(True)
-    right_pts = lanes['R'].fill_poly_points(False)
-    pts = np.hstack((left_pts, right_pts))
+    pts = np.hstack((lanes['L'].fill_poly_points(True),
+                     lanes['R'].fill_poly_points(False)))
 
 
     lanes_img = iu.Image(img_data = np.zeros_like(img.img_data).astype(np.uint8),
@@ -25,7 +24,9 @@ def draw_lanes_on_blank_img(img, lanes, lane_color, vwr=None):
     iv._push(vwr, lanes_img)
     vwr.show()
     
-    ut.brk("FIXME: do more stuff")
+    ut.brk("FIXME: draw lane lines on sides of poly")
+    ut.brk("FIXME: reverse warp this back to original perspective in caller")
+    ut.brk("FIXME: combine images in caller")
     return lanes_image
     
 def doit(path="", cd=None, pd=None, vwr=None):
