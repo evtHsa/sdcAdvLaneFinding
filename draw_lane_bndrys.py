@@ -8,7 +8,12 @@ import numpy as np
 import ImgUtil as iu
 import ImgViewer as iv
 import LaneUtils as lu
-    
+
+# our object model
+# Lanes:  contain LaneBoundary(s) and attributes common to both boundaries
+# LaneBoundary(s): contain attributes for a particular lane bounday
+# Windows: are used to calculate lane boundaries
+
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
