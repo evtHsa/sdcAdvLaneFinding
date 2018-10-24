@@ -51,7 +51,10 @@ parm_dict ={
         },
     # from lesson 7.4
     'sliding_windows' : {'nwindows' : 9, 'margin' : 100, 'minpix' : 50},
-    'lane_line_thickness' : 25
+    'lane_line_thickness' : 25,
+    'lane_blend_alpha' : 1,
+    'lane_blend_beta' : 0.3,
+    'lane_blend_gamma' : 0
 }
 
 # stage 2

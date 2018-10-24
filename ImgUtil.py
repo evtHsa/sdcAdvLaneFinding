@@ -458,7 +458,7 @@ def cv2AddWeighted(src1, src2, alpha=None, beta=None, gamma=None, title=None):
      assert(not  alpha is None)
      assert(not  beta is None)
      assert(not  gamma is None)
-     out_img = Image(img_data = cv2.addWeighted(out_img.img_data, alpha,
+     out_img = Image(img_data = cv2.addWeighted(src1.img_data, alpha,
                                                 src2.img_data, beta, gamma),
                      title=title,
                      img_type = src1.img_type)

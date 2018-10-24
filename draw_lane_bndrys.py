@@ -22,14 +22,14 @@ def doit(path="", cd=None, pd=None, vwr=None):
     size = (lane_img.shape()[1], lane_img.shape()[0])
     lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size, vwr=None)
     iv._push(vwr, lane_img)
-    blended_img = iu.cv2AddWeighted(init_img, lane_img, alpha=1, beta=0.5,
-                                      gamma = 0, title = "merged")
+    blended_img = iu.cv2AddWeighted(init_img, lane_img,
+                                    alpha = pd['lane_blend_alpha'],
+                                    beta = pd['lane_blend_beta'],
+                                    gamma = pd['lane_blend_gamma'], title = "merged")
     iv._push(vwr, blended_img)
     vwr.show()
 
-    ut.brk("FIXME: reverse warp this back to original perspective in caller")
-    ut.brk("FIXME: combine images in caller")
-    ut.brk("FIXME: this routine needs to move to LaneUtils")
+    ut.brk("FIXME: this routine needs to move to LaneUtils under appropriate name")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
