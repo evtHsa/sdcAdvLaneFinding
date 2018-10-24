@@ -152,7 +152,6 @@ class Lane:
         self.left_bndry.draw(out_img)
         self.right_bndry.draw(out_img)
         iv._push(self.vwr, out_img)
-        self.vwr.show()
         return out_img
 
     def fit_polynomials(self):

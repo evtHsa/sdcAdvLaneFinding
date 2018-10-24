@@ -10,7 +10,7 @@ import ImgViewer as iv
 import LaneUtils as lu
     
 def doit(path="", cd=None, pd=None, vwr=None):
-    lane = lu.Lane(cd, pd, vwr)
+    lane = lu.Lane(cd, pd, vwr=None)
     vwr.flush()
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
     iv._push(vwr, init_img)
@@ -18,14 +18,12 @@ def doit(path="", cd=None, pd=None, vwr=None):
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
     lane_img = lane.get_image(init_img)
-    iv._push(self.vwr, lane_img)
+    iv._push(vwr, lane_img)
     vwr.show()
-    ut.brk("FIXME: probably need to flow cd, pd, vwr down from Lane")
-    ut.brk("FIXME: read LaneUtils line by line for stuff 2 clean up")
+
     ut.brk("FIXME: reverse warp this back to original perspective in caller")
     ut.brk("FIXME: combine images in caller")
     ut.brk("FIXME: this routine needs to move to LaneUtils")
-    ut.brk("FIXME: turn off vwr where excess img push in LaneUtils and push img above")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
