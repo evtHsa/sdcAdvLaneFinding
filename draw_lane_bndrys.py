@@ -8,50 +8,23 @@ import numpy as np
 import ImgUtil as iu
 import ImgViewer as iv
 import LaneUtils as lu
-
-def lane__get_image(img, boundrys, lane_color, vwr=None):
-    # object model is broken here. we want an entity that encompasses a left & right
-    # lane line and a polygon bounded by them and a region of interest
-    #
-    # the current model blurs lane  line and lane
-    # what probably should be done: ++FIXME++
-    #
-    # 1) rename current Lane class to LineLine
-    # 2) do some of the setup done in current doit() in Lane's ctor
-    # 3) do the rest in Lane::updateImage
-    # 4) put what's in this fn in Lane::draw()
-    assert(len(boundrys) == 2) # eventually we may want more & forget here assumed 2
-    assert(type(img) is iu.Image)
-
-    pts = np.hstack((boundrys['L'].fill_poly_points(True),
-                     boundrys['R'].fill_poly_points(False)))
-
-
-    out_img = iu.Image(img_data = np.zeros_like(img.img_data).astype(np.uint8),
-                         title = "lane image", img_type = 'rgb')
-    cv2.fillPoly(out_img.img_data, np.int_([pts]), lane_color)
-    boundrys['L'].draw(out_img)
-    boundrys['R'].draw(out_img)
-    iv._push(vwr, out_img)
-    vwr.show()
-    
-    ut.brk("FIXME: draw lane lines on sides of poly")
-    ut.brk("FIXME: reverse warp this back to original perspective in caller")
-    ut.brk("FIXME: combine images in caller")
-    return lanes_image
     
 def doit(path="", cd=None, pd=None, vwr=None):
+    lane = lu.Lane(cd, pd, vwr)
     vwr.flush()
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
     iv._push(vwr, init_img)
     iv._push(vwr, binary_warped)
-    boundrys = lu.lane__find_pixels(binary_warped, cd, pd, vwr=None)
-    lu.fit_polynomial(boundrys['L'], pd)
-    iv._push(vwr, boundrys['L'].out_img)
-    lu.fit_polynomial(boundrys['R'], pd)
-    iv._push(vwr, boundrys['R'].out_img)
-    lane_img = lane__get_image(init_img, boundrys, pd['lane_fill_color'], vwr)
+    lane.find_pixels_all_bndrys(binary_warped)
+    lane.fit_polynomials()
+    lane_img = lane.get_image(init_img)
+    # FIXME:dont pass fill color, let lane get it from pd
     vwr.show()
+    ut.brk("FIXME: probably need to flow cd, pd, vwr down from Lane")
+    ut.brk("FIXME: get all the fixmes out of LaneUtils")
+    ut.brk("FIXME: reverse warp this back to original perspective in caller")
+    ut.brk("FIXME: combine images in caller")
+    ut.brk("FIXME: this routine needs to move to LaneUtils")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
