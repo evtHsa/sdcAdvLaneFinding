@@ -18,7 +18,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
     lane_img = lane.get_image(init_img)
-    ut.brk("push lane img above")
+    iv._push(self.vwr, lane_img)
     vwr.show()
     ut.brk("FIXME: probably need to flow cd, pd, vwr down from Lane")
     ut.brk("FIXME: read LaneUtils line by line for stuff 2 clean up")
