@@ -61,7 +61,10 @@ class Image:
           self.cmap = type_2_cmap[img_type] # fall down if not in dict
           self.img_type = img_type
           self.title = title
-          
+
+     def shape(self):
+          return self.img_data.shape
+     
      def show(self):
           print("title = %s, img_type = %s" % (self.title, self.img_type))
           
