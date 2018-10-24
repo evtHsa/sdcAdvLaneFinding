@@ -21,7 +21,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     # FIXME:dont pass fill color, let lane get it from pd
     vwr.show()
     ut.brk("FIXME: probably need to flow cd, pd, vwr down from Lane")
-    ut.brk("FIXME: get all the fixmes out of LaneUtils")
+    ut.brk("FIXME: read LaneUtils line by line for stuff 2 clean up")
     ut.brk("FIXME: reverse warp this back to original perspective in caller")
     ut.brk("FIXME: combine images in caller")
     ut.brk("FIXME: this routine needs to move to LaneUtils")

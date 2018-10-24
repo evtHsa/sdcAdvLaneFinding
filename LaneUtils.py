@@ -109,7 +109,7 @@ class LaneBoundary:
                         line_thickness = self.parm_dict['lane_line_thickness'])
 
 class Window:
-    def __init__(self, img, win_ix, win_height, x_base, margin, title, vwr, nonzerox,
+    def __init__(self, img, win_ix, win_height, x_base, margin, vwr, nonzerox,
                  nonzeroy,parm_dict = None):
         assert(type(img) is iu.Image)
         self.y_lo = img.img_data.shape[0] - (win_ix + 1) * win_height
@@ -117,7 +117,6 @@ class Window:
         self.x_lo = x_base - margin
         self.x_hi = x_base + margin
         self.ix = win_ix
-        self.title = title
         self.vwr = vwr
         self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
                           (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi)).nonzero()[0]
@@ -185,8 +184,7 @@ class Lane:
         for window in range(nwindows):
             for bndry in [self.left_bndry, self.right_bndry]:
                 win = Window(binary_warped, window, window_height, bndry.x_current,
-                             margin, "L", self.vwr, nonzerox, nonzeroy, self.pd)
-                #FIXME: what is that literal 'L' doing in prev line???
+                             margin, self.vwr, nonzerox, nonzeroy, self.pd)
                 # ok to here, good ixes on prev line
                 bndry.window_update(win)
                 bndry.draw_window(bndry.out_img) #FIXME: reference to image is redundant
