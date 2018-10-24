@@ -18,8 +18,11 @@ def doit(path="", cd=None, pd=None, vwr=None):
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
     lane_img = lane.get_image(init_img)
-    init_img_dup = iu.copy_image(init_img)
     iv._push(vwr, lane_img)
+    size = (lane_img.shape()[1], lane_img.shape()[0])
+    lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size, vwr=None)
+    iv._push(vwr, lane_img)
+    init_img_dup = iu.copy_image(init_img)
     vwr.show()
 
     ut.brk("FIXME: reverse warp this back to original perspective in caller")
