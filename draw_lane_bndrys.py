@@ -18,13 +18,14 @@ def doit(path="", cd=None, pd=None, vwr=None):
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
     lane_img = lane.get_image(init_img)
-    # FIXME:dont pass fill color, let lane get it from pd
+    ut.brk("push lane img above")
     vwr.show()
     ut.brk("FIXME: probably need to flow cd, pd, vwr down from Lane")
     ut.brk("FIXME: read LaneUtils line by line for stuff 2 clean up")
     ut.brk("FIXME: reverse warp this back to original perspective in caller")
     ut.brk("FIXME: combine images in caller")
     ut.brk("FIXME: this routine needs to move to LaneUtils")
+    ut.brk("FIXME: turn off vwr where excess img push in LaneUtils and push img above")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
