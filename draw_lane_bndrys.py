@@ -22,7 +22,9 @@ def doit(path="", cd=None, pd=None, vwr=None):
     size = (lane_img.shape()[1], lane_img.shape()[0])
     lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size, vwr=None)
     iv._push(vwr, lane_img)
-    init_img_dup = iu.copy_image(init_img)
+    blended_img = iu.cv2AddWeighted(init_img, lane_img, alpha=1, beta=0.5,
+                                      gamma = 0, title = "merged")
+    iv._push(vwr, blended_img)
     vwr.show()
 
     ut.brk("FIXME: reverse warp this back to original perspective in caller")

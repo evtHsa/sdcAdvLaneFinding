@@ -450,3 +450,16 @@ def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
 def copy_image(in_img):
      assert(type(in_img) is Image)
      return copy.deepcopy(in_img)
+
+def cv2AddWeighted(src1, src2, alpha=None, beta=None, gamma=None, title=None):
+     assert(type(src1) is Image)
+     assert(type(src2) is Image)
+     assert(src1.shape() == src2.shape())
+     assert(not  alpha is None)
+     assert(not  beta is None)
+     assert(not  gamma is None)
+     out_img = Image(img_data = cv2.addWeighted(out_img.img_data, alpha,
+                                                src2.img_data, beta, gamma),
+                     title=title,
+                     img_type = src1.img_type)
+     return out_img
