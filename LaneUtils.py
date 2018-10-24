@@ -13,7 +13,7 @@ import pprint
 
 #adapted from lesson 7.4 solution
 class LaneBoundary:
-    def __init__(self, init_x_current, img, color_rgb, bndry_title, vwr=None):
+    def __init__(self, init_x_current, img, bndry_title, vwr=None):
         assert(type(img) is iu.Image)
         assert(img.is2D())
         self.in_img = img
@@ -24,7 +24,6 @@ class LaneBoundary:
         self.y = -1
         self.x_current = init_x_current
         self.ix_list = list()
-        self.color_rgb = color_rgb
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
         self.fit = None # just a note that we'll use this l8r
         self.ploty = None # just a note that we'll use this l8r
@@ -130,7 +129,6 @@ class Window:
 
     def draw(self, out_img):
         assert(type(out_img) is iu.Image)
-        ut.oneShotMsg("FIXME: rectangle colors and thickness shdb in parms")
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       self.parm_dict['sliding_window_color'], 2)
 class Lane:
@@ -181,11 +179,8 @@ class Lane:
         nonzerox = np.array(nonzero[1])
 
         # Current positions to be updated later for each window in nwindows
-        self.left_bndry = LaneBoundary(left_max_ix, binary_warped,
-                                       self.pd['rgb']['red'], 'L', self.vwr)
-        #FIXME:we dont need 2pass down pixel color since we dont need to paint pxls
-        self.right_bndry = LaneBoundary(right_max_ix, binary_warped,
-                                        self.pd['rgb']['blue'], 'R', self.vwr)
+        self.left_bndry = LaneBoundary(left_max_ix, binary_warped, 'L', self.vwr)
+        self.right_bndry = LaneBoundary(right_max_ix, binary_warped, 'R', self.vwr)
 
         for window in range(nwindows):
             for bndry in [self.left_bndry, self.right_bndry]:
