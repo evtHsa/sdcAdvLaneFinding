@@ -13,9 +13,13 @@ import pprint
 
 #adapted from lesson 7.4 solution
 class LaneBoundary:
-    def __init__(self, init_x_current, img, bndry_title, vwr=None):
+    def __init__(self,  init_x_current, img, bndry_title, lane = None, vwr=None):
         assert(type(img) is iu.Image)
         assert(img.is2D())
+        assert(type(lane) is Lane)
+        
+        assert(not lane is None)
+        self.lane = lane # our parent so we can reference attrs common to all lanes
         self.in_img = img
         _img_data = img.img_data
         self.out_img = iu.Image(img_data = np.dstack((_img_data, _img_data, _img_data)),
@@ -26,16 +30,17 @@ class LaneBoundary:
         self.ix_list = list()
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
         self.fit = None # just a note that we'll use this l8r
-        self.ploty = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
         
     def fit_polynomial(self):
         assert(type(self) is LaneBoundary)
         x = self.x
         y = self.y
+        ploty = self.lane.ploty # from our owning lane
+        assert(not ploty is None)
+
         fit = np.polyfit(y, x, 2)
-        ploty = np.linspace(0, self.in_img.img_data.shape[0] - 1,
-                            self.in_img.img_data.shape[0])
+
         try:
             fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
         except TypeError:
@@ -43,9 +48,7 @@ class LaneBoundary:
             print('fit_polynomal: failed to fit a line!')
             fit = 1*ploty**2 + 1*ploty
         assert(not fit is None)
-        assert(not ploty is None)
         self.fit = fit
-        self.ploty = ploty
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
@@ -65,8 +68,9 @@ class LaneBoundary:
         #    line to the top of the second series and another diagonal to close the polygon
         #    at the top of the first series(the "bowtie") so we flip one of the series of points
         assert(not self.fit is None)
-        assert(not self.ploty is None)
-        pts = np.vstack([self.fit, self.ploty]).T
+        ploty = self.lane.ploty # from our owning lane
+        assert(not ploty is None)
+        pts = np.vstack([self.fit, ploty]).T
         if flip:
             pts = np.flipud(pts)
         return np.array([pts])
@@ -104,7 +108,9 @@ class LaneBoundary:
         
     def draw(self, img):
         assert(type(img) is iu.Image)
-        iu.cv2Polylines(self.fit, self.ploty, img,
+        ploty = self.lane.ploty # from our owning lane
+        assert(not ploty is None)
+        iu.cv2Polylines(self.fit, ploty, img,
                         line_color = self.parm_dict['lane_line_color'],
                         line_thickness = self.parm_dict['lane_line_thickness'])
 
@@ -133,12 +139,20 @@ class Window:
 class Lane:
     # for right now Lanes exist to hold a left and a right boundary and some misc
     # parm and cache dicts.
-    def __init__(self, cd=None, pd=None, vwr=None):
+    def __init__(self, cd=None, pd=None, img=None, vwr=None):
+        assert(not cd is  None)
+        assert(not pd is None)
+        assert(not img is None)
+        assert(type(img) is iu.Image)
+        #vwr may be None
         self.cd = cd
         self.pd = pd
+        self.img = img
         self.vwr = vwr
         self.left_bndry = None
         self.right_bndry = None
+        self.ploty = np.linspace(0, self.img.img_data.shape[0] - 1, #same 4 all bndrys
+                            self.img.img_data.shape[0])
         
     def get_image(self, img):
         assert(type(img) is iu.Image)
@@ -177,8 +191,10 @@ class Lane:
         nonzerox = np.array(nonzero[1])
 
         # Current positions to be updated later for each window in nwindows
-        self.left_bndry = LaneBoundary(left_max_ix, binary_warped, 'L', self.vwr)
-        self.right_bndry = LaneBoundary(right_max_ix, binary_warped, 'R', self.vwr)
+        self.left_bndry = LaneBoundary(left_max_ix, binary_warped, 'L', lane=self,
+                                       vwr=self.vwr)
+        self.right_bndry = LaneBoundary(right_max_ix, binary_warped, 'R', lane = self,
+                                        vwr=self.vwr)
 
         for window in range(nwindows):
             for bndry in [self.left_bndry, self.right_bndry]:
