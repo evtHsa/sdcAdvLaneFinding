@@ -18,6 +18,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
     lane_img = lane.get_image(init_img)
+    init_img_dup = iu.copy_image(init_img)
     iv._push(vwr, lane_img)
     vwr.show()
 

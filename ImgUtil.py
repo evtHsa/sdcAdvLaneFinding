@@ -10,6 +10,7 @@ import glob
 import os
 import util as ut
 import parm_dict as pd
+import copy
 
 type_2_cmap = {
      'gray': 'Greys_r',
@@ -443,3 +444,6 @@ def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
     iv._push(vwr, img)
     return img
     
+def copy_image(in_img):
+     assert(type(in_img) is Image)
+     return copy.deepcopy(in_img)
