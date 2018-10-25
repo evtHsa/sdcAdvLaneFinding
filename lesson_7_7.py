@@ -60,7 +60,11 @@ def my_way(ploty, left_fit, right_fit):
                                    binary_warped, 'L', lane=lane, vwr=None)
     lane.right_bndry = lu.LaneBoundary(0, # hope max ix doesnt matter for this test
                                     binary_warped, 'R', lane=lane, vwr=None)
-    ut.brk("fake up lane & boundaries with fake data")
+    lane. left_bndry.fit_coeff = left_fit
+    lane. right_bndry.fit_coeff = right_fit
+    lrc = lane. left_bndry.radius_of_curvature_pxl()
+    rrc = lane. right_bndry.radius_of_curvature_pxl()
+    print("FIXME: " + str((lrc, rrc)))
     
 def measure_curvature_pixels():
     '''
@@ -70,14 +74,12 @@ def measure_curvature_pixels():
     # Make sure to feed in your real data instead in your project!
     ploty, left_fit, right_fit = generate_data() # those are the fit coefficients in my scheme
     my_way(ploty, left_fit, right_fit)
-    
     # Define y-value where we want radius of curvature
     # We'll choose the maximum y-value, corresponding to the bottom of the image
     y_eval = np.max(ploty)
     # Calculation of R_curve (radius of curvature)
     left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
     right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
-    ut.brk("call my method based stuff to calc curvature")
     return left_curverad, right_curverad
 
 
