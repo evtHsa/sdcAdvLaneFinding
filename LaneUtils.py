@@ -39,16 +39,19 @@ class LaneBoundary:
         ploty = self.lane.ploty # from our owning lane
         assert(not ploty is None)
 
-        fit = np.polyfit(y, x, 2)
-
+        fitc = np.polyfit(y, x, 2)
+        self.fit_coeff = fitc
         try:
-            fit = fit[0] * ploty**2 + fit[1] * ploty + fit[2]
+            fit = fitc[0] * ploty**2 + fitc[1] * ploty + fitc[2]
         except TypeError:
             # Avoids an error if fit is still none or incorrect
             print('fit_polynomal: failed to fit a line!')
             fit = 1*ploty**2 + 1*ploty
         assert(not fit is None)
+
         self.fit = fit
+        # from lesson 7.4
+        self.curve_radius = self.radius_of_curvature()
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
