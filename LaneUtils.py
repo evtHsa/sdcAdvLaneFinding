@@ -39,6 +39,8 @@ class LaneBoundary:
         y = self.lane.ploty
         y_eval = np.max(y)
         # Define conversions in x and y from pixels space to meters(from lesson 7.8)
+        self.curve_radius  = ((1 + (2*fit[0]*y_eval + fit[1])**2)**1.5) / np.absolute(2*fit[0])
+        
         xm_per_pix = 3.7/700 # meters per pixel in x dimension        
         ym_per_pix = 30/720 # meters per pixel in y dimension
         rc = ((1 + (2*fit[0]*y_eval + fit[1])**2)**1.5) / np.absolute(2*fit[0])
@@ -63,7 +65,7 @@ class LaneBoundary:
 
         self.fit = fit
         # from lesson 7.4
-        self.curve_radius = self.radius_of_curvature()
+        self.radius_of_curvature()
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect

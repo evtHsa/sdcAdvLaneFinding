@@ -62,9 +62,9 @@ def my_way(ploty, left_fit, right_fit):
                                     binary_warped, 'R', lane=lane, vwr=None)
     lane. left_bndry.fit_coeff = left_fit
     lane. right_bndry.fit_coeff = right_fit
-    lrc = lane. left_bndry.radius_of_curvature_pxl()
-    rrc = lane. right_bndry.radius_of_curvature_pxl()
-    print("FIXME: " + str((lrc, rrc)))
+    lane. left_bndry.radius_of_curvature_pxl()
+    lane. right_bndry.radius_of_curvature_pxl()
+    print("FIXME: " + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
     
 def measure_curvature_pixels():
     '''
