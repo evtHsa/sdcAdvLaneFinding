@@ -13,6 +13,9 @@ import numpy as np
 
 import numpy as np
 
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
+vwr = cache_dict['viewer']
+
 def generate_data():
     '''
     Generates fake data to use for calculating lane curvature.
@@ -42,6 +45,17 @@ def generate_data():
     right_fit = np.polyfit(ploty, rightx, 2)
     
     return ploty, left_fit, right_fit
+
+####################################################
+####################################################
+def my_way(ploty, left_fit, right_fit):
+    cd = cache_dict
+    pd = parm_dict
+    path = ut.get_fnames("test_images/", "*.jpg")[0]
+    init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
+    # img is just to painlessly fake out Lane ctor
+    lane = lu.Lane(cd, pd, img = init_img, vwr=None)
+    ut.brk("fake up lane & boundaries with fake data")
     
 def measure_curvature_pixels():
     '''
@@ -49,7 +63,8 @@ def measure_curvature_pixels():
     '''
     # Start by generating our fake example data
     # Make sure to feed in your real data instead in your project!
-    ploty, left_fit, right_fit = generate_data()
+    ploty, left_fit, right_fit = generate_data() # those are the fit coefficients in my scheme
+    my_way(ploty, left_fit, right_fit)
     
     # Define y-value where we want radius of curvature
     # We'll choose the maximum y-value, corresponding to the bottom of the image
@@ -57,7 +72,7 @@ def measure_curvature_pixels():
     # Calculation of R_curve (radius of curvature)
     left_curverad = ((1 + (2*left_fit[0]*y_eval + left_fit[1])**2)**1.5) / np.absolute(2*left_fit[0])
     right_curverad = ((1 + (2*right_fit[0]*y_eval + right_fit[1])**2)**1.5) / np.absolute(2*right_fit[0])
-    
+    ut.brk("call my method based stuff to calc curvature")
     return left_curverad, right_curverad
 
 
