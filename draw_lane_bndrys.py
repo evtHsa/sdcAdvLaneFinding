@@ -34,7 +34,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     iv._push(vwr, blended_img)
     vwr.show()
 
-    ut.brk("FIXME: this routine needs to move to LaneUtils under appropriate name")
+    ut.oneShotMsg("FIXME: this routine needs 2move to LaneUtils w/appropriate name")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cache_dict['viewer']
