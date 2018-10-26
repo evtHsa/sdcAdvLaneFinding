@@ -11,6 +11,9 @@ import LaneUtils as lu
 
 import numpy as np
 
+cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
+vwr = cache_dict['viewer']
+
 def generate_data(ym_per_pix, xm_per_pix):
     '''
     Generates fake data to use for calculating lane curvature.
@@ -38,9 +41,11 @@ def generate_data(ym_per_pix, xm_per_pix):
     left_fit_cr = np.polyfit(ploty*ym_per_pix, leftx*xm_per_pix, 2)
     right_fit_cr = np.polyfit(ploty*ym_per_pix, rightx*xm_per_pix, 2)
     
-    return ploty, left_fit_cr, right_fit_cr
+    return ploty, left_fit_cr, right_fit_cr, leftx, rightx
     
-def my_way(ploty, left_fit, right_fit):
+ ####################################################
+####################################################
+def my_way(ploty, left_fit_cr, right_fit_cr, leftx, rightx):
     cd = cache_dict
     pd = parm_dict
     path = ut.get_fnames("test_images/", "*.jpg")[0]
@@ -52,12 +57,16 @@ def my_way(ploty, left_fit, right_fit):
                                    binary_warped, 'L', lane=lane, vwr=None)
     lane.right_bndry = lu.LaneBoundary(0, # hope max ix doesnt matter for this test
                                     binary_warped, 'R', lane=lane, vwr=None)
-    lane. left_bndry.fit_coeff = left_fit
-    lane. right_bndry.fit_coeff = right_fit
-    lane. left_bndry.radius_of_curvature_real()
-    lane. right_bndry.radius_of_curvature_real()
-    print("FIXME: " + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
-    
+    lane.left_bndry.x = leftx
+    lane.right_bndry.x = rightx
+    lane. left_bndry.fit_coeff = left_fit_cr
+    lane. right_bndry.fit_coeff = right_fit_cr
+    lane.cd['fit_units'] = 'meters'
+    lane. left_bndry.radius_of_curvature('pixels')
+    lane. right_bndry.radius_of_curvature('pixels')
+    print("FIXME(meters): "
+          + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
+       
 def measure_curvature_real():
     '''
     Calculates the curvature of polynomial functions in meters.
@@ -68,8 +77,8 @@ def measure_curvature_real():
     
     # Start by generating our fake example data
     # Make sure to feed in your real data instead in your project!
-    ploty, left_fit_cr, right_fit_cr = generate_data(ym_per_pix, xm_per_pix)
-    
+    ploty, left_fit_cr, right_fit_cr, leftx, rightx = generate_data(ym_per_pix, xm_per_pix)
+    my_way(ploty, left_fit_cr, right_fit_cr, leftx, rightx)
     # Define y-value where we want radius of curvature
     # We'll choose the maximum y-value, corresponding to the bottom of the image
     y_eval = np.max(ploty)
