@@ -67,11 +67,6 @@ def my_way(ploty, left_fit, right_fit):
     lane. right_bndry.radius_of_curvature('pixels')
     print("FIXME(pixels): "
           + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
-    lane.cd['fit_units'] = 'meters'
-    lane. left_bndry.radius_of_curvature('pixels')
-    lane. right_bndry.radius_of_curvature('pixels')
-    print("FIXME(meters): "
-          + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
     
 def measure_curvature_pixels():
     '''
