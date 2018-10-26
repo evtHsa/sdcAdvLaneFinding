@@ -40,6 +40,24 @@ def generate_data(ym_per_pix, xm_per_pix):
     
     return ploty, left_fit_cr, right_fit_cr
     
+def my_way(ploty, left_fit, right_fit):
+    cd = cache_dict
+    pd = parm_dict
+    path = ut.get_fnames("test_images/", "*.jpg")[0]
+    init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
+    # img is just to painlessly fake out Lane ctor
+    lane = lu.Lane(cd, pd, img = init_img, vwr=None)
+    lane.ploty = ploty
+    lane.left_bndry = lu.LaneBoundary(0, # hope max ix doesnt matter for this test
+                                   binary_warped, 'L', lane=lane, vwr=None)
+    lane.right_bndry = lu.LaneBoundary(0, # hope max ix doesnt matter for this test
+                                    binary_warped, 'R', lane=lane, vwr=None)
+    lane. left_bndry.fit_coeff = left_fit
+    lane. right_bndry.fit_coeff = right_fit
+    lane. left_bndry.radius_of_curvature_real()
+    lane. right_bndry.radius_of_curvature_real()
+    print("FIXME: " + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
+    
 def measure_curvature_real():
     '''
     Calculates the curvature of polynomial functions in meters.
@@ -59,7 +77,7 @@ def measure_curvature_real():
     # Calculation of R_curve (radius of curvature)
     left_curverad = ((1 + (2*left_fit_cr[0]*y_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
     right_curverad = ((1 + (2*right_fit_cr[0]*y_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
-    
+    #xm_per_pix, ym_per_pix
     return left_curverad, right_curverad
 
 
@@ -69,3 +87,4 @@ left_curverad, right_curverad = measure_curvature_real()
 print(left_curverad, 'm', right_curverad, 'm')
 # Should see values of 533.75 and 648.16 here, if using
 # the default `generate_data` function with given seed number
+print("lesson 7.8")

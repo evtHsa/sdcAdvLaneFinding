@@ -32,40 +32,47 @@ class LaneBoundary:
         self.title = bndry_title
         self.fit = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
-        
-    def radius_of_curvature_pxl(self):
-        #pxl means "in units of pixels"
-        fit = self.fit_coeff
+                
+    def radius_of_curvature(self, fit_units):
+        assert(self.lane.pd['valid_fit_units'][fit_units]) # enforce 'meters' or 'pixels'
+
+        fitc = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
-        # Define conversions in x and y from pixels space to meters(from lesson 7.8)
-        self.curve_radius  = ((1 + (2*fit[0]*y_eval + fit[1])**2)**1.5) / np.absolute(2*fit[0])
+        if self.lane.cd['fit_units'] is 'pixels':
+            self.curve_radius  = ((1 + (2*fitc[0]*y_eval
+                                        + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
+        else:
+            xmpp = self.lane.pd['xm_per_pix']
+            ympp = self.lane.pd['ym_per_pix']
+            ut.brk("sometings wong")
+            self.curve_radius  = ((1 + (2*fitc[0]*y_eval*ympp
+                                        + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
         
-        xm_per_pix = 3.7/700 # meters per pixel in x dimension        
-        ym_per_pix = 30/720 # meters per pixel in y dimension
-        rc = ((1 + (2*fit[0]*y_eval + fit[1])**2)**1.5) / np.absolute(2*fit[0])
-        return rc
-        
-    def fit_polynomial(self):
-        assert(type(self) is LaneBoundary)
+    def fit_polynomial(self, fit_units = None):
         x = self.x
         y = self.y
         ploty = self.lane.ploty # from our owning lane
         assert(not ploty is None)
-
-        fitc = np.polyfit(y, x, 2)
-        self.fit_coeff = fitc
+        assert(self.lanepd['valid_fit_units'][fit_units]) # enforce 'meters' or 'pixels'
+        
+        self.lane.cd['fit_units'] = fit_units
+        if self.lane.cd['fit_units'] is 'pixels':
+            self.fit_coeff = np.polyfit(y, x, 2)
+        else:
+            self.fit_coeff = np.polyfit(ploty * ympp, x * xmpp, 2) # 'meters' not 'pixels'
+            
         try:
-            fit = fitc[0] * ploty**2 + fitc[1] * ploty + fitc[2]
+            self.fit = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
         except TypeError:
             # Avoids an error if fit is still none or incorrect
             print('fit_polynomal: failed to fit a line!')
-            fit = 1*ploty**2 + 1*ploty
-        assert(not fit is None)
+            self.fit = 1*ploty**2 + 1*ploty
 
-        self.fit = fit
+        assert(not self.fit is None)
         # from lesson 7.4
-        self.radius_of_curvature()
+        ut.brk("dddd")
+        self.radius_of_curvature(fit_units)
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect

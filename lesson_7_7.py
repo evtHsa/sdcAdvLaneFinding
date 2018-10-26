@@ -62,9 +62,16 @@ def my_way(ploty, left_fit, right_fit):
                                     binary_warped, 'R', lane=lane, vwr=None)
     lane. left_bndry.fit_coeff = left_fit
     lane. right_bndry.fit_coeff = right_fit
-    lane. left_bndry.radius_of_curvature_pxl()
-    lane. right_bndry.radius_of_curvature_pxl()
-    print("FIXME: " + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
+    lane.cd['fit_units'] = 'pixels'
+    lane. left_bndry.radius_of_curvature('pixels')
+    lane. right_bndry.radius_of_curvature('pixels')
+    print("FIXME(pixels): "
+          + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
+    lane.cd['fit_units'] = 'meters'
+    lane. left_bndry.radius_of_curvature('pixels')
+    lane. right_bndry.radius_of_curvature('pixels')
+    print("FIXME(meters): "
+          + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
     
 def measure_curvature_pixels():
     '''
@@ -89,3 +96,4 @@ left_curverad, right_curverad = measure_curvature_pixels()
 print(left_curverad, right_curverad)
 # Should see values of 1625.06 and 1976.30 here, if using
 # the default `generate_data` function with given seed number
+print("lesson 7.7")
