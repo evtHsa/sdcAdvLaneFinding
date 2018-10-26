@@ -37,6 +37,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
     ut.oneShotMsg("FIXME: this routine needs 2move to LaneUtils w/appropriate name")
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
+cache_dict['fit_units'] = 'pixels'
 vwr = cache_dict['viewer']
 
 for path in ut.get_fnames("test_images/", "*.jpg"):

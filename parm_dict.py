@@ -54,7 +54,10 @@ parm_dict ={
     'lane_line_thickness' : 25,
     'lane_blend_alpha' : 1,
     'lane_blend_beta' : 0.3,
-    'lane_blend_gamma' : 0
+    'lane_blend_gamma' : 0,
+    'xm_per_pix' : 3.7/700,
+    'ym_per_pix' : 30/720,
+    'valid_fit_units' : { 'pixels': True, 'meters': True}
 }
 
 # stage 2
