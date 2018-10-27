@@ -198,6 +198,7 @@ class Lane:
                                         alpha = pd['lane_blend_alpha'],
                                         beta = pd['lane_blend_beta'],
                                         gamma = pd['lane_blend_gamma'], title = "merged")
+        self.calc_vehicle_pos()
         return blended_img #lane
         
     def get_image(self, img):
@@ -213,6 +214,11 @@ class Lane:
         self.right_bndry.draw(out_img)
         iv._push(self.vwr, out_img)
         return out_img
+
+    def calc_vehicle_pos(self):
+        ctr_x = self.width / 2
+        ut.brk("duh")
+        print("duh")
 
     def fit_polynomials(self):
         self.left_bndry.fit_polynomial()
