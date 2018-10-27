@@ -37,15 +37,19 @@ class LaneBoundary:
         fitc = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
-        if self.lane.units is 'pixels':
-            self.curve_radius  = ((1 + (2*fitc[0]*y_eval
-                                        + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
-        else:
-            xmpp = self.lane.pd['xm_per_pix']
-            ympp = self.lane.pd['ym_per_pix']
-            self.curve_radius  = ((1 + (2*fitc[0]*y_eval*ympp
-                                        + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
-        #print("%s: r-o-c = %f" % (self.title, self.curve_radius))
+        self.curve_radius  = ((1 + (2*fitc[0]*y_eval
+                                    + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
+        
+    def radius_of_curvature_m(self):
+        fitc = self.fit_coeff
+        print("FIXME: must redo curve fit w/x, y in meters")
+        y = self.lane.ploty
+        y_eval = np.max(y)
+        xmpp = self.lane.pd['xm_per_pix']
+        ympp = self.lane.pd['ym_per_pix']
+        print("FIXME: warning you may WAW")
+        self.curve_radius  =  ((1 + (2*fitc[0]*y_eval*ympp
+                                     + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
         
     def fit_polynomial(self):
         x = self.x
