@@ -63,8 +63,8 @@ def my_way(ploty, left_fit, right_fit):
     lane. left_bndry.fit_coeff = left_fit
     lane. right_bndry.fit_coeff = right_fit
     lane.cd['fit_units'] = 'pixels'
-    lane. left_bndry.radius_of_curvature('pixels')
-    lane. right_bndry.radius_of_curvature('pixels')
+    lane. left_bndry.radius_of_curvature()
+    lane. right_bndry.radius_of_curvature()
     print("FIXME(pixels): "
           + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
     

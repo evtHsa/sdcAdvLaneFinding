@@ -63,8 +63,8 @@ def my_way(ploty, left_fit_cr, right_fit_cr, leftx, rightx):
     lane. left_bndry.fit_coeff = left_fit_cr
     lane. right_bndry.fit_coeff = right_fit_cr
     lane.cd['fit_units'] = 'meters'
-    lane. left_bndry.radius_of_curvature('pixels')
-    lane. right_bndry.radius_of_curvature('pixels')
+    lane. left_bndry.radius_of_curvature()
+    lane. right_bndry.radius_of_curvature()
     print("FIXME(meters): "
           + str((lane. left_bndry.curve_radius, lane. right_bndry.curve_radius)))
        

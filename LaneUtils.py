@@ -33,12 +33,11 @@ class LaneBoundary:
         self.fit = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
         
-    def radius_of_curvature(self, fit_units):
-        assert(self.lane.pd['valid_fit_units'][fit_units]) # enforce 'meters' or 'pixels'
+    def radius_of_curvature(self):
         fitc = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
-        if self.lane.cd['fit_units'] is 'pixels':
+        if self.lane.units is 'pixels':
             self.curve_radius  = ((1 + (2*fitc[0]*y_eval
                                         + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
         else:
@@ -46,19 +45,20 @@ class LaneBoundary:
             ympp = self.lane.pd['ym_per_pix']
             self.curve_radius  = ((1 + (2*fitc[0]*y_eval*ympp
                                         + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
-        
-    def fit_polynomial(self, fit_units = None):
+        print("%s: r-o-c = %f" % (self.title, self.curve_radius))
+       
+    def fit_polynomial(self):
         x = self.x
         y = self.y
+        xmpp = self.lane.pd['xm_per_pix']
+        ympp = self.lane.pd['ym_per_pix']
         ploty = self.lane.ploty # from our owning lane
         assert(not ploty is None)
-        assert(self.lane.pd['valid_fit_units'][fit_units]) # enforce 'meters' or 'pixels'
-        
-        self.lane.cd['fit_units'] = fit_units
-        if self.lane.cd['fit_units'] is 'pixels':
+
+        if self.lane.units is 'pixels':
             self.fit_coeff = np.polyfit(y, x, 2)
         else:
-            self.fit_coeff = np.polyfit(ploty * ympp, x * xmpp, 2) # 'meters' not 'pixels'
+            self.fit_coeff = np.polyfit(y * ympp, x * xmpp, 2) # 'meters' not 'pixels'
             
         try:
             self.fit = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
@@ -69,7 +69,7 @@ class LaneBoundary:
 
         assert(not self.fit is None)
         # from lesson 7.4
-        self.radius_of_curvature(fit_units)
+        self.radius_of_curvature()
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
@@ -195,8 +195,8 @@ class Lane:
         return out_img
 
     def fit_polynomials(self):
-        self.left_bndry.fit_polynomial(self.cd['fit_units'])
-        self.right_bndry.fit_polynomial(self.cd['fit_units'])
+        self.left_bndry.fit_polynomial()
+        self.right_bndry.fit_polynomial()
 
     def find_pixels_all_bndrys(self, binary_warped):
         assert(type(binary_warped) is iu.Image)
