@@ -30,7 +30,7 @@ class LaneBoundary:
         self.ix_list = list()
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
         self.title = bndry_title
-        self.fit = None # just a note that we'll use this l8r
+        self.fit_x = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
         
     def radius_of_curvature(self):
@@ -61,13 +61,13 @@ class LaneBoundary:
             self.fit_coeff = np.polyfit(y * ympp, x * xmpp, 2) # 'meters' not 'pixels'
             
         try:
-            self.fit = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
+            self.fit_x = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
         except TypeError:
             # Avoids an error if fit is still none or incorrect
             print('fit_polynomal: failed to fit a line!')
-            self.fit = 1*ploty**2 + 1*ploty
+            self.fit_x = 1*ploty**2 + 1*ploty
 
-        assert(not self.fit is None)
+        assert(not self.fit_x is None)
         # from lesson 7.4
         self.radius_of_curvature()
 
@@ -88,10 +88,10 @@ class LaneBoundary:
         #    order so after drawing the bottom point of the first series we have a diagonal
         #    line to the top of the second series and another diagonal to close the polygon
         #    at the top of the first series(the "bowtie") so we flip one of the series of points
-        assert(not self.fit is None)
+        assert(not self.fit_x is None)
         ploty = self.lane.ploty # from our owning lane
         assert(not ploty is None)
-        pts = np.vstack([self.fit, ploty]).T
+        pts = np.vstack([self.fit_x, ploty]).T
         if flip:
             pts = np.flipud(pts)
         return np.array([pts])
@@ -131,7 +131,7 @@ class LaneBoundary:
         assert(type(img) is iu.Image)
         ploty = self.lane.ploty # from our owning lane
         assert(not ploty is None)
-        iu.cv2Polylines(self.fit, ploty, img,
+        iu.cv2Polylines(self.fit_x, ploty, img,
                         line_color = self.parm_dict['lane_line_color'],
                         line_thickness = self.parm_dict['lane_line_thickness'])
 
