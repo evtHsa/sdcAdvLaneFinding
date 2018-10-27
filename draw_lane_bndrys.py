@@ -16,7 +16,6 @@ import LaneUtils as lu
 
 #cd is cache_dict, pd is parm_dict
 cd, pd = ut.app_init(viewer=True, saver=True, title="whatever")
-cd['fit_units'] = 'pixels'
 vwr = cd['viewer']
 
 ut.oneShotMsg("FIXME: change pixels in prev line to meters")
