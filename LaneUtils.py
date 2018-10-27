@@ -174,7 +174,12 @@ class Lane:
         self.vwr = vwr
         self.left_bndry = None
         self.right_bndry = None
-        
+
+    def display_curve_rad(self):
+        avg_roc = (self.left_bndry.curve_radius + self.right_bndry.curve_radius) / 2
+        ret = "curvature radius = %.2f%s" % (avg_roc, self.pd['units_abbrev'][self.units])
+        return ret
+    
     def note_img_attrs(self, img=None):
         assert(not img is None)
         assert(type(img) is iu.Image)

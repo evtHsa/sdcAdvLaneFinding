@@ -57,7 +57,8 @@ parm_dict ={
     'lane_blend_gamma' : 0,
     'xm_per_pix' : 3.7/700,
     'ym_per_pix' : 30/720,
-    'valid_fit_units' : { 'pixels': True, 'meters': True}
+    'valid_fit_units' : { 'pixels': True, 'meters': True},
+    'units_abbrev' : {'meters' : 'm', 'pixels' : 'p'}
 }
 
 # stage 2
