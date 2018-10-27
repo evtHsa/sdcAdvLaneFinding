@@ -433,7 +433,7 @@ def cv2Polylines(x_pts, y_pts, out_img, line_color=None, line_thickness=None):
     pts = np.array(list(zip(x_pts, y_pts)), dtype=np.int32)
     cv2.polylines(out_img.img_data, [pts], False, line_color, line_thickness)
 
-def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
+def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
     img = imRead(path, reader='cv2', vwr=None)
     iv._push(vwr, img)
     undistorted = undistort(img, cd, vwr=None)
@@ -441,11 +441,6 @@ def get_binary_warped_image_v2(path="", cd=None, pd=None, vwr=None):
     hls_lab = hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     iv._push(vwr, hls_lab)
     return img, hls_lab
-    
-def get_binary_warped_image(path="", cd=None, pd=None, vwr=None):
-    img = imRead(path, reader='cv2', flags = cv2.IMREAD_GRAYSCALE, vwr=None)
-    iv._push(vwr, img)
-    return img
     
 def copy_image(in_img):
      assert(type(in_img) is Image)

@@ -52,7 +52,7 @@ def my_way(ploty, left_fit, right_fit):
     cd = cache_dict
     pd = parm_dict
     path = ut.get_fnames("test_images/", "*.jpg")[0]
-    init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
+    init_img, binary_warped = iu.get_binary_warped_image(path, cd, pd, vwr=None)
     # img is just to painlessly fake out Lane ctor
     lane = lu.Lane(cd, pd, img = init_img, units='pixels', vwr=None)
     lane.ploty = ploty

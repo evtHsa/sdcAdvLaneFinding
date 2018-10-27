@@ -15,7 +15,7 @@ def doit(path="", cd=None, pd=None, vwr=None):
         lane = lu.Lane(cd, pd, vwr)
         vwr.flush()
         print("FIXME: path = %s" % path)
-        init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr)
+        init_img, binary_warped = iu.get_binary_warped_image(path, cd, pd, vwr)
         iv._push(vwr, init_img)
         iv._push(vwr, binary_warped)
         lane.find_pixels_all_bndrys(binary_warped)
