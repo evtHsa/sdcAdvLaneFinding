@@ -175,14 +175,15 @@ class Lane:
         self.left_bndry = None
         self.right_bndry = None
         
-    def set_ploty(self, img=None):
+    def note_img_attrs(self, img=None):
         assert(not img is None)
         assert(type(img) is iu.Image)
+        self.width, self.height, self.num_chan = img.img_data.shape
         self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
 
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
         ut.oneShotMsg("FIXME: iwbni this returned a list of intermediate imgs")
-        self.set_ploty(in_img)
+        self.note_img_attrs(in_img)
         undistorted = iu.undistort(in_img, cd, vwr=None)
         top_down = iu.look_down(undistorted, cd, vwr)
         binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
