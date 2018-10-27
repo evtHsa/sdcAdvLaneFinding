@@ -14,36 +14,38 @@ import LaneUtils as lu
 # LaneBoundary(s): contain attributes for a particular lane bounday
 # Windows: are used to calculate lane boundaries
 
-def doit(init_img, cd=None, pd=None, vwr=None):
-    vwr.flush()
-    lane = lu.Lane(cd, pd, img = init_img, units='pixels', vwr=None)
-    ut.oneShotMsg("FIXME: change pixels in prev line to meters")
-
-    undistorted = iu.undistort(img, cd, vwr=None)
+def doit(in_img, cd=None, pd=None, vwr=None):
+    undistorted = iu.undistort(in_img, cd, vwr=None)
     top_down = iu.look_down(undistorted, cd, vwr)
     binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
-    iv._push(vwr, binary_warped)
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
-    lane_img = lane.get_image(init_img)
-    iv._push(vwr, lane_img)
+    lane_img = lane.get_image(in_img)
     size = (lane_img.shape()[1], lane_img.shape()[0])
     lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size, vwr=None)
-    iv._push(vwr, lane_img)
-    blended_img = iu.cv2AddWeighted(init_img, lane_img,
+    blended_img = iu.cv2AddWeighted(in_img, lane_img,
                                     alpha = pd['lane_blend_alpha'],
                                     beta = pd['lane_blend_beta'],
                                     gamma = pd['lane_blend_gamma'], title = "merged")
-    iv._push(vwr, blended_img)
-    vwr.show()
+    return blended_img
 
     ut.oneShotMsg("FIXME: this routine needs 2move to LaneUtils w/appropriate name")
 
-cache_dict, parm_dict = ut.app_init(viewer=True, saver=True, title="whatever")
-cache_dict['fit_units'] = 'pixels'
-vwr = cache_dict['viewer']
+#cd is cache_dict, pd is parm_dict
+cd, pd = ut.app_init(viewer=True, saver=True, title="whatever")
+cd['fit_units'] = 'pixels'
+vwr = cd['viewer']
+
+ut.oneShotMsg("FIXME: change pixels in prev line to meters")
+
+vwr.flush()
 
 for path in ut.get_fnames("test_images/", "*.jpg"):
     print("FIXME: path = %s" % path)
-    img = iu.imRead(path, reader='cv2', vwr=None)
-    doit(img, cd=cache_dict, pd=parm_dict, vwr=vwr)
+    in_img = iu.imRead(path, reader='cv2', vwr=None)
+    lane = lu.Lane(cd, pd, img = in_img, units='pixels', vwr=None)
+    ut.oneShotMsg("above is stupid, img shd not be in lane ctor")
+    out_img= doit(in_img, cd, pd, vwr=vwr)
+    iv._push(vwr, out_img)
+    
+vwr.show()
