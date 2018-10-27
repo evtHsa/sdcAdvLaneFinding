@@ -33,7 +33,7 @@ class LaneBoundary:
         self.fit_x = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
         
-    def radius_of_curvature(self):
+    def radius_of_curvature_p(self):
         fitc = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
@@ -69,7 +69,7 @@ class LaneBoundary:
 
         assert(not self.fit_x is None)
         # from lesson 7.4
-        self.radius_of_curvature()
+        self.radius_of_curvature_p()
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
