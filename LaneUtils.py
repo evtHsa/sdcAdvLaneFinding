@@ -179,6 +179,23 @@ class Lane:
         self.right_bndry = None
         self.ploty = np.linspace(0, self.img.img_data.shape[0] - 1, #same 4 all bndrys
                             self.img.img_data.shape[0])
+        
+    def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
+        undistorted = iu.undistort(in_img, cd, vwr=None)
+        top_down = iu.look_down(undistorted, cd, vwr)
+        binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
+        self.find_pixels_all_bndrys(binary_warped)
+        self.fit_polynomials()
+        lane_img = self.get_image(in_img)
+        size = (lane_img.shape()[1], lane_img.shape()[0])
+        lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size,
+                                         vwr=None)
+        blended_img = iu.cv2AddWeighted(in_img, lane_img,
+                                        alpha = pd['lane_blend_alpha'],
+                                        beta = pd['lane_blend_beta'],
+                                        gamma = pd['lane_blend_gamma'], title = "merged")
+        return blended_img #lane
+        
     def get_image(self, img):
         assert(type(img) is iu.Image)
 
