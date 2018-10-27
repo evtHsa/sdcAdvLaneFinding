@@ -14,12 +14,14 @@ import LaneUtils as lu
 # LaneBoundary(s): contain attributes for a particular lane bounday
 # Windows: are used to calculate lane boundaries
 
-def doit(path="", cd=None, pd=None, vwr=None):
+def doit(init_img, cd=None, pd=None, vwr=None):
     vwr.flush()
-    init_img, binary_warped = iu.get_binary_warped_image(path, cd, pd, vwr=None)
     lane = lu.Lane(cd, pd, img = init_img, units='pixels', vwr=None)
     ut.oneShotMsg("FIXME: change pixels in prev line to meters")
-    iv._push(vwr, init_img)
+
+    undistorted = iu.undistort(img, cd, vwr=None)
+    top_down = iu.look_down(undistorted, cd, vwr)
+    binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     iv._push(vwr, binary_warped)
     lane.find_pixels_all_bndrys(binary_warped)
     lane.fit_polynomials()
@@ -43,4 +45,5 @@ vwr = cache_dict['viewer']
 
 for path in ut.get_fnames("test_images/", "*.jpg"):
     print("FIXME: path = %s" % path)
-    doit(path=path, cd=cache_dict, pd=parm_dict, vwr=vwr)
+    img = iu.imRead(path, reader='cv2', vwr=None)
+    doit(img, cd=cache_dict, pd=parm_dict, vwr=vwr)
