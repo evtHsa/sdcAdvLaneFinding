@@ -107,7 +107,6 @@ def cv2Undistort(img, mtx, dist, vwr=None):
      assert(type(img) is Image)
      undist = Image(img_data= cv2.undistort(img.img_data, mtx, dist, None, mtx),
                     title="undistorted", img_type=img.img_type)
-     iv._push(vwr, undist)
      return undist
 
 def img_drawChessboardCorners(img, nx, ny, corners, ret, vwr=None):

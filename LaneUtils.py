@@ -179,7 +179,7 @@ class Lane:
         assert(not img is None)
         assert(type(img) is iu.Image)
         self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
-        
+
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
         self.set_ploty(in_img)
         undistorted = iu.undistort(in_img, cd, vwr=None)
