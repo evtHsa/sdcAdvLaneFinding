@@ -27,6 +27,7 @@ for path in ut.get_fnames("test_images/", "*.jpg"):
     print("FIXME: path = %s" % path)
     in_img = iu.imRead(path, reader='cv2', vwr=None)
     out_img= lane.lane_finder_pipe(in_img, cd, pd, vwr=None)
+    print("FIXME: %s" % lane.display_vehicle_pos())
     iv._push(vwr, out_img)
     
 vwr.show()
