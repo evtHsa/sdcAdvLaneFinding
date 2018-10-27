@@ -45,8 +45,8 @@ class LaneBoundary:
             ympp = self.lane.pd['ym_per_pix']
             self.curve_radius  = ((1 + (2*fitc[0]*y_eval*ympp
                                         + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
-        print("%s: r-o-c = %f" % (self.title, self.curve_radius))
-       
+        #print("%s: r-o-c = %f" % (self.title, self.curve_radius))
+        
     def fit_polynomial(self):
         x = self.x
         y = self.y
@@ -179,7 +179,6 @@ class Lane:
         self.right_bndry = None
         self.ploty = np.linspace(0, self.img.img_data.shape[0] - 1, #same 4 all bndrys
                             self.img.img_data.shape[0])
-        
     def get_image(self, img):
         assert(type(img) is iu.Image)
 
@@ -238,6 +237,3 @@ class Lane:
                     # x_current is updated correctly
         self.left_bndry.finis(nonzerox, nonzeroy)
         self.right_bndry.finis(nonzerox, nonzeroy)
-
-
-    
