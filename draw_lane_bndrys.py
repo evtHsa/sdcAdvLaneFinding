@@ -20,14 +20,12 @@ cd['fit_units'] = 'pixels'
 vwr = cd['viewer']
 
 ut.oneShotMsg("FIXME: change pixels in prev line to meters")
-
 vwr.flush()
+lane = lu.Lane(cd, pd, units='pixels', vwr=None)
 
 for path in ut.get_fnames("test_images/", "*.jpg"):
     print("FIXME: path = %s" % path)
     in_img = iu.imRead(path, reader='cv2', vwr=None)
-    lane = lu.Lane(cd, pd, img = in_img, units='pixels', vwr=None)
-    ut.oneShotMsg("above is stupid, img shd not be in lane ctor")
     out_img= lane.lane_finder_pipe(in_img, cd, pd, vwr=vwr)
     iv._push(vwr, out_img)
     

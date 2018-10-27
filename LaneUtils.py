@@ -163,24 +163,25 @@ class Lane:
     def chk_valid_units(self, units):
         assert(self.pd['valid_fit_units'][units]) # enforce 'meters' or 'pixels'
 
-    def __init__(self, cd=None, pd=None, img=None, units=None, vwr=None):
+    def __init__(self, cd=None, pd=None, units=None, vwr=None):
         assert(not cd is  None)
         assert(not pd is None)
-        assert(not img is None)
-        assert(type(img) is iu.Image)
         #vwr may be None
         self.cd = cd
         self.pd = pd
         self.chk_valid_units(units)
         self.units = units
-        self.img = img
         self.vwr = vwr
         self.left_bndry = None
         self.right_bndry = None
-        self.ploty = np.linspace(0, self.img.img_data.shape[0] - 1, #same 4 all bndrys
-                            self.img.img_data.shape[0])
+        
+    def set_ploty(self, img=None):
+        assert(not img is None)
+        assert(type(img) is iu.Image)
+        self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
         
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
+        self.set_ploty(in_img)
         undistorted = iu.undistort(in_img, cd, vwr=None)
         top_down = iu.look_down(undistorted, cd, vwr)
         binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
