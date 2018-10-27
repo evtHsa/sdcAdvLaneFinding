@@ -29,18 +29,15 @@ class LaneBoundary:
         self.x_current = init_x_current
         self.ix_list = list()
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
+        self.title = bndry_title
         self.fit = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
         
     def radius_of_curvature(self):
-        fit = self.fit
+        fit = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
-        # Define conversions in x and y from pixels space to meters(from lesson 7.8)
-        xm_per_pix = 3.7/700 # meters per pixel in x dimension        
-        ym_per_pix = 30/720 # meters per pixel in y dimension
-        rc = ((1 + (2*fit[0]*y_eval*ym_per_pix + fit[1])**2)**1.5) / np.absolute(2*fit[0])
-        print("FIXME:rc = " + str(rc))
+        rc = ((1 + (2*fit[0]*y_eval + fit[1])**2)**1.5) / np.absolute(2*fit[0])
         return rc
         
     def fit_polynomial(self):
