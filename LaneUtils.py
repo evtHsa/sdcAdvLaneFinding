@@ -215,10 +215,18 @@ class Lane:
         iv._push(self.vwr, out_img)
         return out_img
 
+    def display_vehicle_pos(self):
+        ret = "FIXME: %.2f meters %s of center" % (
+            np.abs(self.vehicle_pos), "left" if self.vehicle_pos < 0 else "right")
+        return ret
+        
     def calc_vehicle_pos(self):
-        ctr_x = self.width / 2
-        ut.brk("duh")
-        print("duh")
+        pic_ctr = self.width / 2
+        x_l = self.left_bndry.x[0]
+        x_r = self.right_bndry.x[0]
+        assert(x_l < x_r)
+        lane_ctr = x_l + (x_r - x_l)/2
+        self.vehicle_pos = (lane_ctr - pic_ctr) * self.pd['xm_per_pix']        
 
     def fit_polynomials(self):
         self.left_bndry.fit_polynomial()
