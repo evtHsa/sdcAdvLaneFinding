@@ -186,7 +186,8 @@ class Lane:
         self.note_img_attrs(in_img)
         undistorted = iu.undistort(in_img, cd, vwr=None)
         top_down = iu.look_down(undistorted, cd, vwr)
-        binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
+        binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd,
+                                               parm_dict = pd)
         self.find_pixels_all_bndrys(binary_warped)
         self.fit_polynomials()
         lane_img = self.get_image(in_img)
