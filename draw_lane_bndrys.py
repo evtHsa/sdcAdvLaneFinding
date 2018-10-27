@@ -17,7 +17,8 @@ import LaneUtils as lu
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
-    lane = lu.Lane(cd, pd, img = init_img, vwr=None)
+    lane = lu.Lane(cd, pd, img = init_img, units='pixels', vwr=None)
+    ut.oneShotMsg("FIXME: change pixels in prev line to meters")
     iv._push(vwr, init_img)
     iv._push(vwr, binary_warped)
     lane.find_pixels_all_bndrys(binary_warped)

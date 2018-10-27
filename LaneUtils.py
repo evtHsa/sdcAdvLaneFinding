@@ -11,8 +11,8 @@ import ImgUtil as iu
 import ImgViewer as iv
 import pprint
 
-#adapted from lesson 7.4 solution
 class LaneBoundary:
+    
     def __init__(self,  init_x_current, img, bndry_title, lane = None, vwr=None):
         assert(type(img) is iu.Image)
         assert(img.is2D())
@@ -160,7 +160,10 @@ class Window:
 class Lane:
     # for right now Lanes exist to hold a left and a right boundary and some misc
     # parm and cache dicts.
-    def __init__(self, cd=None, pd=None, img=None, vwr=None):
+    def chk_valid_units(self, units):
+        assert(self.pd['valid_fit_units'][units]) # enforce 'meters' or 'pixels'
+
+    def __init__(self, cd=None, pd=None, img=None, units=None, vwr=None):
         assert(not cd is  None)
         assert(not pd is None)
         assert(not img is None)
@@ -168,6 +171,8 @@ class Lane:
         #vwr may be None
         self.cd = cd
         self.pd = pd
+        self.chk_valid_units(units)
+        self.units = units
         self.img = img
         self.vwr = vwr
         self.left_bndry = None

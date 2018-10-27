@@ -51,7 +51,8 @@ def my_way(ploty, left_fit_cr, right_fit_cr, leftx, rightx):
     path = ut.get_fnames("test_images/", "*.jpg")[0]
     init_img, binary_warped = iu.get_binary_warped_image_v2(path, cd, pd, vwr=None)
     # img is just to painlessly fake out Lane ctor
-    lane = lu.Lane(cd, pd, img = init_img, vwr=None)
+    lane = lu.Lane(cd, pd, img = init_img, units='pixels', vwr=None)
+    ut.oneShotMsg("FIXME: units above must be meters")
     lane.ploty = ploty
     lane.left_bndry = lu.LaneBoundary(0, # hope max ix doesnt matter for this test
                                    binary_warped, 'L', lane=lane, vwr=None)
