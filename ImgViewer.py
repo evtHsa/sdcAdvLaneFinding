@@ -56,12 +56,16 @@ class ImgViewer:
         if clear:
             self.flush()
 
-    def show_immed(self, img, title=""):
-        assert(type(img) is iu.Image)
-        plt.figure()
-        plt.title(title)
-        plt.imshow(img.img_data, cmap=img.cmap)
-        plt.show()
+    def show_immed(self, img_list, title=""):
+        # note: you can use this via pdb: vwr.show_immed(img)
+        # ex: vwr.show_immed([in_img, top_down])
+        # ex: cache_dict['viewer'].show_immed([hls_binary_l])
+        for img in img_list:
+            assert(type(img) is iu.Image)
+            plt.figure()
+            plt.title(img.title)
+            plt.imshow(img.img_data, cmap=img.cmap)
+            plt.show()
 
     def show_immed_ndarray(self, img=None, title=None, img_type=None):
         assert(type(img) is np.ndarray)
