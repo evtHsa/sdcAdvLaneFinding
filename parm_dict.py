@@ -56,10 +56,7 @@ parm_dict ={
     'lane_blend_beta' : 0.3,
     'lane_blend_gamma' : 0,
     'xm_per_pix' : 3.7/700,
-    'ym_per_pix' : 30/720,
-    'valid_fit_units' : { 'pixels': True}, # FIXME:deprecated
-    'valid_roc_units' : { 'pixels': True, 'meters': True},
-    'units_abbrev' : {'meters' : 'm', 'pixels' : 'p'}
+    'ym_per_pix' : 30/720
 }
 
 # stage 2

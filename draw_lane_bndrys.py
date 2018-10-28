@@ -18,18 +18,16 @@ import LaneUtils as lu
 cd, pd = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cd['viewer']
 
-def doit(units):
-    lane = lu.Lane(cd, pd, units=units, vwr=None)
+def doit():
+    lane = lu.Lane(cd, pd, vwr=None)
 
     for path in ut.get_fnames("test_images/", "*.jpg"):
         in_img = iu.imRead(path, reader='cv2', vwr=None)
         out_img= lane.lane_finder_pipe(in_img, cd, pd, vwr=None)
-        out_img.title = units
         print("FIXME: %s" % lane.display_vehicle_pos())
         print("FIXME: %s" % lane.display_curve_rad())
         iv._push(vwr, out_img)
 
-for units in ['pixels', 'meters']:
-    vwr.flush()
-    doit(units)
-    vwr.show()
+vwr.flush()
+doit()
+vwr.show()

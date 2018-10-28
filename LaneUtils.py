@@ -60,11 +60,7 @@ class LaneBoundary:
         ploty = self.lane.ploty # from our owning lane
         assert(not ploty is None)
 
-        if self.lane.units is 'pixels':
-            self.fit_coeff = np.polyfit(y, x, 2)
-        else:
-            self.fit_coeff = np.polyfit(y * ympp, x * xmpp, 2) # 'meters' not 'pixels'
-            
+        self.fit_coeff = np.polyfit(y, x, 2)
         try:
             self.fit_x = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
         except TypeError:
@@ -163,17 +159,12 @@ class Window:
 class Lane:
     # for right now Lanes exist to hold a left and a right boundary and some misc
     # parm and cache dicts.
-    def chk_valid_units(self, units):
-        assert(self.pd['valid_fit_units'][units]) # enforce 'meters' or 'pixels'
-
-    def __init__(self, cd=None, pd=None, units=None, vwr=None):
+    def __init__(self, cd=None, pd=None, vwr=None):
         assert(not cd is  None)
         assert(not pd is None)
         #vwr may be None
         self.cd = cd
         self.pd = pd
-        self.chk_valid_units(units)
-        self.units = units
         self.vwr = vwr
         self.left_bndry = None
         self.right_bndry = None
@@ -182,7 +173,7 @@ class Lane:
         lrc = self.left_bndry.radius_of_curvature_m()
         rrc = self.right_bndry.radius_of_curvature_m()
         avg_roc = (lrc + rrc) / 2
-        ret = "curvature radius = %.2f%s" % (avg_roc, self.pd['units_abbrev'][self.units])
+        ret = "curvature radius = %.2f m" % avg_roc
         return ret
     
     def note_img_attrs(self, img=None):
@@ -209,6 +200,9 @@ class Lane:
                                         beta = pd['lane_blend_beta'],
                                         gamma = pd['lane_blend_gamma'], title = "merged")
         self.calc_vehicle_pos()
+        overlay_msg = self.display_vehicle_pos()
+        overlay_msg += self.display_curve_rad()
+        blended_img.putText(overlay_msg)
         return blended_img #lane
         
     def get_image(self, img):
