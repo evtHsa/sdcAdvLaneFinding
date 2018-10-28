@@ -37,8 +37,8 @@ class LaneBoundary:
         fitc = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
-        self.curve_radius  = ((1 + (2*fitc[0]*y_eval
-                                    + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
+        ret   = ((1 + (2*fitc[0]*y_eval + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
+        return ret
         
     def radius_of_curvature_m(self):
         fitc = self.fit_coeff
@@ -48,7 +48,7 @@ class LaneBoundary:
         xmpp = self.lane.pd['xm_per_pix']
         ympp = self.lane.pd['ym_per_pix']
         print("FIXME: warning you may WAW")
-        self.curve_radius  =  ((1 + (2*fitc[0]*y_eval*ympp
+        ret  =  ((1 + (2*fitc[0]*y_eval*ympp
                                      + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
         
     def fit_polynomial(self):
@@ -72,8 +72,6 @@ class LaneBoundary:
             self.fit_x = 1*ploty**2 + 1*ploty
 
         assert(not self.fit_x is None)
-        # from lesson 7.4
-        self.radius_of_curvature_p()
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
@@ -180,7 +178,9 @@ class Lane:
         self.right_bndry = None
 
     def display_curve_rad(self):
-        avg_roc = (self.left_bndry.curve_radius + self.right_bndry.curve_radius) / 2
+        lrc = self.left_bndry.radius_of_curvature_p()
+        rrc = self.right_bndry.radius_of_curvature_p()
+        avg_roc = (lrc + rrc) / 2
         ret = "curvature radius = %.2f%s" % (avg_roc, self.pd['units_abbrev'][self.units])
         return ret
     
