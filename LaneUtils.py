@@ -34,6 +34,7 @@ class LaneBoundary:
         self.parm_dict = None # set lazily on first window update
         
     def radius_of_curvature_p(self):
+        #FIXME: obsolete fn but leave it about for a while 102718
         fitc = self.fit_coeff
         y = self.lane.ploty
         y_eval = np.max(y)
@@ -41,15 +42,15 @@ class LaneBoundary:
         return ret
         
     def radius_of_curvature_m(self):
-        fitc = self.fit_coeff
-        print("FIXME: must redo curve fit w/x, y in meters")
-        y = self.lane.ploty
+        x = self.x
+        y = self.y
         y_eval = np.max(y)
         xmpp = self.lane.pd['xm_per_pix']
         ympp = self.lane.pd['ym_per_pix']
-        print("FIXME: warning you may WAW")
+        fitc = np.polyfit(y*ympp, x*xmpp, 2)
         ret  =  ((1 + (2*fitc[0]*y_eval*ympp
                                      + fitc[1])**2)**1.5) / np.absolute(2*fitc[0])
+        return ret
         
     def fit_polynomial(self):
         x = self.x
@@ -178,8 +179,8 @@ class Lane:
         self.right_bndry = None
 
     def display_curve_rad(self):
-        lrc = self.left_bndry.radius_of_curvature_p()
-        rrc = self.right_bndry.radius_of_curvature_p()
+        lrc = self.left_bndry.radius_of_curvature_m()
+        rrc = self.right_bndry.radius_of_curvature_m()
         avg_roc = (lrc + rrc) / 2
         ret = "curvature radius = %.2f%s" % (avg_roc, self.pd['units_abbrev'][self.units])
         return ret
