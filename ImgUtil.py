@@ -19,6 +19,7 @@ type_2_cmap = {
 }
 
 color_2_src_type = {
+     str(cv2.COLOR_RGB2BGR) : 'rgb',
      str(cv2.COLOR_RGB2GRAY) : 'rgb',
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
@@ -32,6 +33,7 @@ color_2_src_type = {
 }
 
 colorConversion2DestTypeDict = { # FIXME: this is misguided, misleading, and bad
+     str(cv2.COLOR_RGB2BGR) : 'bgr',
      str(cv2.COLOR_RGB2GRAY) : 'gray',
      str(cv2.COLOR_BGR2GRAY) : 'gray',
      str(cv2.COLOR_RGB2HLS)   : 'gray',
@@ -44,6 +46,7 @@ colorConversion2DestTypeDict = { # FIXME: this is misguided, misleading, and bad
 }
 
 colorConversion2DestColorName = {
+     str(cv2.COLOR_RGB2GRAY) : 'bgr',
      str(cv2.COLOR_RGB2GRAY) : 'gray',
      str(cv2.COLOR_BGR2GRAY) : 'gray',
      str(cv2.COLOR_RGB2HLS)   : 'hls',

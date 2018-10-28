@@ -290,13 +290,15 @@ class VideoCtrlr:
         self.out_path = "test_out/" + basename + ".mp4"
         video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame)
-        ut.brk("xxx")
         rendered_video.write_videofile(out_path, audio=False)
 
     def process_frame(self, img_data):
         self.img_cnt += 1
         if self.img_cnt < 10:
             print("FIXME:heeeeeeeeeeeeeeeeeeeeeres johnny")
+
+        # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
-        self.lane.lane_finder_pipe(img)
+        bgr_img = iu.cv2CvtColor(img, cv2.COLOR_RGB2BGR)
+        self.lane.lane_finder_pipe(bgr_img, self.cache_dict, self.parm_dict, self.vwr)
         
