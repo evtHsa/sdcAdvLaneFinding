@@ -61,7 +61,7 @@ class Image:
           self.cmap = type_2_cmap[img_type] # fall down if not in dict
           self.img_type = img_type
           self.title = title
-          self.overlay_text  = None
+          self.msgs = []
 
      def shape(self):
           return self.img_data.shape
@@ -75,13 +75,15 @@ class Image:
      def shape(self):
           return self.img_data.shape
 
-     def putText(self, msg):
+     def putText(self):
           # https://stackoverflow.com/questions/37191008/load-truetype-font-to-opencv
           # questions/16615662/how-to-write-text-on-a-image-in-windows-using-python-opencv2
           r, g, b = (255, 255, 255) # FIXME: what if img is rbg, enforcement??
-          font=cv2.FONT_HERSHEY_DUPLEX
-          #print("FIXME:xo")
-          cv2.putText(self.img_data, msg, (100, 100), font, 2, (r, g, b), 2, cv2.LINE_AA)
+          font=cv2.FONT_HERSHEY_DUPLEX #why are hershey the only fonts in opencv
+          y = 50
+          for msg in self.msgs:
+               cv2.putText(self.img_data, msg, (50, y), font, 2, (r, g, b), 2, cv2.LINE_AA)
+               y += 50 # I hate guessing about magic #s! ho w tall is the text??
                     
      def plot(self, _plt):
           #self.show()

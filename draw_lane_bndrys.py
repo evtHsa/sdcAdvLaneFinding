@@ -24,8 +24,6 @@ def doit():
     for path in ut.get_fnames("test_images/", "*.jpg"):
         in_img = iu.imRead(path, reader='cv2', vwr=None)
         out_img= lane.lane_finder_pipe(in_img, cd, pd, vwr=None)
-        print("FIXME: %s" % lane.display_vehicle_pos())
-        print("FIXME: %s" % lane.display_curve_rad())
         iv._push(vwr, out_img)
 
 vwr.flush()

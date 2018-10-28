@@ -200,10 +200,11 @@ class Lane:
                                         beta = pd['lane_blend_beta'],
                                         gamma = pd['lane_blend_gamma'], title = "merged")
         self.calc_vehicle_pos()
-        overlay_msg = self.display_vehicle_pos()
-        overlay_msg += self.display_curve_rad()
-        blended_img.putText(overlay_msg)
-        return blended_img #lane
+        blended_img.msgs = []
+        blended_img.msgs.append(self.display_vehicle_pos())
+        blended_img.msgs.append(self.display_curve_rad())
+        blended_img.putText()
+        return blended_img
         
     def get_image(self, img):
         assert(type(img) is iu.Image)
@@ -220,7 +221,7 @@ class Lane:
         return out_img
 
     def display_vehicle_pos(self):
-        ret = "FIXME: %.2f meters %s of center" % (
+        ret = "%.2f meters %s of center" % (
             np.abs(self.vehicle_pos), "left" if self.vehicle_pos < 0 else "right")
         return ret
         
