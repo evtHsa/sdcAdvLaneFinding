@@ -207,7 +207,7 @@ class Lane:
         blended_img.putText()
         return blended_img
         
-    def get_image(self, img):
+    def get_image(self, img): #FIXME: name not at all evocative of purpose
         ut._assert(type(img) is iu.Image)
 
         pts = np.hstack((self.left_bndry.fill_poly_points(True),
