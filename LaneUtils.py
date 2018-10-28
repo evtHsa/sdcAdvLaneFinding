@@ -10,6 +10,7 @@ import numpy as np
 import ImgUtil as iu
 import ImgViewer as iv
 import pprint
+from moviepy.editor import VideoFileClip
 
 class LaneBoundary:
     
@@ -183,6 +184,7 @@ class Lane:
         self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
 
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
+        ut.brk("wtf")
         ut.oneShotMsg("FIXME: iwbni this returned a list of intermediate imgs")
         self.note_img_attrs(in_img)
         undistorted = iu.undistort(in_img, cd, vwr=None)
@@ -277,3 +279,25 @@ class Lane:
                     # x_current is updated correctly
         self.left_bndry.finis(nonzerox, nonzeroy)
         self.right_bndry.finis(nonzerox, nonzeroy)
+        
+class VideoCtrlr:
+    def __init__(self, basename):
+        self.img_cnt = 0
+        self.cache_dict, self.parm_dict = ut.app_init(viewer=True, saver=False,
+                                                       title="whatever")
+        self.vwr = self.cache_dict['viewer']
+        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
+        in_path = basename + ".mp4"
+        self.out_path = "test_out/" + basename + ".mp4"
+        video_in = VideoFileClip(in_path)
+        rendered_video = video_in.fl_image(self.process_frame)
+        ut.brk("xxx")
+        rendered_video.write_videofile(out_path, audio=False)
+
+    def process_frame(self, img_data):
+        self.img_cnt += 1
+        if self.img_cnt < 10:
+            print("FIXME:heeeeeeeeeeeeeeeeeeeeeres johnny")
+        img = iu.Image(img_data = img_data, title="", img_type='rgb')
+        self.lane.lane_finder_pipe(img)
+        
