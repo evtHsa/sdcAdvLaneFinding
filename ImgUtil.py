@@ -288,6 +288,7 @@ def getColorConversionDestType(color):
      return colorConversion2DestTypeDict[str(color)]
 
 def undistort(img_obj, cache, vwr=None):
+     #FIXME: this fn and cv2Undistort seem redundant. combine them
     assert(type(img_obj) is Image)
 
     undist = cv2Undistort(img_obj, cache['mtx'], cache['dist'])
