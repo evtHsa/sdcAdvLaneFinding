@@ -84,3 +84,8 @@ def app_init(viewer=False, saver=False, title=""):
      cache_dict, parm_dict = infrastructure_setup(viewer, saver, title)
      camera.camera_setup(cache_dict = cache_dict, parm_dict = parm_dict)
      return (cache_dict, parm_dict)
+
+def _assert(cond):
+        if not cond:
+                print("assertion failed")
+                pdb.set_trace()
