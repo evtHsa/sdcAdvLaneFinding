@@ -101,7 +101,7 @@ class Image:
      
 def cv2CvtColor(img_obj, color, vwr=None):
      assert(type(img_obj) is Image)
-     assert(img_obj.legalColorConversion(color))
+     ut._assert(img_obj.legalColorConversion(color))
 
      ret = Image(img_data = cv2.cvtColor(img_obj.img_data, color),
                  title = "cvtColor: " + str(color),

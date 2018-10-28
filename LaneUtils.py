@@ -15,11 +15,11 @@ from moviepy.editor import VideoFileClip
 class LaneBoundary:
     
     def __init__(self,  init_x_current, img, bndry_title, lane = None, vwr=None):
-        assert(type(img) is iu.Image)
-        assert(img.is2D())
-        assert(type(lane) is Lane)
+        ut._assert(type(img) is iu.Image)
+        ut._assert(img.is2D())
+        ut._assert(type(lane) is Lane)
         
-        assert(not lane is None)
+        ut._assert(not lane is None)
         self.lane = lane # our parent so we can reference attrs common to all lanes
         self.in_img = img
         _img_data = img.img_data
@@ -59,7 +59,7 @@ class LaneBoundary:
         xmpp = self.lane.pd['xm_per_pix']
         ympp = self.lane.pd['ym_per_pix']
         ploty = self.lane.ploty # from our owning lane
-        assert(not ploty is None)
+        ut._assert(not ploty is None)
 
         self.fit_coeff = np.polyfit(y, x, 2)
         try:
@@ -69,7 +69,7 @@ class LaneBoundary:
             print('fit_polynomal: failed to fit a line!')
             self.fit_x = 1*ploty**2 + 1*ploty
 
-        assert(not self.fit_x is None)
+        ut._assert(not self.fit_x is None)
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
@@ -88,9 +88,9 @@ class LaneBoundary:
         #    order so after drawing the bottom point of the first series we have a diagonal
         #    line to the top of the second series and another diagonal to close the polygon
         #    at the top of the first series(the "bowtie") so we flip one of the series of points
-        assert(not self.fit_x is None)
+        ut._assert(not self.fit_x is None)
         ploty = self.lane.ploty # from our owning lane
-        assert(not ploty is None)
+        ut._assert(not ploty is None)
         pts = np.vstack([self.fit_x, ploty]).T
         if flip:
             pts = np.flipud(pts)
@@ -109,7 +109,7 @@ class LaneBoundary:
         self.window = window
         
     def draw_window(self, img):
-        assert(type(img) is iu.Image)
+        ut._assert(type(img) is iu.Image)
         self.window.draw(img)
         
     def finis(self, nonzerox, nonzeroy):
@@ -128,9 +128,9 @@ class LaneBoundary:
             print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
         
     def draw(self, img):
-        assert(type(img) is iu.Image)
+        ut._assert(type(img) is iu.Image)
         ploty = self.lane.ploty # from our owning lane
-        assert(not ploty is None)
+        ut._assert(not ploty is None)
         iu.cv2Polylines(self.fit_x, ploty, img,
                         line_color = self.parm_dict['lane_line_color'],
                         line_thickness = self.parm_dict['lane_line_thickness'])
@@ -138,7 +138,7 @@ class LaneBoundary:
 class Window:
     def __init__(self, img, win_ix, win_height, x_base, margin, vwr, nonzerox,
                  nonzeroy,parm_dict = None):
-        assert(type(img) is iu.Image)
+        ut._assert(type(img) is iu.Image)
         self.y_lo = img.img_data.shape[0] - (win_ix + 1) * win_height
         self.y_hi = img.img_data.shape[0] - win_ix  * win_height
         self.x_lo = x_base - margin
@@ -154,15 +154,15 @@ class Window:
               (self.title, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
 
     def draw(self, out_img):
-        assert(type(out_img) is iu.Image)
+        ut._assert(type(out_img) is iu.Image)
         cv2.rectangle(out_img.img_data, (self.x_lo, self.y_lo), (self.x_hi, self.y_hi),
                       self.parm_dict['sliding_window_color'], 2)
 class Lane:
     # for right now Lanes exist to hold a left and a right boundary and some misc
     # parm and cache dicts.
     def __init__(self, cd=None, pd=None, vwr=None):
-        assert(not cd is  None)
-        assert(not pd is None)
+        ut._assert(not cd is  None)
+        ut._assert(not pd is None)
         #vwr may be None
         self.cd = cd
         self.pd = pd
@@ -178,13 +178,12 @@ class Lane:
         return ret
     
     def note_img_attrs(self, img=None):
-        assert(not img is None)
-        assert(type(img) is iu.Image)
         self.height, self.width, self.num_chan = img.img_data.shape
         self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
 
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
-        ut.brk("wtf")
+        ut._assert(not in_img is None)
+        ut._assert(type(in_img) is iu.Image)
         ut.oneShotMsg("FIXME: iwbni this returned a list of intermediate imgs")
         self.note_img_attrs(in_img)
         undistorted = iu.undistort(in_img, cd, vwr=None)
@@ -209,7 +208,7 @@ class Lane:
         return blended_img
         
     def get_image(self, img):
-        assert(type(img) is iu.Image)
+        ut._assert(type(img) is iu.Image)
 
         pts = np.hstack((self.left_bndry.fill_poly_points(True),
                          self.right_bndry.fill_poly_points(False)))
@@ -231,7 +230,7 @@ class Lane:
         pic_ctr = self.width / 2
         x_l = self.left_bndry.x[0]
         x_r = self.right_bndry.x[0]
-        assert(x_l < x_r)
+        ut._assert(x_l < x_r)
         lane_ctr = x_l + (x_r - x_l)/2
         self.vehicle_pos = (lane_ctr - pic_ctr) * self.pd['xm_per_pix']        
 
@@ -240,8 +239,8 @@ class Lane:
         self.right_bndry.fit_polynomial()
 
     def find_pixels_all_bndrys(self, binary_warped):
-        assert(type(binary_warped) is iu.Image)
-        assert(binary_warped.is2D())
+        ut._assert(type(binary_warped) is iu.Image)
+        ut._assert(binary_warped.is2D())
     
         wp = self.pd['sliding_windows']
         nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
