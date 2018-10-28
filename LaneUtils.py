@@ -282,7 +282,7 @@ class Lane:
 class VideoCtrlr:
     def __init__(self, basename):
         self.img_cnt = 0
-        self.cache_dict, self.parm_dict = ut.app_init(viewer=True, saver=False,
+        self.cache_dict, self.parm_dict = ut.app_init(viewer=True, saver=True,
                                                        title="whatever")
         self.vwr = self.cache_dict['viewer']
         self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
