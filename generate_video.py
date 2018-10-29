@@ -14,6 +14,10 @@ import LaneUtils as lu
 # Lanes:  contain LaneBoundary(s) and attributes common to both boundaries
 # LaneBoundary(s): contain attributes for a particular lane bounday
 # Windows: are used to calculate lane boundaries
-for path in ['project_video']:
+for path in [
+        #'project_video',
+        'challenge_video',
+        #'harder_challenge_video'
+]:
     vc = lu.VideoCtrlr(path) # th-th-th-th-th-at's all folks
 
