@@ -281,24 +281,31 @@ class Lane:
         
 class VideoCtrlr:
     def __init__(self, basename):
-        self.img_cnt = 0
+        self.frame_ctr = 0
+        self.faulty_frames = 0
         self.cache_dict, self.parm_dict = ut.app_init(viewer=True, saver=True,
                                                        title="whatever")
         self.vwr = self.cache_dict['viewer']
         self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
         in_path = basename + ".mp4"
-        self.out_path = "test_out/" + basename + ".mp4"
+        out_path = "test_out/" + basename + ".mp4"
         video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame)
         rendered_video.write_videofile(out_path, audio=False)
+        print("\n\\n Total Frames %d, faulty frames %d" % (self.frame_ctr, self.faulty_frames))
 
     def process_frame(self, img_data):
-        self.img_cnt += 1
-        if self.img_cnt < 10:
-            print("FIXME:heeeeeeeeeeeeeeeeeeeeeres johnny")
-
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
         bgr_img = iu.cv2CvtColor(img, cv2.COLOR_RGB2BGR)
-        self.lane.lane_finder_pipe(bgr_img, self.cache_dict, self.parm_dict, self.vwr)
+        self.frame_ctr += 1
+        try:
+            pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
+                                                      self.parm_dict, self.vwr)
+            ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
+        except:
+            print("could not find lane boundaries in frame %d" % self.frame_ctr)
+            self.faulty_frames += 1
+            ret_img = img
+        return ret_img.img_data
         
