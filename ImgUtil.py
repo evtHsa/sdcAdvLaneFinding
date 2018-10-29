@@ -20,6 +20,7 @@ type_2_cmap = {
 
 color_2_src_type = {
      str(cv2.COLOR_RGB2BGR) : 'rgb',
+     str(cv2.COLOR_BGR2RGB) : 'bgr',
      str(cv2.COLOR_RGB2GRAY) : 'rgb',
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
      str(cv2.COLOR_BGR2GRAY) : 'bgr',
@@ -33,6 +34,7 @@ color_2_src_type = {
 }
 
 colorConversion2DestTypeDict = { # FIXME: this is misguided, misleading, and bad
+     str(cv2.COLOR_BGR2RGB) : 'rgb',
      str(cv2.COLOR_RGB2BGR) : 'bgr',
      str(cv2.COLOR_RGB2GRAY) : 'gray',
      str(cv2.COLOR_BGR2GRAY) : 'gray',
@@ -46,7 +48,8 @@ colorConversion2DestTypeDict = { # FIXME: this is misguided, misleading, and bad
 }
 
 colorConversion2DestColorName = {
-     str(cv2.COLOR_RGB2GRAY) : 'bgr',
+     str(cv2.COLOR_RGB2BGR) : 'bgr',
+     str(cv2.COLOR_BGR2RGB) : 'rgb',
      str(cv2.COLOR_RGB2GRAY) : 'gray',
      str(cv2.COLOR_BGR2GRAY) : 'gray',
      str(cv2.COLOR_RGB2HLS)   : 'hls',
@@ -100,7 +103,10 @@ class Image:
           _plt.xlabel(self.title)
           
      def legalColorConversion(self, color):
-          return self.img_type == color_2_src_type[str(color)]
+          # FIXME: just say yes until we have better fix for the fact that
+          # cv2.COLOR_RGB2BGR == cv2.COLOR_BGR2RGB
+          #return self.img_type == color_2_src_type[str(color)]
+          return True
      
 def cv2CvtColor(img_obj, color, vwr=None):
      assert(type(img_obj) is Image)
