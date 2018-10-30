@@ -115,7 +115,6 @@ def cv2CvtColor(img_obj, color, vwr=None):
      ret = Image(img_data = cv2.cvtColor(img_obj.img_data, color),
                  title = "cvtColor: " + str(color),
                  img_type=getColorConversionDestType(color))
-     iv._push(vwr, ret)
      return ret
 
 def img_rgb2gray(img, vwr=None):
@@ -154,7 +153,6 @@ def Sobel(img, out_depth=-1, dx_order=0, dy_order=0, ksize=3, vwr=None):
 
      tmp = Image(img_data = cv2.Sobel(img.img_data, out_depth, dx_order,
                                       dy_order, ksize), title="Sobel", img_type='gray')
-     iv._push(vwr, tmp)
      return tmp
         
     
@@ -186,7 +184,6 @@ def abs_sobel_thresh(img, orient='x', thresh_min=0, thresh_max=255, ksize=3,
      
      binary_image = Image(img_data=np.squeeze(sxbinary),
                           title="scaled_sobel", img_type = 'gray')
-     iv._push(vwr, binary_image)
      return binary_image
 
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Magnitude of the Gradient"
@@ -206,7 +203,6 @@ def mag_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      binary_output[(scaled_sobel >= thresh_min) & (scaled_sobel <= thresh_max)] = 1
      ret = Image(img_data = np.squeeze(binary_output), title="sobel_mag_thresh",
                  img_type='gray')
-     iv._push(vwr, ret)
      return ret
     
 #from lesson 6 "Gradients and Color Spaces", ch 3 "Direction of the Gradient"
@@ -227,7 +223,6 @@ def dir_thresh(img, thresh_min=0, thresh_max=255, ksize=3,
      binary_output[(grad_dir >= thresh_min) & (grad_dir <= thresh_max)] = 1
      binary_image = Image(img_data = np.squeeze(binary_output),
                           title = "sobel dir thresh", img_type = 'gray')
-     iv._push(vwr, binary_image)
      return binary_image
 
 # from lesson 6.11 "HLS quiz"
@@ -240,7 +235,6 @@ def hls_thresh(img, thresh_lo, thresh_hi, vwr):
      binary_image = Image(img_data = np.squeeze(binary_output),
                           title = "hls_thresh(%.2f, %.2f)" % (thresh_lo, thresh_hi),
                           img_type = 'gray')
-     iv._push(vwr, binary_image)
      return binary_image
 
 def combined_thresh(btnl, title): # bin_thresh_ndarray_list
@@ -269,7 +263,6 @@ def imRead(path, flags = None, reader=None, vwr=None):
           img_obj = Image(img_data = cv2.imread(path, flags), title = title, img_type = _type)
      else:
           img_obj = Image(img_data = mpimg.imread(path), title = title, img_type = 'rgb')
-     iv._push(vwr, img_obj)
      return img_obj
 
 def lookDownXform_src():
@@ -290,7 +283,6 @@ def getLookDownXform(cache=None):
 def cv2WarpPerspective(img, xformMatrix, size, vwr=None):
      assert(type(img) is Image)
      img.img_data = cv2.warpPerspective(img.img_data, xformMatrix, size)
-     iv._push(vwr, img)
      return img
 
 def getColorConversionDestType(color):
@@ -307,7 +299,6 @@ def look_down(img, cache, vwr=None):
      assert(type(img) is Image)
      img_size = (img.shape()[1], img.shape()[0])
      warped = cv2WarpPerspective(img, cache['M_lookdown'], img_size)
-     iv._push(vwr, warped)
      return warped
 
 def init_obj_points(nx, ny):
@@ -372,7 +363,6 @@ def cb_corners(parm_dict, cache_dict, max_files=0, verbose=False, vwr=None):
             
             # Draw and display the corners
             cv2.drawChessboardCorners(img_obj.img_data, (nx,ny), corners2, ret)
-            iv._push(vwr, img_obj)
         else:
             print("findChessboardCorners(%s) failed" % fname)
 
