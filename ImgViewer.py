@@ -22,8 +22,8 @@ class ImgViewer:
         if (debug):
             img.show()
     
-        #if self.svr:
-        #    self.svr.save(img)
+        if self.svr:
+            self.svr.save(img)
 
     def pop(self):
         return self.img_obj_list.pop()

@@ -182,38 +182,43 @@ class Lane:
         self.height, self.width, self.num_chan = img.img_data.shape
         self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
 
+    def log_stage(self, img, stwing):
+        self.FIXME_state = stwing
+        self.vwr.svr.save(img, stwing)
+        
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
         ut._assert(not in_img is None)
         ut._assert(type(in_img) is iu.Image)
         ut.oneShotMsg("FIXME: iwbni this returned a list of intermediate imgs")
         self.note_img_attrs(in_img)
-        self.FIXME_stage = 'init'
-        undistorted = iu.undistort(in_img, cd, vwr=None)
-        self.FIXME_stage = 'undistort'
+        self.log_stage(in_img, 'init')
+        
+        undistorted = iu.undistort(in_img, cd, vwr=vwr)
+        self.log_stage(undistorted, 'undistort')
         top_down = iu.look_down(undistorted, cd, vwr)
-        self.FIXME_stage = 'look_down'
+        self.log_stage(top_down, 'look_down')
         binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd,
                                                parm_dict = pd)
-        self.FIXME_stage = 'bin warp(after hls/lab'
+        self.log_stage(binary_warped, 'bin_warp_hls_lab')
         self.find_pixels_all_bndrys(binary_warped)
-        self.FIXME_stage = 'find_pixels'
         self.fit_polynomials()
-        self.FIXME_stage = 'fit_polys'
         lane_img = self.get_image(in_img)
+        self.log_stage(lane_img, 'lane_img')
         size = (lane_img.shape()[1], lane_img.shape()[0])
         lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size,
-                                         vwr=None)
-        self.FIXME_stage = 'lane_img'
+                                         vwr=vwr)
+        self.log_stage(lane_img, 'rewarped_lane_img')
         blended_img = iu.cv2AddWeighted(in_img, lane_img,
                                         alpha = pd['lane_blend_alpha'],
                                         beta = pd['lane_blend_beta'],
                                         gamma = pd['lane_blend_gamma'], title = "merged")
-        self.FIXME_stage = 'blended_img'
+        self.log_stage(blended_img, 'blended_img')
         self.calc_vehicle_pos()
         blended_img.msgs = []
         blended_img.msgs.append(self.display_vehicle_pos())
         blended_img.msgs.append(self.display_curve_rad())
         blended_img.putText()
+        self.log_stage(blended_img, 'annotated_blended_img')
         return blended_img
         
     def get_image(self, img): #FIXME: name not at all evocative of purpose
