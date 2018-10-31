@@ -1,4 +1,4 @@
-﻿**Advanced Lanxe Finding Project**
+﻿**Advanced Lanssssxe Finding Project**
 
 The goals / steps of this project are the following:
 
