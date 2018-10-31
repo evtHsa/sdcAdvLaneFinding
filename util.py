@@ -89,6 +89,6 @@ def _assert(cond):
         if not cond:
                 really_assert = True
                 print("assertion failed")
-                pdb.set_trace()
+                #pdb.set_trace()
                 if really_assert:
                         assert(False)
