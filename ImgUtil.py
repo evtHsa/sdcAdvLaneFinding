@@ -254,7 +254,7 @@ def imRead(path, flags = None, reader=None, vwr=None):
 
      if flags is None:
           flags = cv2.IMREAD_COLOR
-     title = reader + ":imread(" + path + ")"
+     title = reader + ":imread"
      if (reader == 'cv2'):          
           if flags == cv2.IMREAD_GRAYSCALE:
                _type = 'gray'
@@ -282,8 +282,10 @@ def getLookDownXform(cache=None):
 
 def cv2WarpPerspective(img, xformMatrix, size, vwr=None):
      assert(type(img) is Image)
-     img.img_data = cv2.warpPerspective(img.img_data, xformMatrix, size)
-     return img
+     ret = copy_image(img)
+     ret.title = 'warped'
+     ret.img_data = cv2.warpPerspective(img.img_data, xformMatrix, size)
+     return ret
 
 def getColorConversionDestType(color):
      return colorConversion2DestTypeDict[str(color)]
