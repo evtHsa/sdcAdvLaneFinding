@@ -265,6 +265,7 @@ class Lane:
         wp = self.pd['sliding_windows']
         nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
         hist = iu.hist(binary_warped, self.vwr)
+        self.log_stage(hist)
         left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
         img_data = binary_warped.img_data #reduce typing
 
