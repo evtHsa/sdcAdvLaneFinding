@@ -227,7 +227,6 @@ class Lane:
         cv2.fillPoly(out_img.img_data, np.int_([pts]), self.pd['lane_fill_color'])
         self.left_bndry.draw(out_img)
         self.right_bndry.draw(out_img)
-        iv._push(self.vwr, out_img)
         return out_img
 
     def display_vehicle_pos(self):
@@ -297,17 +296,27 @@ class VideoCtrlr:
         self.vwr = self.cache_dict['viewer']
         self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
         in_path = basename + ".mp4"
+        print("processing " + in_path)
         out_path = "test_out/" + basename + ".mp4"
         video_in = VideoFileClip(in_path)
-        rendered_video = video_in.fl_image(self.process_frame)
+        rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)
-        print("\n\\n Total Frames %d, faulty frames %d" % (self.frame_ctr, self.faulty_frames))
-
+        print("\n\\n Total Frames %d, faulty frames %d" % (self.frame_ctr,
+                                                           self.faulty_frames))
     def process_frame(self, img_data):
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
         bgr_img = iu.cv2CvtColor(img, cv2.COLOR_RGB2BGR)
+        pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
+                                                  self.parm_dict, self.vwr)
+        ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
         self.frame_ctr += 1
+        return ret_img.img_data
+
+    def process_frame_bp(self, img_data):
+        # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
+        img = iu.Image(img_data = img_data, title="", img_type='rgb')
+        bgr_img = iu.cv2CvtColor(img, cv2.COLOR_RGB2BGR)
         try:
             pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
                                                       self.parm_dict, self.vwr)
@@ -315,6 +324,11 @@ class VideoCtrlr:
         except:
             print("could not find lane boundaries in frame %d" % self.frame_ctr)
             self.faulty_frames += 1
+            img.title = "badFrame_"+str(self.frame_ctr)+".jpg"
+            self.vwr.svr.save(img)
             ret_img = img
+        self.frame_ctr += 1
+        if self.frame_ctr % 100  == 0:
+            print("frame %d"  % self.frame_ctr)
         return ret_img.img_data
         
