@@ -182,27 +182,34 @@ class Lane:
         self.height, self.width, self.num_chan = img.img_data.shape
         self.ploty = np.linspace(0, img.img_data.shape[0] - 1, img.img_data.shape[0])
 
-    def log_stage(self, img, stwing):
-        self.FIXME_state = stwing
-        self.vwr.svr.save(img, stwing)
+    def log_stage(self, img=None, stwing=""):
+        tmp = stwing
+        if img:
+            assert(not img.title == "")
+            tmp= img.title
+            self.vwr.svr.save(img)
+            
+        assert(not tmp == "")
+        self.FIXME_state = tmp
+
         
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
         ut._assert(not in_img is None)
         ut._assert(type(in_img) is iu.Image)
         self.note_img_attrs(in_img)
-        self.log_stage(in_img, 'init')
+        self.log_stage(in_img)
         
         undistorted = iu.undistort(in_img, cd, vwr=vwr)
-        self.log_stage(undistorted, 'undistort')
+        self.log_stage(undistorted)
         top_down = iu.look_down(undistorted, cd, vwr)
-        self.log_stage(top_down, 'look_down')
+        self.log_stage(top_down)
         binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd,
                                                parm_dict = pd)
-        self.log_stage(binary_warped, 'bin_warp_hls_lab')
+        self.log_stage(binary_warped)
         self.find_pixels_all_bndrys(binary_warped)
         self.fit_polynomials()
         lane_img = self.get_image(in_img)
-        self.log_stage(lane_img, 'lane_img')
+        self.log_stage(lane_img)
         size = (lane_img.shape()[1], lane_img.shape()[0])
         lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size,
                                          vwr=vwr)
@@ -211,13 +218,14 @@ class Lane:
                                         alpha = pd['lane_blend_alpha'],
                                         beta = pd['lane_blend_beta'],
                                         gamma = pd['lane_blend_gamma'], title = "merged")
-        self.log_stage(blended_img, 'blended_img')
+        self.log_stage(blended_img)
         self.calc_vehicle_pos()
         blended_img.msgs = []
         blended_img.msgs.append(self.display_vehicle_pos())
         blended_img.msgs.append(self.display_curve_rad())
         blended_img.putText()
-        self.log_stage(blended_img, 'annotated_blended_img')
+        blended_img.title = 'annotated_blended_img'
+        self.log_stage(blended_img)
         return blended_img
         
     def get_image(self, img): #FIXME: name not at all evocative of purpose
@@ -227,7 +235,7 @@ class Lane:
                          self.right_bndry.fill_poly_points(False)))
 
         out_img = iu.Image(img_data = np.zeros_like(img.img_data).astype(np.uint8),
-                           title = "lane image", img_type = 'rgb')
+                           title = "lane_image", img_type = 'rgb')
         cv2.fillPoly(out_img.img_data, np.int_([pts]), self.pd['lane_fill_color'])
         self.left_bndry.draw(out_img)
         self.right_bndry.draw(out_img)
