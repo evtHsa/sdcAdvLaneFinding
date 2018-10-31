@@ -189,7 +189,6 @@ class Lane:
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
         ut._assert(not in_img is None)
         ut._assert(type(in_img) is iu.Image)
-        ut.oneShotMsg("FIXME: iwbni this returned a list of intermediate imgs")
         self.note_img_attrs(in_img)
         self.log_stage(in_img, 'init')
         
