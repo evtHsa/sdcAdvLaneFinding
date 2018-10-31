@@ -14,15 +14,14 @@ class ImgSaver:
         self.ix = 0
         os.mkdir(d)
 
-    def save(self, img, msg=""):
+    def save(self, img):
         assert(type(img) is iu.Image)
         img_data = img.img_data
 
         if img.img_type == 'bgr':
             img_data = cv2.cvtColor(img.img_data, cv2.COLOR_BGR2RGB)
             
-        outf = self.outdir + "%03d" % self.ix + "_" + os.path.basename(img.title)
-        outf = outf +  "_" + msg + ".png"
+        outf = self.outdir + "%03d" % self.ix + "_" + os.path.basename(img.title) + ".png"
         self.ix = self.ix + 1
         mpimg.imsave(outf, img_data, cmap=img.cmap)
 
