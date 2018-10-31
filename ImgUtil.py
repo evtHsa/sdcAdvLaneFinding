@@ -427,7 +427,7 @@ def hist(img, vwr):
     # Sum across image pixels vertically - make sure to set `axis`
     # i.e. the highest areas of vertical lines should be larger values
     histogram = np.sum(bottom_half, axis=0)
-    histogram = Image(img_data = histogram, title="", img_type='gray')
+    histogram = Image(img_data = histogram, title="histogram", img_type='gray')
     return histogram
 
 def get_LR_hist_max_ix(hist):
