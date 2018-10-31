@@ -169,6 +169,7 @@ class Lane:
         self.vwr = vwr
         self.left_bndry = None
         self.right_bndry = None
+        self.FIXME_stage = None
 
     def display_curve_rad(self):
         lrc = self.left_bndry.radius_of_curvature_m()
@@ -186,20 +187,28 @@ class Lane:
         ut._assert(type(in_img) is iu.Image)
         ut.oneShotMsg("FIXME: iwbni this returned a list of intermediate imgs")
         self.note_img_attrs(in_img)
+        self.FIXME_stage = 'init'
         undistorted = iu.undistort(in_img, cd, vwr=None)
+        self.FIXME_stage = 'undistort'
         top_down = iu.look_down(undistorted, cd, vwr)
+        self.FIXME_stage = 'look_down'
         binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd,
                                                parm_dict = pd)
+        self.FIXME_stage = 'bin warp(after hls/lab'
         self.find_pixels_all_bndrys(binary_warped)
+        self.FIXME_stage = 'find_pixels'
         self.fit_polynomials()
+        self.FIXME_stage = 'fit_polys'
         lane_img = self.get_image(in_img)
         size = (lane_img.shape()[1], lane_img.shape()[0])
         lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size,
                                          vwr=None)
+        self.FIXME_stage = 'lane_img'
         blended_img = iu.cv2AddWeighted(in_img, lane_img,
                                         alpha = pd['lane_blend_alpha'],
                                         beta = pd['lane_blend_beta'],
                                         gamma = pd['lane_blend_gamma'], title = "merged")
+        self.FIXME_stage = 'blended_img'
         self.calc_vehicle_pos()
         blended_img.msgs = []
         blended_img.msgs.append(self.display_vehicle_pos())
