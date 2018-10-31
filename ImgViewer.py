@@ -5,7 +5,7 @@ import ImgUtil as iu
     
 class ImgViewer:
     
-    def __init__(self, w=4, h=4, rows=1, cols=1, title = "", svr=None):
+    def __init__(self, w=4, h=4, rows=1, cols=1, title = "", svr=None, auto_save=False):
         self.img_obj_list = []
         self.w = w
         self.h = h
@@ -13,6 +13,7 @@ class ImgViewer:
         self.rows = rows
         self.cols = cols
         self.svr = svr
+        self.auto_save = auto_save
 
     def push(self, img,  debug=False):
         assert(type(img) is iu.Image)
@@ -22,7 +23,7 @@ class ImgViewer:
         if (debug):
             img.show()
     
-        if self.svr:
+        if self.svr and self.auto_save:
             self.svr.save(img)
 
     def pop(self):
