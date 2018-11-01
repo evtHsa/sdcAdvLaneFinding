@@ -14,8 +14,8 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./test_out/archive/001_undistorted.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
+[image2]: ./test_out/archive/002_warped.png "warped"
+[image3]: ./test_out/archive/003_hls lab.png "Binary Example"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image6]: ./examples/example_output.jpg "Output"
@@ -76,8 +76,6 @@ The code was mostly developed in regular python scripts with most of the interme
 				 - lookdown transformation
 				 - and it's invers
 
-
-
 ## camera_setup
 In the second code cell in **P2.ipynb** ("run with the viewer enabled almost everywhere"), we start by calling ut.**app_init**() which:
  - saves the cache_dict(cd) and parm_dict to be passed to the Lane constructor
@@ -110,7 +108,7 @@ undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+As can be seen in ImgUtil.py and the unit_test/ filesk I tried, guided by the lessons, thesholded sobel, thresholded magnitude, directional sobel but did not good results on all test images. Ultimately hls + lab worked best especially on yellow lines.
 
 ![alt text][image3]
 
