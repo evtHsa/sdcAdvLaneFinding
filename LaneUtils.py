@@ -187,7 +187,8 @@ class Lane:
         if img:
             assert(not img.title == "")
             tmp= img.title
-            self.vwr.svr.save(img)
+            if self.vwr and self.vwr.svr:
+                self.vwr.svr.save(img)
             
         assert(not tmp == "")
         self.FIXME_state = tmp
@@ -265,7 +266,8 @@ class Lane:
         wp = self.pd['sliding_windows']
         nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
         hist = iu.hist(binary_warped, self.vwr)
-        self.log_stage(hist)
+        # log stage needs a bigger brain to display 2d histograms than the current code has
+        #self.log_stage(hist)
         left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
         img_data = binary_warped.img_data #reduce typing
 
@@ -314,7 +316,7 @@ class VideoCtrlr:
         video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)
-        print("\n\\n Total Frames %d, faulty frames %d" % (self.frame_ctr,
+        print("\n\n Total Frames %d, faulty frames %d" % (self.frame_ctr,
                                                            self.faulty_frames))
     def process_frame(self, img_data):
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
