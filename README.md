@@ -16,9 +16,7 @@ The goals / steps of this project are the following:
 [image1]: ./test_out/archive/001_undistorted.png "Undistorted"
 [image2]: ./test_out/archive/002_warped.png "warped"
 [image3]: ./test_out/archive/003_hls lab.png "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
+[image6]: ./test_out/archive/007_annotated_blended_img.png "Output"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -104,7 +102,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 #### 1. Provide an example of a distortion-corrected image.
 
 undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above
-![alt text][image2]
+![alt text][image1]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
@@ -114,47 +112,18 @@ As can be seen in ImgUtil.py and the unit_test/ filesk I tried, guided by the le
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
-
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
-
-This resulted in the following source and destination points:
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
+the source and destination points from which the M_lookdown matrix is calculated are hardcoded from the lesson in ImgUtil.py::lookdownXform_src() and lookDownXform_dst() which are passed to look_down() which calls cv2WarpPerspective()
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
-
-![alt text][image5]
+in LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
-
+near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+This is near the end of the pipe where blended image is calculated
 
 ![alt text][image6]
 
