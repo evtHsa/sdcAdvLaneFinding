@@ -102,7 +102,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
-undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above to produce the undistorted imag
+undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above to produce the undistorted imag. One of the interesting, to me, aspects was the tutorial on calculating object points from https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html.  I spent a bunch of time, likely too much to understand this and even left the ipynb I used to work through it in steps in my project. numpy is still amazing.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image1]
@@ -122,39 +122,17 @@ then via **hls_lab_lane_detect**() in ImgUtil.py we get
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+the source and destination points from which the M_lookdown matrix is calculated are hardcoded from the lesson in ImgUtil.py::lookdownXform_src() and lookDownXform_dst() which are passed to look_down() which calls cv2WarpPerspective()
 
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
-
-This resulted in the following source and destination points:
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
+Both images in section 2 (above) show results after the perspective transform.
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The visual result, using the lane lines to define a polygon which we fill, is:
 
 ![alt text][image5]
+
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -162,9 +140,12 @@ I did this in lines # through # in my code in `my_other_file.py`
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I imnear the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
+#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-![alt text][image6]
+This is near the end of the pipe where blended image is calculated
+
+![alt text][image7]
 
 ---
 
