@@ -343,7 +343,5 @@ class VideoCtrlr:
             self.vwr.svr.save(img)
             ret_img = img
         self.frame_ctr += 1
-        if self.frame_ctr % 100  == 0:
-            print("frame %d"  % self.frame_ctr)
         return ret_img.img_data
         
