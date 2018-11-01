@@ -1,10 +1,7 @@
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+**Advanced Lane Finding Project**
 
 ---
 
-**Advanced Lane Finding Project**
 
 The goals / steps of this project are the following:
 
@@ -38,26 +35,80 @@ The goals / steps of this project are the following:
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
-You're reading it!
+This document
 
 ### Camera Calibration
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
+**A note on code organization and how it was developed**:
+The code was mostly developed in regular python scripts with most of the intermediate steps preserved in the **unit_tests/** directory. As patterns emerged and general classes of things became clear a few modules were developed:
 
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
+ - **camera.py**: camera specific functionality(probably should be folded into util.py)
+ - **ImgSaver.py**: provides a **ImgSaver** class whose constructor creates a times tamped subdirectory of **test_out/** and saves files with a name decorated with an index(so they sort conveniently) and provides a **save()** method
+ - **ImgUtil.py**
+	 - provides interfaces to Open CV routines using my classes so I can enforce what I think should be happening with assert (see for example **cv2CvtColor**), Being new to Open CV this helped me avoid errors which would probably be obvious to people more experienced with the library.
+	 - the **Image** class which provides(among other facilities)
+		 - **putText**() :  overlays text on an Image (used for position and curvature radius)
+		 - **legalColorConversion**(): the original impetus for this class
+	 - other utility image funcitons (ex: cb_corners(), hls_lab_lane_detect()
+ - **ImgViewer.py**: A debugging aid for myself. While developing a pipline(s) images are pushed into a list in an instance and the show method displays them an M x N gridfull at a time. Most of the routines in this class can be called from pdb to inspect images when things go "walkabout" as they frequently did.
+ - **LaneUtils.py** - the heart of the app which provides some non-member functions and the key classes:
+	 - **LaneBoundary** which provides
+		 - key instance variables:
+			 - **x,y**: for the polynomial fit points
+			 - **parm_dict**: discussed later in the file where it originates
+			 - **radius_of_curvature_m**(): in meters
+			 - **fit_polynomial**()
+			 - **draw**()
+		 - **Window**: encapsulates the sliding window operations
+		 - **Lane**
+			 - **lane_finder_pipe**() - what the whole lesson is about
+			 - **get_image**() - badly named. gets and image of the lane boundaries filled in to be overlaid on the input image
+			 - **display_vehicle_pos**()
+			 - **show_vehicle_pos**()
+			 - **find_pixels_all_boundaries**() - also badly named. drives the sliding window algorithm
+		 - **VideoCtrl**
+			 - __init__(): sets up the video processing
+			 - **process_frame_bp**(): runs each frame through the lane finding pipeline. "bp" refers to the try/except that makes it "bulletproof"
+		 - **parm_dict.py** which defines two dictionaries
+			 - **parm_dict**: things like 
+				 - width and height of the ImageViewer grid described above
+				 - parameters for sobel and hough(which ultimately didn't get used much)
+				 - thresholds for things we did use like hls, lab, luv
+				 - some readable names for a few rgb colors
+			 - **cache_dict**: a convenient bag to carry around
+				 - calibration matrix
+				 - distortion coefficients
+				 - lookdown transformation
+				 - and it's invers
+
+## camera_setup
+In the second code cell in **P2.ipynb** ("run with the viewer enabled almost everywhere"), we start by calling ut.**app_init**() which:
+ - saves the cache_dict(cd) and parm_dict to be passed to the Lane constructor
+ - camera_setup() -> **cb_corners**() where
+	 - we setup **obj_points** as shown by the OpenCV tutorial code cited in the comments. To oversimplify, obj_points are known by geometry and we calculate the distortion(s) by seeing where they are in the image .vs. where they should be.
+	 - then for each image
+		 - read the image from disk	
+		 - conver it to gray scale
+		 - if cv2.**findChessboardCorners**() worked(it fails for 3 images,
+			 - append the points we found to the object points
+			 - refine  the corners with **cornerSubPix** as suggested at https://docs.opencv.org/3.0-beta/modules/imgproc/doc/feature_detection.html#cornersubpix
+	 - finally the **cache_dict** returned from cb_corners() now contains **obj_points** and **img_points** that we pass to **calibrateCamera**()
+	 - we then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
-
-![alt text][image1]
 
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
+![alt text][image2]
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
+![alt text][image1]
+
+**magic happens** and we get
+![alt text][image3]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
