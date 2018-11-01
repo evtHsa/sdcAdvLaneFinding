@@ -132,6 +132,7 @@ In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for 
 The visual result, using the lane lines to define a polygon which we fill, is:
 
 ![alt text][image5]
+![alt text][image6]
 
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
