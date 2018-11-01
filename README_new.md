@@ -142,7 +142,7 @@ Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature
 
 Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
 
-![alt text][image7]
+![alt text][image6]
 
 ---
 
