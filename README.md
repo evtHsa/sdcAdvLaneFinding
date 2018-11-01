@@ -1,4 +1,4 @@
-﻿**Advanced Lanssssxe Finding Project**
+﻿**Advanced Lane Finding Project**
 
 The goals / steps of this project are the following:
 
@@ -34,14 +34,54 @@ This document
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
+**A note on code organization and how it was developed**:
+The code was mostly developed in regular python scripts with most of the intermediate steps preserved in the **unit_tests/** directory. As patterns emerged and general classes of things became clear a few modules were developed:
 
-The code for this step is contained in ==camera.py, util.py, and ImgUtil.py.
+ - **camera.py**: camera specific functionality(probably should be folded into util.py)
+ - **ImgSaver.py**: provides a **ImgSaver** class whose constructor creates a times tamped subdirectory of **test_out/** and saves files with a name decorated with an index(so they sort conveniently) and provides a **save()** method
+ - **ImgUtil.py**
+	 - provides interfaces to Open CV routines using my classes so I can enforce what I think should be happening with assert (see for example **cv2CvtColor**), Being new to Open CV this helped me avoid errors which would probably be obvious to people more experienced with the library.
+	 - the **Image** class which provides(among other facilities)
+		 - **putText**() :  overlays text on an Image (used for position and curvature radius)
+		 - **legalColorConversion**(): the original impetus for this class
+	 - other utility image funcitons (ex: cb_corners(), hls_lab_lane_detect()
+ - **ImgViewer.py**: A debugging aid for myself. While developing a pipline(s) images are pushed into a list in an instance and the show method displays them an M x N gridfull at a time. Most of the routines in this class can be called from pdb to inspect images when things go "walkabout" as they frequently did.
+ - **LaneUtils.py** - the heart of the app which provides some non-member functions and the key classes:
+	 - **LaneBoundary** which provides
+		 - key instance variables:
+			 - **x,y**: for the polynomial fit points
+			 - **parm_dict**: discussed later in the file where it originates
+			 - **radius_of_curvature_m**(): in meters
+			 - **fit_polynomial**()
+			 - **draw**()
+		 - **Window**: encapsulates the sliding window operations
+		 - **Lane**
+			 - **lane_finder_pipe**() - what the whole lesson is about
+			 - **get_image**() - badly named. gets and image of the lane boundaries filled in to be overlaid on the input image
+			 - **display_vehicle_pos**()
+			 - **show_vehicle_pos**()
+			 - **find_pixels_all_boundaries**() - also badly named. drives the sliding window algorithm
+		 - **VideoCtrl**
+			 - __init__(): sets up the video processing
+			 - **process_frame_bp**(): runs each frame through the lane finding pipeline. "bp" refers to the try/except that makes it "bulletproof"
+		 - **parm_dict.py** which defines two dictionaries
+			 - **parm_dict**: things like 
+				 - width and height of the ImageViewer grid described above
+				 - parameters for sobel and hough(which ultimately didn't get used much)
+				 - thresholds for things we did use like hls, lab, luv
+				 - some readable names for a few rgb colors
+			 - **cache_dict**: a convenient bag to carry around
+				 - calibration matrix
+				 - distortion coefficients
+				 - lookdown transformation
+				 - and it's invers
 
- - we start in **
+
 
 ## camera_setup
-
-**() which calls cb_corners in ImgUtil.py
+In the second code cell in **P2.ipynb** ("run with the viewer enabled almost everywhere"), we start by calling ut.**app_init**() which:
+ - saves the cache_dict(cd) and parm_dict to be passed to the Lane constructor
+ - camera_setup() -> **cb_corners**() where
 	 - we setup **obj_points** as shown by the OpenCV tutorial code cited in the comments. To oversimplify, obj_points are known by geometry and we calculate the distortion(s) by seeing where they are in the image .vs. where they should be.
 	 - then for each image
 		 - read the image from disk	
@@ -65,7 +105,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 #### 1. Provide an example of a distortion-corrected image.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above
 ![alt text][image2]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
