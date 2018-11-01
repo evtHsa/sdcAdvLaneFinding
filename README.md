@@ -95,14 +95,14 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ![enter image description here](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/000_cv2:imread.png)
 **
 
-![alt text][image1]
+![alt text][image6]
 
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
 
 undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above
-![alt text][image1]
+![alt text][image6]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
