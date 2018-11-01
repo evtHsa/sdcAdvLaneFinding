@@ -21,7 +21,7 @@ The goals / steps of this project are the following:
 [image3]: ./test_out/archive/002_warped.png "warped"
 [image4]: ./test_out/archive/003_hls+lab.png "hls+lab"
 [image5]: ./test_out/archive/004_lane_image.png "lane_image"
-[image6]: ./test_out/archive/006_merged.png" Output"
+[image6]: ./test_out/archive/006_merged.png "Output"
 [image7]: ./test_out/archive/007_annotated_blended_img.png "annotated and blended"
 [video1]: ./project_video.mp4 "Video"
 
@@ -132,8 +132,7 @@ In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for 
 The visual result, using the lane lines to define a polygon which we fill, is:
 
 ![alt text][image5]
-![alt text][image5]
-![alt text][image6]
+
 
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
@@ -144,7 +143,7 @@ Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature
 
 Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
 
-![alt text][image6]
+![alt text][image7]
 
 ---
 
