@@ -129,7 +129,7 @@ Both images in section 2 (above) show results after the perspective transform.
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries
 
-The visual result, using the lane lines to define a polygon which we fill, is:
+The visxsual result, using the lane lines to define a polygon which we fill, is:
 
 ![alt text][image5]
 ![alt text][image6]
