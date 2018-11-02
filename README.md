@@ -84,7 +84,7 @@ The code was mostly developed in regular python scripts with most of the interme
 				 - and it's invers
 
 ## camera_setup
-In the second code cell in **P2.ipynb** ("run with the viewer enabled almost everywhere"), we start by calling ut.**app_init**() which:
+In the second code cell in **advanced_lane_finding.ipynb** ("run with the viewer enabled almost everywhere"), we start by calling ut.**app_init**() which:
  - saves the cache_dict(cd) and parm_dict to be passed to the Lane constructor
  - camera_setup() -> **cb_corners**() where
 	 - we setup **obj_points** as shown by the OpenCV tutorial code cited in the comments. To oversimplify, obj_points are known by geometry and we calculate the distortion(s) by seeing where they are in the image .vs. where they should be.
