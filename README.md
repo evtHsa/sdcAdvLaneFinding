@@ -1,4 +1,7 @@
-﻿**Advanced Lane Finding Project**
+**Advanced Lane Finding Project**
+
+---
+
 
 The goals / steps of this project are the following:
 
@@ -13,16 +16,22 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./test_out/archive/001_undistorted.png "Undistorted"
-[image2]: ./test_out/archive/002_warped.png "warped"
-[image3]: ./test_out/archive/003_hls lab.png "Binary Example"
-[image6]: ./test_out/archive/007_annotated_blended_img.png "Output"
+[image1]: ./test_out/archive/000_cv2:imread.png "original"
+[image2]: ./test_out/archive/001_undistorted.png "undistorted"
+[image3]: ./test_out/archive/002_warped.png "warped"
+[image4]: ./test_out/archive/003_hls+lab.png "hls+lab"
+[image5]: ./test_out/archive/004_lane_image.png "lane_image"
+[image6]: ./test_out/archive/006_merged.png "Output"
+[image7]: ./test_out/archive/007_annotated_blended_img.png "annotated and blended"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
+### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+
 ---
 
+### Writeup / README
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
@@ -89,43 +98,52 @@ In the second code cell in **P2.ipynb** ("run with the viewer enabled almost eve
 	 - we then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
-**
-
-## original image
-![enter image description here](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/000_cv2:imread.png)
-**
-
-![alt text][image6]
 
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
+undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above to produce the undistorted imag. One of the interesting, to me, aspects was the tutorial on calculating object points from https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html.  I spent a bunch of time, likely too much to understand this.
 
-undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above
-![alt text][image6]
+To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+![alt text][image1]
+
+**magic happens** and we get
+![alt text][image2]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-As can be seen in ImgUtil.py and the unit_test/ filesk I tried, guided by the lessons, thesholded sobel, thresholded magnitude, directional sobel but did not good results on all test images. Ultimately hls + lab worked best especially on yellow lines.
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
+First we warp the image into a top down view (see **lane_finder_pipe**())
 ![alt text][image3]
+
+then via **hls_lab_lane_detect**() in ImgUtil.py we get
+![alt text][image4]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 the source and destination points from which the M_lookdown matrix is calculated are hardcoded from the lesson in ImgUtil.py::lookdownXform_src() and lookDownXform_dst() which are passed to look_down() which calls cv2WarpPerspective()
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+Both images in section 2 (above) show results after the perspective transform.
 
-in LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries
+#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries. It was some small amount of fun to get the points from the two lane boundaries ordered properly in fill_poly_points() to avoid the "bowtie effect" where, in the default order, you wind up with the top point of each boundary connected to the bottom of the other. See the comments for more about that.
+
+The visual result, using the lane lines to define a polygon which we fill, is:
+
+![alt text][image5]
+
+
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
+Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
+
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-This is near the end of the pipe where blended image is calculated
+Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature_m() we perform the calculations from the lessons as stated in the comments
 
-![alt text][image6]
+![alt text][image7]
 
 ---
 
@@ -133,7 +151,10 @@ This is near the end of the pipe where blended image is calculated
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Links to my video results
+- projectvideo: ./test_out/archive/project_video.mp4
+- challenge video: ./test_out/archive/challenge_video.mp4
+- harder challenge video: ./test_out/archive/harder_challenge_video.mp4
 
 ---
 
