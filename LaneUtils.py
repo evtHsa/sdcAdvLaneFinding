@@ -316,8 +316,8 @@ class VideoCtrlr:
         video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)
-        print("\n\n Total Frames %d, faulty frames %d" % (self.frame_ctr,
-                                                           self.faulty_frames))
+        print("\n\n Total Frames %d, failed to find lane bounaries in %d frames"
+              % (self.frame_ctr, self.faulty_frames))
     def process_frame(self, img_data):
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
@@ -337,7 +337,7 @@ class VideoCtrlr:
                                                       self.parm_dict, self.vwr)
             ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
         except:
-            print("could not find lane boundaries in frame %d" % self.frame_ctr)
+            #print("could not find lane boundaries in frame %d" % self.frame_ctr)
             self.faulty_frames += 1
             img.title = "badFrame_"+str(self.frame_ctr)+".jpg"
             self.vwr.svr.save(img)
