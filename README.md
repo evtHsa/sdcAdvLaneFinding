@@ -152,9 +152,9 @@ Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 Links to my video results
-- projectvideo: [project video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/project_video.mp4)
-- challenge video: (./test_out/archive/challenge_video.mp4)
-- harder challenge video: (./test_out/archive/harder_challenge_video.mp4)
+-  [project video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/project_video.mp4)
+-  [challenge video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/challenge_video.mp4)
+-  [harder challenge video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/harder_challenge_video.mp4)
 
 ---
 
