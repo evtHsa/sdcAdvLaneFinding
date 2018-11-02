@@ -102,7 +102,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
-undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above to produce the undistorted imag. One of the interesting, to me, aspects was the tutorial on calculating object points from https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html.  I spent a bunch of time, likely too much to understand this and even left the ipynb I used to work through it in steps in my project. numpy is still amazing.
+undistort() in ImgUtil.py calls cv2Undistort*() -> cv2.undistort() using the mtx and dist discussed above to produce the undistorted imag. One of the interesting, to me, aspects was the tutorial on calculating object points from https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_calib3d/py_calibration/py_calibration.html.  I spent a bunch of time, likely too much to understand this.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image1]
@@ -127,7 +127,7 @@ the source and destination points from which the M_lookdown matrix is calculated
 Both images in section 2 (above) show results after the perspective transform.
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries
+In LaneUtils.py, find_pixels_all_bndrys() runs the sliding window algorithm for the left and right lanes. lane_finder_pipe() then calls fit_polynomial() on the left and right lane boundaries. It was some small amount of fun to get the points from the two lane boundaries ordered properly in fill_poly_points() to avoid the "bowtie effect" where, in the default order, you wind up with the top point of each boundary connected to the bottom of the other. See the comments for more about that.
 
 The visual result, using the lane lines to define a polygon which we fill, is:
 
@@ -151,7 +151,10 @@ Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Links to my video results
+- projectvideo: ./test_out/archive/project_video.mp4
+- challenge video: ./test_out/archive/challenge_video.mp4
+- harder challenge video: ./test_out/archive/harder_challenge_video.mp4
 
 ---
 
