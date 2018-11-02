@@ -162,4 +162,11 @@ Links to my video results
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+How burdensome is the guidance to be brief? Grievous. But anyway 
+
+ - shadows clearly give my implementation screaming blue fits
+ - the wall in the challenge video played havoc with my implementation as but ?maybe? combining sobel gradients with the hls+lab might have worked better?
+ - oddly enough, at least to me, my implementation did FAR better on the harder challenge video than the challenge video
+ - most beneficial for my implementation would be not being confusd by the dark/light transition from the wall shadow
+ - dealing with shadow mght require changing thresholds perhaps guided by a metric for scene brightness so that transition from bright to shadow as well as daylight -> dusk -> night -> twilight -> daylight would be seamless
+ - when my implementation was confused it just returned the input frame and reported the stats in the ipynb of how many frames confused it
