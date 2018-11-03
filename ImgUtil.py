@@ -397,7 +397,10 @@ def oneChannelInAlternateColorspace2BinaryinaryImage(img, color_space_id=-1,
      return tb_image
 
 def hls_lab_lane_detect(img, cache_dict = None, parm_dict = None):
+     # temporarily deprecated in favor of lab+luv but leave it here
      assert(type(img) is Image)
+     ut.oneShotMsg("hls_lab_lane_detect")
+     vwr = cache_dict['viewer']
      hls_binary_l = oneChannelInAlternateColorspace2BinaryinaryImage(img,
                                                                      cv2.COLOR_BGR2HLS, 1, cd = cache_dict,
                                                                      pd = parm_dict)
@@ -407,6 +410,33 @@ def hls_lab_lane_detect(img, cache_dict = None, parm_dict = None):
      combined = np.zeros_like(hls_binary_l.img_data)
      combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
      ret = Image(img_data = combined, title = "hls+lab", img_type='gray')
+     iv._flush(vwr)
+     iv._push(vwr,ret)
+     iv._show(vwr)
+     return ret
+
+def FIXME_lane_detect(img, cache_dict = None, parm_dict = None):
+     ut.oneShotMsg("FIXME_lane_detect")
+     ut.brk("you didn't really mean that")
+     
+def lab_luv_lane_detect(img, cache_dict = None, parm_dict = None):
+     # on advice of reviewer, trying lab:B + luv:L
+     # failed to detect lane lines in 24/1200 frames
+     assert(type(img) is Image)
+     ut.oneShotMsg("lab_luv_lane_detect")
+     vwr = cache_dict['viewer']
+     lab_binary_b = oneChannelInAlternateColorspace2BinaryinaryImage(img,
+                                                                     cv2.COLOR_BGR2Lab, 2, cd = cache_dict,
+                                                                     pd = parm_dict)
+     luv_binary_l = oneChannelInAlternateColorspace2BinaryinaryImage(img,
+                                                                     cv2.COLOR_BGR2Luv, 0, cd = cache_dict,
+                                                                     pd = parm_dict)
+     combined = np.zeros_like(luv_binary_l.img_data)
+     combined[(lab_binary_b.img_data == 1) | (luv_binary_l.img_data == 1)] =1
+     ret = Image(img_data = combined, title = "lab:b+luv:l", img_type='gray')
+     iv._flush(vwr)
+     iv._push(vwr,ret)
+     iv._show(vwr)
      return ret
 
 def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
