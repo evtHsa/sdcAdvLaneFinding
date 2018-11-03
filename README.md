@@ -23,6 +23,8 @@ The goals / steps of this project are the following:
 [image5]: ./test_out/archive/004_lane_image.png "lane_image"
 [image6]: ./test_out/archive/006_merged.png "Output"
 [image7]: ./test_out/archive/007_annotated_blended_img.png "annotated and blended"
+[image8]: ./test_out/archive/feedback_1_chessboard.png "chessboard w/o detected corners"
+[image9]: ./test_out/archive/eedback_1_chessboard_corners_drawn.png "with detected corners"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
@@ -96,6 +98,10 @@ In the second code cell in **advanced_lane_finding.ipynb** ("run with the viewer
 			 - refine  the corners with **cornerSubPix** as suggested at https://docs.opencv.org/3.0-beta/modules/imgproc/doc/feature_detection.html#cornersubpix
 	 - finally the **cache_dict** returned from cb_corners() now contains **obj_points** and **img_points** that we pass to **calibrateCamera**()
 	 - we then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
+
+The pre and post corner detection images look like
+![alt text][image8]
+![alt text][image9]
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
