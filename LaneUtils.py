@@ -312,7 +312,7 @@ class VideoCtrlr:
         self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
         in_path = basename + ".mp4"
         print("processing " + in_path)
-        out_path = "test_out/" + basename + ".mp4"
+        out_path = ut.get_out_dir() + basename + ".mp4"
         video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)

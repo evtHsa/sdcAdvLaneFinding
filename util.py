@@ -92,3 +92,11 @@ def _assert(cond):
                 #pdb.set_trace()
                 if really_assert:
                         assert(False)
+
+def get_out_dir():
+        tmp = os.environ['test_out']
+        if tmp:
+                return tmp # must end in slash
+        else:
+                return "/tmp/"
+        booger

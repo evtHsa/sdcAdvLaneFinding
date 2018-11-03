@@ -1,1 +1,2 @@
 export PYTHONPATH="`pwd`":$PYTHONPATH
+export test_out="`pwd`/test_out/"
