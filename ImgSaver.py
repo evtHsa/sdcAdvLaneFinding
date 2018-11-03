@@ -14,10 +14,17 @@ class ImgSaver:
         d = d + dt.datetime.now().strftime("%a_%m%d%y_%H%M%S") + "/"
         self.outdir = d
         self.ix = 0
+        self.enabled = True
         os.mkdir(d)
 
+    def set_enabled(self, enabled):
+        self.enabled = enabled
+        
     def save(self, img):
         assert(type(img) is iu.Image)
+        if not self.enabled:
+            return
+
         img_data = img.img_data
 
         if img.img_type == 'bgr':

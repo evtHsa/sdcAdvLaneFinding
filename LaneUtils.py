@@ -314,9 +314,8 @@ class VideoCtrlr:
             self.vwr = self.cache_dict['viewer']
             # we create them for video debug but even  then only turn them
             # on when needed
-            self.vwr.disable()
-            self.vwr.disable_save()
-        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None,
+            self.vwr.bce_set_enabled(False)
+        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=self.vwr,
                          binary_warper=binary_warper)
         in_path = basename + ".mp4"
         print("processing " + in_path)
@@ -354,4 +353,7 @@ class VideoCtrlr:
             ret_img = img
         self.frame_ctr += 1
         return ret_img.img_data
-        
+    
+    def bce_set_enabled(self, enabled):
+        if self.vwr:
+            self.vwr.bce_set_enabled(enabled) #"bce" means "everything" in russian

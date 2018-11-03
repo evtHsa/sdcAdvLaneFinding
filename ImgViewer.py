@@ -15,20 +15,14 @@ class ImgViewer:
         self.cols = cols
         self.svr = svr
         self.auto_save = auto_save
-        
-    def enable(self):
-        self.enabled = True
 
+    def set_enabled(self, enabled):
+        self.enabled = enabled
         
-    def disable(self):
-        self.enabled = False
-        
-    def enable_save(self):
-        self.auto_save = True
-
-        
-    def disable_save(self):
-        self.auto_save = False
+    def bce_set_enabled(self, enabled): #"bce" means "everything" in russian
+        self.set_enabled(enabled)
+        if self.svr:
+            self.svr.set_enabled(enabled)
         
     def push(self, img,  debug=False):
         if not self.enabled:
