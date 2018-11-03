@@ -97,11 +97,13 @@ In the second code cell in **advanced_lane_finding.ipynb** ("run with the viewer
 			 - append the points we found to the object points
 			 - refine  the corners with **cornerSubPix** as suggested at https://docs.opencv.org/3.0-beta/modules/imgproc/doc/feature_detection.html#cornersubpix
 	 - finally the **cache_dict** returned from cb_corners() now contains **obj_points** and **img_points** that we pass to **calibrateCamera**()
-	 - we then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
-
 The pre and post corner detection images look like
+
 ![alt text][image8]
+
 ![alt text][image9]
+
+	 - we then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
