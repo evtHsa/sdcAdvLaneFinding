@@ -24,7 +24,7 @@ The goals / steps of this project are the following:
 [image6]: ./test_out/archive/006_merged.png "Output"
 [image7]: ./test_out/archive/007_annotated_blended_img.png "annotated and blended"
 [image8]: ./test_out/archive/feedback_1_chessboard.png "chessboard w/o detected corners"
-[image9]: ./test_out/archive/eedback_1_chessboard_corners_drawn.png "with detected corners"
+[image9]: ./test_out/archive/feedback_1_chessboard_corners_drawn.png "with detected corners"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
