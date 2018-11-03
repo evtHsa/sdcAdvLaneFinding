@@ -89,9 +89,11 @@ def _assert(cond):
         if not cond:
                 really_assert = True
                 print("assertion failed")
-                #pdb.set_trace()
-                if really_assert:
-                        assert(False)
+
+                if pd.parm_dict['debug_on_assert']:
+                        pdb.set_trace()
+                if pd.parm_dict['quit_on_assert']:
+                        quit()
 
 def get_out_dir():
         tmp = os.environ['test_out']
@@ -99,4 +101,4 @@ def get_out_dir():
                 return tmp # must end in slash
         else:
                 return "/tmp/"
-        booger
+        
