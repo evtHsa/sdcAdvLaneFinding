@@ -339,16 +339,16 @@ def cb_corners(parm_dict, cache_dict, max_files=0, verbose=False, vwr=None):
     # derived from same source as init_obj_points()
     # termination criteria
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-    
     nx, ny = parm_dict['chessboard_nx'],  parm_dict['chessboard_ny']
     objp  = init_obj_points(nx, ny) # object points in 3 space
 
     obj_points = []
     img_points = [] # point in 2 space
     
+    vwr.flush()
     for fname in ut.get_fnames("camera_cal/", "calibration*.jpg"):
-
         img_obj = imRead(fname, reader='cv2', vwr=vwr)
+        vwr.push(img_obj)
         if verbose:
             print("cb_corners: fname = %s(%d, %d)" % (fname,
                                                       img_obj.shape()[0], img_obj.shape()[1]))
@@ -365,10 +365,12 @@ def cb_corners(parm_dict, cache_dict, max_files=0, verbose=False, vwr=None):
             
             # Draw and display the corners
             cv2.drawChessboardCorners(img_obj.img_data, (nx,ny), corners2, ret)
+            img_obj.title = img_obj.title + "_corners_drawn"
+            vwr.push(img_obj)
         else:
             print("findChessboardCorners(%s) failed" % fname)
 
-    iv._show(vwr, clear=True)
+    vwr.show(clear=True)
     cache_dict['obj_points'] = obj_points
     cache_dict['img_points'] = img_points
 
