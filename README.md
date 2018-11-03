@@ -103,7 +103,7 @@ The pre and post corner detection images look like
 
 ![alt text][image9]
 
-	 - we then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
+We then call cv2.**getPerspectiveTransform**() (twice) to calculate the matrix **M** to transform from camera image to "birds eye" and **M_inv** to do the reverse
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
