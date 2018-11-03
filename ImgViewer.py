@@ -98,7 +98,7 @@ def _view(vwr, img, title):
         vwr.show_immed(img, title)
     
 def _push(vwr, img_obj):
-    assert(type(img_ojb) is Image)
+    assert(type(img_obj) is iu.Image)
     if vwr:
         vwr.push(img_obj)
 

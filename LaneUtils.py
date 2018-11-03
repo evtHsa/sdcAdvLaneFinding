@@ -303,12 +303,18 @@ class Lane:
         self.right_bndry.finis(nonzerox, nonzeroy)
         
 class VideoCtrlr:
-    def __init__(self, basename):
+    def __init__(self, basename, viewer=False, saver=False):
         self.frame_ctr = 0
         self.faulty_frames = 0
-        self.cache_dict, self.parm_dict = ut.app_init(viewer=True, saver=True,
+        self.cache_dict, self.parm_dict = ut.app_init(viewer=viewer, saver=saver,
                                                        title="whatever")
-        self.vwr = self.cache_dict['viewer']
+        self.vwr = None
+        if viewer:
+            self.vwr = self.cache_dict['viewer']
+            # we create them for video debug but even  then only turn them
+            # on when needed
+            self.vwr.disable()
+            self.vwr.disable_save()
         self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
         in_path = basename + ".mp4"
         print("processing " + in_path)
@@ -340,7 +346,8 @@ class VideoCtrlr:
             #print("could not find lane boundaries in frame %d" % self.frame_ctr)
             self.faulty_frames += 1
             img.title = "badFrame_"+str(self.frame_ctr)+".jpg"
-            self.vwr.svr.save(img)
+            if self.vwr and self.vwr.svr:
+                self.vwr.svr.save(img)
             ret_img = img
         self.frame_ctr += 1
         return ret_img.img_data
