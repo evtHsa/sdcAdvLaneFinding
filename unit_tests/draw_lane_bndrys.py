@@ -19,7 +19,7 @@ cd, pd = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cd['viewer']
 
 def doit():
-    lane = lu.Lane(cd, pd, vwr=vwr)
+    lane = lu.Lane(cd, pd, vwr=vwr, binary_warper=iu.hls_lab_lane_detect)
 
     for path in ut.get_fnames("test_images/", "*.jpg"):
         in_img = iu.imRead(path, reader='cv2', vwr=vwr)

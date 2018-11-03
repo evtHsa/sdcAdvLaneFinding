@@ -19,5 +19,6 @@ for path in [
         #'challenge_video',
         'harder_challenge_video'
 ]:
-    vc = lu.VideoCtrlr(path, viewer=True, saver=True) # th-th-th-th-th-at's all folks
+    vc = lu.VideoCtrlr(path, viewer=True, saver=True,
+                       binary_warper=iu.hls_lab_lane_detect) # th-th-th-th-th-at's all folks
 

@@ -160,7 +160,8 @@ class Window:
 class Lane:
     # for right now Lanes exist to hold a left and a right boundary and some misc
     # parm and cache dicts.
-    def __init__(self, cd=None, pd=None, vwr=None):
+    def __init__(self, cd=None, pd=None, vwr=None,
+                 binary_warper=iu.FIXME_lane_detect):
         ut._assert(not cd is  None)
         ut._assert(not pd is None)
         #vwr may be None
@@ -170,6 +171,7 @@ class Lane:
         self.left_bndry = None
         self.right_bndry = None
         self.FIXME_stage = None
+        self.binary_warper = binary_warper
 
     def display_curve_rad(self):
         lrc = self.left_bndry.radius_of_curvature_m()
@@ -204,8 +206,7 @@ class Lane:
         self.log_stage(undistorted)
         top_down = iu.look_down(undistorted, cd, vwr)
         self.log_stage(top_down)
-        binary_warped = iu.hls_lab_lane_detect(top_down, cache_dict = cd,
-                                               parm_dict = pd)
+        binary_warped = self.binary_warper(top_down, cache_dict = cd, parm_dict = pd)
         self.log_stage(binary_warped)
         self.find_pixels_all_bndrys(binary_warped)
         self.fit_polynomials()
@@ -303,7 +304,7 @@ class Lane:
         self.right_bndry.finis(nonzerox, nonzeroy)
         
 class VideoCtrlr:
-    def __init__(self, basename, viewer=False, saver=False):
+    def __init__(self, basename, viewer=False, saver=False, binary_warper=None):
         self.frame_ctr = 0
         self.faulty_frames = 0
         self.cache_dict, self.parm_dict = ut.app_init(viewer=viewer, saver=saver,
@@ -315,7 +316,7 @@ class VideoCtrlr:
             # on when needed
             self.vwr.disable()
             self.vwr.disable_save()
-        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None)
+        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None, binary_warper=bw)
         in_path = basename + ".mp4"
         print("processing " + in_path)
         out_path = ut.get_out_dir() + basename + ".mp4"
