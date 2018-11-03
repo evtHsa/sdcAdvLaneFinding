@@ -316,7 +316,8 @@ class VideoCtrlr:
             # on when needed
             self.vwr.disable()
             self.vwr.disable_save()
-        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None, binary_warper=bw)
+        self.lane = Lane(self.cache_dict, self.parm_dict, vwr=None,
+                         binary_warper=binary_warper)
         in_path = basename + ".mp4"
         print("processing " + in_path)
         out_path = ut.get_out_dir() + basename + ".mp4"
