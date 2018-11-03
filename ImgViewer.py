@@ -6,6 +6,7 @@ import ImgUtil as iu
 class ImgViewer:
     
     def __init__(self, w=4, h=4, rows=1, cols=1, title = "", svr=None, auto_save=False):
+        self.enabled = True
         self.img_obj_list = []
         self.w = w
         self.h = h
@@ -14,8 +15,24 @@ class ImgViewer:
         self.cols = cols
         self.svr = svr
         self.auto_save = auto_save
+        
+    def enable(self):
+        self.enabled = True
 
+        
+    def disable(self):
+        self.enabled = False
+        
+    def enable_save(self):
+        self.auto_save = True
+
+        
+    def disable_save(self):
+        self.auto_save = False
+        
     def push(self, img,  debug=False):
+        if not self.enabled:
+            return
         assert(type(img) is iu.Image)
 
         self.img_obj_list.append(img)
@@ -48,6 +65,8 @@ class ImgViewer:
         plt.show()
         
     def show(self, clear=False):
+        if not self.enabled:
+            return
         L = self.img_obj_list
         n_imgs = len(L)
         grid_size = self.rows * self.cols
@@ -79,6 +98,7 @@ def _view(vwr, img, title):
         vwr.show_immed(img, title)
     
 def _push(vwr, img_obj):
+    assert(type(img_ojb) is Image)
     if vwr:
         vwr.push(img_obj)
 
