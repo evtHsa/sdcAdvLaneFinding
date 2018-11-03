@@ -19,13 +19,10 @@ cd, pd = ut.app_init(viewer=True, saver=True, title="whatever")
 vwr = cd['viewer']
 
 def doit():
-    lane = lu.Lane(cd, pd, vwr=None)
+    lane = lu.Lane(cd, pd, vwr=vwr)
 
     for path in ut.get_fnames("test_images/", "*.jpg"):
-        in_img = iu.imRead(path, reader='cv2', vwr=None)
-        out_img= lane.lane_finder_pipe(in_img, cd, pd, vwr=None)
-        iv._push(vwr, out_img)
-
-vwr.flush()
+        in_img = iu.imRead(path, reader='cv2', vwr=vwr)
+        out_img= lane.lane_finder_pipe(in_img, cd, pd, vwr=vwr)
+        ut.brk("check test_out")
 doit()
-vwr.show()
