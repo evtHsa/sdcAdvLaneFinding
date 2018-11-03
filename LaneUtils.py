@@ -325,6 +325,7 @@ class VideoCtrlr:
         rendered_video.write_videofile(out_path, audio=False)
         print("\n\n Total Frames %d, failed to find lane bounaries in %d frames"
               % (self.frame_ctr, self.faulty_frames))
+        
     def process_frame(self, img_data):
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
