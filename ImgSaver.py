@@ -9,7 +9,6 @@ import cv2
 class ImgSaver:
     # abstracts saving a bunch of files in a timestamp directory
     def __init__(self, d=None):
-        ut.brk()
         if d is None:
             d = ut.get_out_dir()
         d = d + dt.datetime.now().strftime("%a_%m%d%y_%H%M%S") + "/"
