@@ -36,10 +36,10 @@ parm_dict ={
     'lab_thresh' : [
         (230, 255), #(L): not too useful
         (133, 253), #(a): dubious utility
-        (155, 205)  #(b): not sure if this is picking up the right stuff
+        (145, 205)  #(b): not sure if this is picking up the right stuff
     ],
     'luv_thresh' : [
-        (225, 255),   #(L): seeems to pick up yellow and white lines well
+        (215, 255),   #(L): seeems to pick up yellow and white lines well
         (133, 253), #(U): picks up non blurry yellow
         (0, 255)      #(V): seems useless
     ],
