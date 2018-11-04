@@ -102,3 +102,7 @@ def get_out_dir():
         else:
                 return "/tmp/"
         
+def format_exception(ex):
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        return message
