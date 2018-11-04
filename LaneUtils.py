@@ -320,7 +320,7 @@ class VideoCtrlr:
         in_path = basename + ".mp4"
         print("processing " + in_path)
         out_path = ut.get_out_dir() + basename + ".mp4"
-        video_in = VideoFileClip(in_path)
+        video_in = VideoFileClip(in_path).subclip(39,42)
         rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)
         print("\n\n Total Frames %d, failed to find lane bounaries in %d frames"
