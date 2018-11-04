@@ -20,6 +20,7 @@ for path in [
         #'harder_challenge_video'
 ]:
     #warper = iu.hls_lab_lane_detect
+    #warper = iu.hls_lab_luv_lane_detect
     warper = iu.lab_luv_lane_detect
 
     vc = lu.VideoCtrlr(path, viewer=True, saver=True,
