@@ -410,9 +410,6 @@ def hls_lab_lane_detect(img, cache_dict = None, parm_dict = None):
      combined = np.zeros_like(hls_binary_l.img_data)
      combined[(hls_binary_l.img_data == 1) | (lab_binary_b.img_data == 1)] =1
      ret = Image(img_data = combined, title = "hls+lab", img_type='gray')
-     iv._flush(vwr)
-     iv._push(vwr,ret)
-     iv._show(vwr)
      return ret
 
 def FIXME_lane_detect(img, cache_dict = None, parm_dict = None):
@@ -434,9 +431,6 @@ def lab_luv_lane_detect(img, cache_dict = None, parm_dict = None):
      combined = np.zeros_like(luv_binary_l.img_data)
      combined[(lab_binary_b.img_data == 1) | (luv_binary_l.img_data == 1)] =1
      ret = Image(img_data = combined, title = "lab:b+luv:l", img_type='gray')
-     iv._flush(vwr)
-     iv._push(vwr,ret)
-     iv._show(vwr)
      return ret
 
 def hls_lab_luv_lane_detect(img, cache_dict = None, parm_dict = None):
@@ -458,9 +452,6 @@ def hls_lab_luv_lane_detect(img, cache_dict = None, parm_dict = None):
      combined[(lab_binary_b.img_data == 1) | (luv_binary_l.img_data == 1)
               | hls_binary_l.img_data == 1] =1
      ret = Image(img_data = combined, title = "lab:b+luv:l", img_type='gray')
-     iv._flush(vwr)
-     iv._push(vwr,ret)
-     iv._show(vwr)
      return ret
 
 def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
