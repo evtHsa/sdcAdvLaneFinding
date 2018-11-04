@@ -25,15 +25,27 @@ class LaneBoundary:
         _img_data = img.img_data
         self.out_img = iu.Image(img_data = np.dstack((_img_data, _img_data, _img_data)),
                            title = "lane pixels" + bndry_title)
-        self.x = -1
-        self.y = -1
+        self._x = -1
+        self._y = -1
         self.x_current = init_x_current
         self.ix_list = list()
         self.vwr = vwr #FIXME: should not be here, only 4 debug, remove l8r
         self.title = bndry_title
         self.fit_x = None # just a note that we'll use this l8r
         self.parm_dict = None # set lazily on first window update
+
+    def set_x(self, x):
+        self._x = x
         
+    def get_x(self):
+        return self._x
+
+    def set_y(self, y):
+        self._y = y
+        
+    def get_y(self):
+        return self._y
+
     def radius_of_curvature_p(self):
         #FIXME: obsolete fn but leave it about for a while 102718
         fitc = self.fit_coeff
@@ -43,8 +55,8 @@ class LaneBoundary:
         return ret
         
     def radius_of_curvature_m(self):
-        x = self.x
-        y = self.y
+        x = self.get_x()
+        y = self.get_y()
         y_eval = np.max(y)
         xmpp = self.lane.pd['xm_per_pix']
         ympp = self.lane.pd['ym_per_pix']
@@ -54,8 +66,8 @@ class LaneBoundary:
         return ret
         
     def fit_polynomial(self):
-        x = self.x
-        y = self.y
+        x = self.get_x()
+        y = self.get_y()
         xmpp = self.lane.pd['xm_per_pix']
         ympp = self.lane.pd['ym_per_pix']
         ploty = self.lane.ploty # from our owning lane
@@ -118,14 +130,15 @@ class LaneBoundary:
         except:
             # Avoids an error if the above is not implemented fully
             pass
-        self.x = nonzerox[self.ix_list]
-        self.y = nonzeroy[self.ix_list]
+        self.set_x(nonzerox[self.ix_list])
+        self.set_y(nonzeroy[self.ix_list])
         
     def show(self, title=None, verbose=False):
         if verbose:
             pprint.pprint(self.__dict__)
         else:
-            print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.x), str(self.y)))
+            print("%s Line\n\tx=%s\n\ty=%s," % (title, str(self.get_x()),
+                                                str(self.get_y())))
         
     def draw(self, img):
         ut._assert(type(img) is iu.Image)
@@ -250,8 +263,8 @@ class Lane:
         
     def calc_vehicle_pos(self):
         pic_ctr = self.width / 2
-        x_l = self.left_bndry.x[0]
-        x_r = self.right_bndry.x[0]
+        x_l = self.left_bndry.get_x()[0]
+        x_r = self.right_bndry.get_x()[0]
         ut._assert(x_l < x_r)
         lane_ctr = x_l + (x_r - x_l)/2
         self.vehicle_pos = (lane_ctr - pic_ctr) * self.pd['xm_per_pix']        
