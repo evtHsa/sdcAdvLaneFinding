@@ -439,6 +439,30 @@ def lab_luv_lane_detect(img, cache_dict = None, parm_dict = None):
      iv._show(vwr)
      return ret
 
+def hls_lab_luv_lane_detect(img, cache_dict = None, parm_dict = None):
+     # lab_luv worked better but still failed on 2 frames so let's revive hls from above
+     # result: no improvement still failing on two frames, so go back to lab_luv
+     assert(type(img) is Image)
+     ut.oneShotMsg("hls_lab_luv_lane_detect")
+     vwr = cache_dict['viewer']
+     hls_binary_l = oneChannelInAlternateColorspace2BinaryinaryImage(img,
+                                                                     cv2.COLOR_BGR2HLS, 1, cd = cache_dict,
+                                                                     pd = parm_dict)
+     lab_binary_b = oneChannelInAlternateColorspace2BinaryinaryImage(img,
+                                                                     cv2.COLOR_BGR2Lab, 2, cd = cache_dict,
+                                                                     pd = parm_dict)
+     luv_binary_l = oneChannelInAlternateColorspace2BinaryinaryImage(img,
+                                                                     cv2.COLOR_BGR2Luv, 0, cd = cache_dict,
+                                                                     pd = parm_dict)
+     combined = np.zeros_like(luv_binary_l.img_data)
+     combined[(lab_binary_b.img_data == 1) | (luv_binary_l.img_data == 1)
+              | hls_binary_l.img_data == 1] =1
+     ret = Image(img_data = combined, title = "lab:b+luv:l", img_type='gray')
+     iv._flush(vwr)
+     iv._push(vwr,ret)
+     iv._show(vwr)
+     return ret
+
 def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
     img = imRead(path, reader='cv2', vwr=None)
     undistorted = undistort(img, cd, vwr=None)
