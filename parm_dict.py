@@ -30,16 +30,16 @@ parm_dict ={
     # herewith we begin new style of threshold parms which hopefully is less painful 2use
     'hls_thresh' : [
         (180, 193), #not too useful
-        (221, 255), #best
+        (195, 255), #best
         (0,255) #not  too usful
     ],
     'lab_thresh' : [
         (230, 255), #(L): not too useful
         (133, 253), #(a): dubious utility
-        (190, 255)  #(b): not sure if this is picking up the right stuff
+        (155, 205)  #(b): not sure if this is picking up the right stuff
     ],
     'luv_thresh' : [
-        (99, 147),   #(L): seeems to pick up yellow and white lines well
+        (225, 255),   #(L): seeems to pick up yellow and white lines well
         (133, 253), #(U): picks up non blurry yellow
         (0, 255)      #(V): seems useless
     ],
@@ -58,7 +58,7 @@ parm_dict ={
     'xm_per_pix' : 3.7/700,
     'ym_per_pix' : 30/720,
     #'bad_frame_ixes' : [1047, 1049, 1050], #hls+lab problem frames
-    'bad_frame_ixes' : [578],
+    'bad_frame_ixes' : [],
     'debug_on_assert': True,
     'quit_on_assert': False
 }
