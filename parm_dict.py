@@ -36,7 +36,7 @@ parm_dict ={
     'lab_thresh' : [
         (230, 255), #(L): not too useful
         (133, 253), #(a): dubious utility
-        (145, 205)  #(b): not sure if this is picking up the right stuff
+        (145, 200)  #(b): not sure if this is picking up the right stuff
     ],
     'luv_thresh' : [
         (215, 255),   #(L): seeems to pick up yellow and white lines well
@@ -58,7 +58,7 @@ parm_dict ={
     'xm_per_pix' : 3.7/700,
     'ym_per_pix' : 30/720,
     #'bad_frame_ixes' : [1047, 1049, 1050], #hls+lab problem frames
-    'bad_frame_ixes' : [],
+    'bad_frame_ixes' : [24,25],
     'debug_on_assert': True,
     'quit_on_assert': False
 }
