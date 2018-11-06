@@ -67,6 +67,7 @@ class LaneBoundary:
         return ret
         
     def fit_polynomial(self):
+        # return false on fail
         x = self.get_x()
         y = self.get_y()
         xmpp = self.lane.pd['xm_per_pix']
@@ -305,6 +306,8 @@ class Lane:
         #self.log_stage(hist)
         left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
         #print("hist maxima L, R = %d, %d" % (left_max_ix, right_max_ix))
+        #iv.plt.plot(hist) # FIXME
+        #iv.plt.show() # FIXME
         img_data = binary_warped.img_data #reduce typing
 
         # Set height of windows - based on nwindows above and image shape
