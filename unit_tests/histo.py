@@ -21,14 +21,20 @@ def analyze_hist(hist):
     
 def doit(path="", cd=None, pd=None, vwr=None):
     vwr.flush()
-    for path in ut.get_fnames("test_images/", "*.jpg"):
-        hist = iu.histo_pipe(path, cd, pd, vwr)
-        hist.title="hist: " + path
-        analyze_hist(hist)
+    for path in ut.get_fnames("test_images/", "problem_binary_warped.jpg"):
+        img = iu.imRead(path, flags = cv2.IMREAD_GRAYSCALE, reader='cv2',
+                        vwr=None)
+        ut.brk("wtf?")
+        hist = iu.hist(img)
+        ut.brk("plot the histogram")
+        ut.brk("call get_LR_hist_max_ix()")
         iv._push(vwr, hist)
     vwr.show()
 
 cache_dict, parm_dict = ut.app_init(viewer=True, saver=False, title="whatever")
 vwr = cache_dict['viewer']
+ut.brk("this unit test is broken")
 doit(cd=cache_dict, pd=parm_dict, vwr=vwr)
+
+
 
