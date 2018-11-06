@@ -35,7 +35,6 @@ class LaneBoundary:
         self.parm_dict = None # set lazily on first window update
 
     def set_x(self, x):
-        #print("set_x(" + str(x) + ")")
         ut._assert(len(x) != 0)
         self._x = x
         
@@ -77,7 +76,7 @@ class LaneBoundary:
         try:
             self.fit_coeff = np.polyfit(y, x, 2)
         except Exception as ex:
-            ut.brk("%s lane boundry polyfit failed: %s" % (self.title,
+            print("FIXME:%s lane boundry polyfit failed: %s" % (self.title,
                                                            ut.format_exception(ex)))
             print("whatever")
         try:
@@ -257,8 +256,8 @@ class Lane:
             self.log_stage(blended_img)
             return blended_img
         except Exception as ex:
-            ut.brk("stupid is a stupid does:%s" % ut.format_exception(ex))
-            return in_img
+            print("FIXME:stupid is a stupid does:%s" % ut.format_exception(ex))
+            return None
         
     def get_image(self, img): #FIXME: name not at all evocative of purpose
         ut._assert(type(img) is iu.Image)
@@ -374,18 +373,17 @@ class VideoCtrlr:
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
         bgr_img = iu.cv2CvtColor(img, cv2.COLOR_RGB2BGR)
-        try:
-            pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
-                                                      self.parm_dict, self.vwr)
-            ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
-        except Exception as ex:
-            print("could not find lane boundaries in frame %d\n%s" % (
-                self.frame_ctr, ut.format_exception(ex)))
+        pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
+                                                  self.parm_dict, self.vwr)
+        if pipe_out_img == None:
+            print("\ncould not find lane boundaries in frame %d\n" % (self.frame_ctr))
             self.faulty_frames += 1
             img.title = "badFrame_"+str(self.frame_ctr)+".jpg"
             if self.vwr and self.vwr.svr:
                 self.vwr.svr.save(img)
             ret_img = img
+        else:
+            ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
         self.frame_ctr += 1
         return ret_img.img_data
     

@@ -58,7 +58,7 @@ parm_dict ={
     'xm_per_pix' : 3.7/700,
     'ym_per_pix' : 30/720,
     'bad_frame_ixes' : [],
-    'debug_on_assert': True,
+    'debug_on_assert': False,
     'quit_on_assert': False
 }
 
