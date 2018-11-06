@@ -78,15 +78,17 @@ class LaneBoundary:
         except Exception as ex:
             print("FIXME:%s lane boundry polyfit failed: %s" % (self.title,
                                                            ut.format_exception(ex)))
-            print("whatever")
+            return False
         try:
             self.fit_x = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
         except TypeError:
             # Avoids an error if fit is still none or incorrect
             print('fit_polynomal: failed to fit a line!')
             self.fit_x = 1*ploty**2 + 1*ploty
+            return False
 
         ut._assert(not self.fit_x is None)
+        return True
 
     def fill_poly_points(self, flip):
         # we need to flip 1 of the lists of points to avoid the bowtie effect
@@ -221,6 +223,7 @@ class Lane:
 
         
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
+        # return processed image or None on error
         try:
             ut._assert(not in_img is None)
             ut._assert(type(in_img) is iu.Image)
@@ -235,7 +238,8 @@ class Lane:
                                                parm_dict = pd)
             self.log_stage(binary_warped)
             self.find_pixels_all_bndrys(binary_warped)
-            self.fit_polynomials()
+            if not self.fit_polynomials():
+                return None
             lane_img = self.get_image(in_img)
             self.log_stage(lane_img)
             size = (lane_img.shape()[1], lane_img.shape()[0])
@@ -256,7 +260,7 @@ class Lane:
             self.log_stage(blended_img)
             return blended_img
         except Exception as ex:
-            print("FIXME:stupid is a stupid does:%s" % ut.format_exception(ex))
+            print("FIXME:%s" % ut.format_exception(ex))
             return None
         
     def get_image(self, img): #FIXME: name not at all evocative of purpose
