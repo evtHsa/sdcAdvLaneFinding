@@ -15,9 +15,10 @@ import LaneUtils as lu
 # LaneBoundary(s): contain attributes for a particular lane bounday
 # Windows: are used to calculate lane boundaries
 for path in [
-        'project_video',
+        #'project_video',
         'challenge_video',
-        'harder_challenge_video']:
+        #'harder_challenge_video'
+]:
     #warper = iu.hls_lab_lane_detect
     #warper = iu.hls_lab_luv_lane_detect
     warper = iu.lab_luv_lane_detect
