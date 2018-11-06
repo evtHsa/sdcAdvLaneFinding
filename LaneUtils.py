@@ -35,6 +35,8 @@ class LaneBoundary:
         self.parm_dict = None # set lazily on first window update
 
     def set_x(self, x):
+        #print("set_x(" + str(x) + ")")
+        ut._assert(len(x) != 0)
         self._x = x
         
     def get_x(self):
@@ -72,8 +74,12 @@ class LaneBoundary:
         ympp = self.lane.pd['ym_per_pix']
         ploty = self.lane.ploty # from our owning lane
         ut._assert(not ploty is None)
-
-        self.fit_coeff = np.polyfit(y, x, 2)
+        try:
+            self.fit_coeff = np.polyfit(y, x, 2)
+        except Exception as ex:
+            ut.brk("%s lane boundry polyfit failed: %s" % (self.title,
+                                                           ut.format_exception(ex)))
+            print("whatever")
         try:
             self.fit_x = self.fit_coeff[0] * ploty**2 + self.fit_coeff[1] * ploty + self.fit_coeff[2]
         except TypeError:
@@ -127,8 +133,9 @@ class LaneBoundary:
     def finis(self, nonzerox, nonzeroy):
         try:
             self.concat_ixes()
-        except:
+        except Exception as ex:
             # Avoids an error if the above is not implemented fully
+            ut.brk("%s.finis => %s" % (self.title, ut.format_exception(ex)))
             pass
         self.set_x(nonzerox[self.ix_list])
         self.set_y(nonzeroy[self.ix_list])
@@ -164,9 +171,9 @@ class Window:
                           (nonzerox <= self.x_hi)).nonzero()[0]
         self.parm_dict = parm_dict
 
-    def print(self):
+    def print(self, msg=""):
         print("win_%s: ix = %d y_lo = %d, y_hi = %d, x_lo = %d, x_hi = %d" %
-              (self.title, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
+              (msg, self.ix, self.y_lo, self.y_hi, self.x_lo, self.x_hi))
 
     def draw(self, out_img):
         ut._assert(type(out_img) is iu.Image)
@@ -187,6 +194,7 @@ class Lane:
         self.right_bndry = None
         self.FIXME_stage = None
         self.binary_warper = binary_warper
+        self.last_pipe_stage = None
 
     def display_curve_rad(self):
         lrc = self.left_bndry.radius_of_curvature_m()
@@ -208,42 +216,49 @@ class Lane:
                 self.vwr.svr.save(img)
             
         assert(not tmp == "")
+        self.last_pipe_stage = tmp
+        #print("log_stage:%s" % tmp)
         self.FIXME_state = tmp
 
         
     def lane_finder_pipe(self, in_img, cd=None, pd=None, vwr=None):
-        ut._assert(not in_img is None)
-        ut._assert(type(in_img) is iu.Image)
-        self.note_img_attrs(in_img)
-        self.log_stage(in_img)
-        
-        undistorted = iu.undistort(in_img, cd, vwr=vwr)
-        self.log_stage(undistorted)
-        top_down = iu.look_down(undistorted, cd, vwr)
-        self.log_stage(top_down)
-        binary_warped = self.binary_warper(top_down, cache_dict = cd, parm_dict = pd)
-        self.log_stage(binary_warped)
-        self.find_pixels_all_bndrys(binary_warped)
-        self.fit_polynomials()
-        lane_img = self.get_image(in_img)
-        self.log_stage(lane_img)
-        size = (lane_img.shape()[1], lane_img.shape()[0])
-        lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size,
-                                         vwr=vwr)
-        self.log_stage(lane_img, 'rewarped_lane_img')
-        blended_img = iu.cv2AddWeighted(in_img, lane_img,
-                                        alpha = pd['lane_blend_alpha'],
-                                        beta = pd['lane_blend_beta'],
-                                        gamma = pd['lane_blend_gamma'], title = "merged")
-        self.log_stage(blended_img)
-        self.calc_vehicle_pos()
-        blended_img.msgs = []
-        blended_img.msgs.append(self.display_vehicle_pos())
-        blended_img.msgs.append(self.display_curve_rad())
-        blended_img.putText()
-        blended_img.title = 'annotated_blended_img'
-        self.log_stage(blended_img)
-        return blended_img
+        try:
+            ut._assert(not in_img is None)
+            ut._assert(type(in_img) is iu.Image)
+            self.note_img_attrs(in_img)
+            self.log_stage(in_img)
+            
+            undistorted = iu.undistort(in_img, cd, vwr=vwr)
+            self.log_stage(undistorted)
+            top_down = iu.look_down(undistorted, cd, vwr)
+            self.log_stage(top_down)
+            binary_warped = self.binary_warper(top_down, cache_dict = cd,
+                                               parm_dict = pd)
+            self.log_stage(binary_warped)
+            self.find_pixels_all_bndrys(binary_warped)
+            self.fit_polynomials()
+            lane_img = self.get_image(in_img)
+            self.log_stage(lane_img)
+            size = (lane_img.shape()[1], lane_img.shape()[0])
+            lane_img = iu.cv2WarpPerspective(lane_img, cd['M_lookdown_inv'], size,
+                                             vwr=vwr)
+            self.log_stage(lane_img, 'rewarped_lane_img')
+            blended_img = iu.cv2AddWeighted(in_img, lane_img,
+                                            alpha = pd['lane_blend_alpha'],
+                                            beta = pd['lane_blend_beta'],
+                                            gamma = pd['lane_blend_gamma'], title = "merged")
+            self.log_stage(blended_img)
+            self.calc_vehicle_pos()
+            blended_img.msgs = []
+            blended_img.msgs.append(self.display_vehicle_pos())
+            blended_img.msgs.append(self.display_curve_rad())
+            blended_img.putText()
+            blended_img.title = 'annotated_blended_img'
+            self.log_stage(blended_img)
+            return blended_img
+        except Exception as ex:
+            ut.brk("stupid is a stupid does:%s" % ut.format_exception(ex))
+            return in_img
         
     def get_image(self, img): #FIXME: name not at all evocative of purpose
         ut._assert(type(img) is iu.Image)
@@ -338,11 +353,12 @@ class VideoCtrlr:
         in_path = basename + ".mp4"
         print("processing " + in_path)
         out_path = ut.get_out_dir() + basename + ".mp4"
-        video_in = VideoFileClip(in_path).subclip(41,42)
+        video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)
-        print("\n\n Total Frames %d, failed to find lane bounaries in %d frames"
-              % (self.frame_ctr, self.faulty_frames))
+        if self.faulty_frames:
+            print("\n\n Total Frames %d, failed to find lane boundaries in %d frames"
+                  % (self.frame_ctr, self.faulty_frames))
         
     def process_frame(self, img_data):
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
@@ -362,8 +378,9 @@ class VideoCtrlr:
             pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
                                                       self.parm_dict, self.vwr)
             ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
-        except:
-            #print("could not find lane boundaries in frame %d" % self.frame_ctr)
+        except Exception as ex:
+            print("could not find lane boundaries in frame %d\n%s" % (
+                self.frame_ctr, ut.format_exception(ex)))
             self.faulty_frames += 1
             img.title = "badFrame_"+str(self.frame_ctr)+".jpg"
             if self.vwr and self.vwr.svr:

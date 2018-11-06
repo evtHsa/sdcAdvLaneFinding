@@ -57,8 +57,7 @@ parm_dict ={
     'lane_blend_gamma' : 0,
     'xm_per_pix' : 3.7/700,
     'ym_per_pix' : 30/720,
-    #'bad_frame_ixes' : [1047, 1049, 1050], #hls+lab problem frames
-    'bad_frame_ixes' : [24,25],
+    'bad_frame_ixes' : [],
     'debug_on_assert': True,
     'quit_on_assert': False
 }
