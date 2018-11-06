@@ -16,13 +16,12 @@ import LaneUtils as lu
 # Windows: are used to calculate lane boundaries
 for path in [
         'project_video',
-        #'challenge_video',
-        #'harder_challenge_video'
-]:
+        'challenge_video',
+        'harder_challenge_video']:
     #warper = iu.hls_lab_lane_detect
     #warper = iu.hls_lab_luv_lane_detect
     warper = iu.lab_luv_lane_detect
-
+    print("================= %s =================" %path)
     vc = lu.VideoCtrlr(path, viewer=True, saver=True,
                        binary_warper=warper) # th-th-th-th-th-at's all folks
 
