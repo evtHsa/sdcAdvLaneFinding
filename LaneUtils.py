@@ -158,8 +158,10 @@ class Window:
         self.x_hi = x_base + margin
         self.ix = win_ix
         self.vwr = vwr
-        self.good_ixes = ((nonzeroy >= self.y_lo) & (nonzeroy <= self.y_hi) &
-                          (nonzerox >= self.x_lo) & (nonzerox <= self.x_hi)).nonzero()[0]
+        self.good_ixes = ((nonzeroy >= self.y_lo) &
+                          (nonzeroy <= self.y_hi) &
+                          (nonzerox >= self.x_lo) &
+                          (nonzerox <= self.x_hi)).nonzero()[0]
         self.parm_dict = parm_dict
 
     def print(self):
@@ -305,14 +307,15 @@ class Lane:
                              margin, self.vwr, nonzerox, nonzeroy, self.pd)
                 # ok to here, good ixes on prev line
                 bndry.window_update(win)
-                bndry.draw_window(bndry.out_img) #FIXME: reference to image is redundant
+                #FIXME: reference to image is redundant
+                bndry.draw_window(bndry.out_img) 
                 bndry.append_ixes()
 
-                # If you found > minpix pixels, recenter next window on their mean position
+                # If you found > minpix pixels, recenter next window on
+                # their mean position
                 if len(bndry.window.good_ixes) > minpix:
                     bndry.x_current = np.int(np.mean(
                         nonzerox[bndry.window.good_ixes]))
-                    # x_current is updated correctly
         self.left_bndry.finis(nonzerox, nonzeroy)
         self.right_bndry.finis(nonzerox, nonzeroy)
         
