@@ -462,23 +462,22 @@ def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
     return ret
 
 
-def hist(img, vwr):
-    assert(type(img) is Image)
-    assert(img.is2D())
-    bottom_half = img.img_data[img.img_data.shape[0]//2:,:]
-    # Sum across image pixels vertically - make sure to set `axis`
-    # i.e. the highest areas of vertical lines should be larger values
-    histogram = np.sum(bottom_half, axis=0)
-    histogram = Image(img_data = histogram, title="histogram", img_type='gray')
-    return histogram
+
+def hist(img):
+     assert(type(img) is Image)
+     assert(img.is2D())
+     # Sum across image pixels vertically - make sure to set `axis`
+     # i.e. the highest areas of vertical lines should be larger values
+     histogram = np.sum(img.img_data, axis=0)
+     return histogram
 
 def get_LR_hist_max_ix(hist):
     # see lesson 7.4
-    width = hist.img_data.shape[0]
+    width = hist.shape[0]
     midway = width // 2
     
-    left_max_ix    = np.argmax(hist.img_data[0:midway])
-    right_max_ix = midway + np.argmax(hist.img_data[midway:width])
+    left_max_ix    = np.argmax(hist[0:midway])
+    right_max_ix = midway + np.argmax(hist[midway:width])
     return (left_max_ix, right_max_ix)
 
 

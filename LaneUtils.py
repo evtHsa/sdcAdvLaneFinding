@@ -280,11 +280,13 @@ class Lane:
         ut._assert(binary_warped.is2D())
     
         wp = self.pd['sliding_windows']
-        nwindows, margin, minpix = (wp['nwindows'], wp['margin'], wp['minpix'])
-        hist = iu.hist(binary_warped, self.vwr)
+        nwindows, margin, minpix = (wp['nwindows'],
+                                    wp['margin'], wp['minpix'])
+        hist = iu.hist(binary_warped)
         # log stage needs a bigger brain to display 2d histograms than the current code has
         #self.log_stage(hist)
         left_max_ix, right_max_ix = iu.get_LR_hist_max_ix(hist)
+        #print("hist maxima L, R = %d, %d" % (left_max_ix, right_max_ix))
         img_data = binary_warped.img_data #reduce typing
 
         # Set height of windows - based on nwindows above and image shape
