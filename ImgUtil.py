@@ -461,11 +461,6 @@ def hls_lab_pipeline(path="", cd=None, pd=None, vwr=None):
     ret = hls_lab_lane_detect(top_down, cache_dict = cd, parm_dict = pd)
     return ret
 
-def histo_pipe(path="", cd=None, pd=None, vwr=None):
-    hls_lab = hls_lab_pipeline(path, cd, pd, vwr)
-    ret = hist(hls_lab, vwr)
-    hist.title = "hist: " + path
-    return ret
 
 def hist(img, vwr):
     assert(type(img) is Image)
