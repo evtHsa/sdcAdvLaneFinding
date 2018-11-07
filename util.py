@@ -86,9 +86,9 @@ def app_init(viewer=False, saver=False, title=""):
      return (cache_dict, parm_dict)
 
 def _quit(msg=""):
-        if msg:
-                print ("==========\n%s\n==========" % msg)
         if pd.parm_dict['quit_on_assert']:
+                if msg:
+                        print ("==========\n%s\n==========" % msg)
                 quit()
 
 def _assert(cond):
