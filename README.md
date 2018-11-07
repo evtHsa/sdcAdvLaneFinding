@@ -162,7 +162,7 @@ Near the end of lane_finder_pipe() -> display_curve_rad() -> radius_of_curvature
 Links to my video results
 -  [project video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/project_video.mp4)
 -  [challenge video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/challenge_video.mp4)
--  [harder challenge video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/harder_challenge_video.mp4)
+-  [harder challenge video](https://github.com/evtHsa/sdcAdvLaneFinding/blob/master/test_out/archive/harder_challenge_video.mp4) # this reminds me of Higway 152 from Mt. Madonna down towards Morgan Hill
 
 ---
 
