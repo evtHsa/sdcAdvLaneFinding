@@ -198,6 +198,7 @@ class Lane:
         self.FIXME_stage = None
         self.binary_warper = binary_warper
         self.last_pipe_stage = None
+        self.sum_lane_widths = 0
 
     def display_curve_rad(self):
         lrc = self.left_bndry.radius_of_curvature_m()
@@ -291,6 +292,7 @@ class Lane:
         lane_ctr = x_l + (x_r - x_l)/2
         self.vehicle_pos = (pic_ctr - lane_ctr) * self.pd['xm_per_pix']
         self.pos_w_r_t_lane_ctr = "left" if pic_ctr < lane_ctr else "right"
+        self.sum_lane_widths += x_r - x_l
 
     def fit_polynomials(self):
         # return false if neither fits
@@ -367,6 +369,7 @@ class VideoCtrlr:
         video_in = VideoFileClip(in_path)
         rendered_video = video_in.fl_image(self.process_frame_bp)
         rendered_video.write_videofile(out_path, audio=False)
+        print("average lane width = %f" % (self.lane.sum_lane_widths / self.frame_ctr))
         if self.faulty_frames:
             print("\n\n Total Frames %d, failed to find lane boundaries in %d frames"
                   % (self.frame_ctr, self.faulty_frames))
