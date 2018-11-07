@@ -280,7 +280,7 @@ class Lane:
 
     def display_vehicle_pos(self):
         ret = "%.2f meters %s of center" % (
-            np.abs(self.vehicle_pos), "left" if self.vehicle_pos < 0 else "right")
+            np.abs(self.vehicle_pos), self.pos_w_r_t_lane_ctr)
         return ret
         
     def calc_vehicle_pos(self):
@@ -289,7 +289,8 @@ class Lane:
         x_r = self.right_bndry.get_x()[0]
         ut._assert(x_l < x_r)
         lane_ctr = x_l + (x_r - x_l)/2
-        self.vehicle_pos = (lane_ctr - pic_ctr) * self.pd['xm_per_pix']        
+        self.vehicle_pos = (pic_ctr - lane_ctr) * self.pd['xm_per_pix']
+        self.pos_w_r_t_lane_ctr = "left" if pic_ctr < lane_ctr else "right"
 
     def fit_polynomials(self):
         # return false if neither fits
