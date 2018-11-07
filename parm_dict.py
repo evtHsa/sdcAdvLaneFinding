@@ -55,7 +55,11 @@ parm_dict ={
     'lane_blend_alpha' : 1,
     'lane_blend_beta' : 0.3,
     'lane_blend_gamma' : 0,
-    'xm_per_pix' : 3.7/700,
+    # lane width in us isapproximately 12 feet = 3.658 m
+    # per http://www.dot.ca.gov/hq/paffairs/faq/faq92.htm, it can vary
+    # over the whole project video, I calculate 895 pixel lane width
+    # from top down view => 3.658 / 859 m/pixel
+    'xm_per_pix' : 3.658/895,
     'ym_per_pix' : 30/720,
     'bad_frame_ixes' : [],
     'debug_on_assert': False,
