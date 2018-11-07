@@ -85,6 +85,12 @@ def app_init(viewer=False, saver=False, title=""):
      camera.camera_setup(cache_dict = cache_dict, parm_dict = parm_dict)
      return (cache_dict, parm_dict)
 
+def _quit(msg=""):
+        if msg:
+                print ("==========\n%s\n==========" % msg)
+        if pd.parm_dict['quit_on_assert']:
+                quit()
+
 def _assert(cond):
         if not cond:
                 really_assert = True
@@ -92,9 +98,8 @@ def _assert(cond):
 
                 if pd.parm_dict['debug_on_assert']:
                         pdb.set_trace()
-                if pd.parm_dict['quit_on_assert']:
-                        quit()
-
+                _quit()
+                
 def get_out_dir():
         tmp = os.environ['test_out']
         if tmp:

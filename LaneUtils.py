@@ -11,6 +11,7 @@ import ImgUtil as iu
 import ImgViewer as iv
 import pprint
 from moviepy.editor import VideoFileClip
+import parm_dict as pd
 
 class LaneBoundary:
     
@@ -291,8 +292,11 @@ class Lane:
         self.vehicle_pos = (lane_ctr - pic_ctr) * self.pd['xm_per_pix']        
 
     def fit_polynomials(self):
-        self.left_bndry.fit_polynomial()
-        self.right_bndry.fit_polynomial()
+        # return false if neither fits
+        #ut.brk("hey?>")
+        lpf = self.left_bndry.fit_polynomial()
+        rpf = self.right_bndry.fit_polynomial()
+        return lpf and rpf
 
     def find_pixels_all_bndrys(self, binary_warped):
         ut._assert(type(binary_warped) is iu.Image)
@@ -378,10 +382,21 @@ class VideoCtrlr:
 
     def process_frame_bp(self, img_data):
         # FIXME: es ware besser wenn unser pipeline nativ mit RGB arbeitet
+        bad_frame_list = pd.parm_dict['bad_frame_ixes']
+        bummer = False
         img = iu.Image(img_data = img_data, title="", img_type='rgb')
         bgr_img = iu.cv2CvtColor(img, cv2.COLOR_RGB2BGR)
+        if bad_frame_list.count(self.frame_ctr):
+            bummer = True
+            print("WHOO HOOO: logging stuff for frame %d" % self.frame_ctr)
+            self.bce_set_enabled(bummer)
+            ut.brk("dig in bubba")
         pipe_out_img = self.lane.lane_finder_pipe(bgr_img, self.cache_dict,
                                                   self.parm_dict, self.vwr)
+        if bummer:
+            bummer = False
+            self.bce_set_enabled(bummer)
+            
         if pipe_out_img == None:
             print("\ncould not find lane boundaries in frame %d\n" % (self.frame_ctr))
             self.faulty_frames += 1
@@ -392,6 +407,8 @@ class VideoCtrlr:
         else:
             ret_img = iu.cv2CvtColor(pipe_out_img, cv2.COLOR_BGR2RGB)
         self.frame_ctr += 1
+        if self.faulty_frames:
+            ut._quit("my dreams are shattered, i quit")
         return ret_img.img_data
     
     def bce_set_enabled(self, enabled):
